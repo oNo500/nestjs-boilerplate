@@ -16,6 +16,7 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "noFallthroughCasesInSwitch": false,
+    // "esModuleInterop": true,
     "baseUrl": "./",
     "paths": {
       "@/*": ["./src/*"]

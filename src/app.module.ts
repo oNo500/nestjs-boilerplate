@@ -9,6 +9,9 @@ import { validateEnv } from '@/config/env';
 import { AuthModule } from '@/shared/auth/auth.module';
 import { UsersModule } from '@/features/users/users.module';
 import { MailModule } from '@/shared/mail/mail.module';
+import { DrizzleModule } from '@/shared/drizzle/drizzle.module';
+import { NodeMailerModule } from '@/core/node-mailer/node-mailer.module';
+import { HealthModule } from './shared/health/health.module';
 
 @Module({
   imports: [
@@ -19,7 +22,10 @@ import { MailModule } from '@/shared/mail/mail.module';
     }),
     AuthModule,
     UsersModule,
+    NodeMailerModule,
     MailModule,
+    DrizzleModule,
+    HealthModule,
   ],
   controllers: [AppController],
   providers: [
