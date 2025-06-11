@@ -5,13 +5,21 @@ import {
   hashString,
   validateString,
 } from '@/shared/util';
-import { eq, or, and, gt, InferInsertModel } from 'drizzle-orm';
+import {
+  eq,
+  or,
+  and,
+  gt,
+  InferInsertModel,
+  InferSelectModel,
+} from 'drizzle-orm';
 import { Env } from '@/config/env';
 import {
   AuthTokensInterface,
   LoginUserInterface,
   RefreshTokenInterface,
   RegisterUserInterface,
+  User,
 } from '@/shared/auth/auth.interface';
 import {
   ChangePasswordDto,
@@ -43,13 +51,11 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { Logger } from 'nestjs-pino';
-import { User } from '@/shared/auth/auth.interface';
-import { InferSelectModel } from 'drizzle-orm';
+import { pickBy } from 'lodash-es';
 import { DrizzleAsyncProvider } from '@/database/drizzle.provider';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import schema from '@/database/schema';
 import { DeviceInfoDto } from './dto/device-info.dto';
-import { pickBy } from 'lodash-es';
 
 @Injectable()
 export class AuthService {
@@ -104,7 +110,6 @@ export class AuthService {
    * @param dto
    * @return Promise<User>
    */
-
   async validateUser(dto: ValidateUserDto): Promise<User> {
     const result = await this.db
       .select()
@@ -119,13 +124,13 @@ export class AuthService {
       .limit(1)
       .then((rows) => rows[0]);
 
-    if (!result) throw new NotFoundException('User not found');
+    if (!result) throw new NotFoundException('用户不存在');
 
     const isValid = await validateString(
       dto.password,
       result.users.password ?? '',
     );
-    if (!isValid) throw new UnauthorizedException('Invalid credentials');
+    if (!isValid) throw new UnauthorizedException('密码错误');
 
     return result.users;
   }

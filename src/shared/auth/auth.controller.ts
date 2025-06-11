@@ -14,6 +14,7 @@ import { Public } from '@/core/decorators/public.decorators';
 // import { JwtRefreshGuard } from '@/core/guards/jwt-refresh.guard';
 import { AuthService } from './auth.service';
 import { getDeviceInfo } from '@/shared/util/os';
+import { validatePasswordStrength } from '../util/validate/password-strength';
 
 import {
   MessageResponse,
@@ -30,15 +31,13 @@ import { ResetPasswordDto } from '@/shared/auth/dto/reset-password.dto';
 import { SignInUserDto } from '@/shared/auth/dto/signIn-user.dto';
 import { SignOutUserDto } from '@/shared/auth/dto/signOut-user.dto';
 import { SignOutAllDeviceUserDto } from '@/shared/auth/dto/signOutAllDevice-user.dto';
-import { validatePasswordStrength } from '../util/validate/password-strength';
+
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   /**
-   * @description Signs in a user.
-   * @param signInUserDto
-   * @returns Promise<SignInResponse>
+   * 用户登录
    */
   @Public()
   @Post('login')
@@ -47,47 +46,71 @@ export class AuthController {
     @Req() request: Request,
   ): Promise<SignInResponse> {
     const userAgent = (request.headers['user-agent'] || '') as string;
-
     const device = getDeviceInfo(userAgent);
     const data = await this.authService.signIn(signInUserDto, device);
     const { ...result } = data.data; // TODO 移除 password 和 sessions 字段
     return {
-      message: 'User signed in successfully',
+      message: '登录成功',
       data: result,
       tokens: data.tokens,
     };
   }
 
   /**
-   * @description Signs out the user from the current session.
-   * @param signOutUserDto
-   * @returns Promise<MessageResponse>
+   * 用户注册（邮箱+验证码）
+   */
+  @Post('register')
+  async register(@Body() dto: CreateUserDto) {
+    this.checkPassword(dto.password, dto.confirmPassword);
+    return this.authService.registerWithEmailOtp(dto);
+  }
+
+  /**
+   * 发送注册邮箱验证码
+   */
+  @Post('send-email-otp')
+  async sendEmailOtp(@Body('email') email: string) {
+    const existUser = await this.authService.findUserByEmail(email);
+    if (existUser) throw new BadRequestException('该邮箱已注册');
+    if (await this.authService.isRegisterOtpLimited(email))
+      throw new BadRequestException('注册过于频繁，请稍后再试');
+    await this.authService.sendRegisterEmailOtp(email);
+    return { message: '验证码已发送' };
+  }
+
+  /**
+   * 校验注册邮箱验证码
+   */
+  @Post('verify-email-otp')
+  async verifyEmailOtp(@Body() dto: { email: string; otp: string }) {
+    await this.authService.verifyRegisterEmailOtp(dto.email, dto.otp);
+    return { message: '验证码校验通过' };
+  }
+
+  /**
+   * 当前设备登出
    */
   @Post('sign-out')
   async signOut(
     @Body() signOutUserDto: SignOutUserDto,
   ): Promise<MessageResponse> {
     await this.authService.signOut(signOutUserDto);
-    return { message: 'User signed out successfully' };
+    return { message: '退出登录成功' };
   }
 
   /**
-   * @description Signs out the user from all devices.
-   * @param dto
-   * @returns {Promise<MessageResponse>}
+   * 所有设备登出
    */
   @Post('sign-out-allDevices')
   async signOutAllDevices(
     @Body() dto: SignOutAllDeviceUserDto,
   ): Promise<MessageResponse> {
     await this.authService.signOutAllDevices(dto);
-    return { message: 'User signed out from all devices successfully' };
+    return { message: '所有设备已退出登录' };
   }
 
   /**
-   * @description Retrieves all sessions for a user.
-   * @param userId
-   * @returns Promise<SessionsResponse>
+   * 获取用户所有会话
    */
   @Get('sessions/:userId')
   async sessions(@Param('userId') userId: string): Promise<SessionsResponse> {
@@ -96,9 +119,7 @@ export class AuthController {
   }
 
   /**
-   * @description Retrieves a session by ID.
-   * @param id
-   * @returns Promise<SessionResponse>
+   * 获取单个会话
    */
   @Get('session/:id')
   async session(@Param('id') id: string): Promise<SessionResponse> {
@@ -107,9 +128,7 @@ export class AuthController {
   }
 
   /**
-   * @description Sends a password reset email.
-   * @param forgotPasswordDto
-   * @returns Promise<MessageResponse>
+   * 发送重置密码邮件
    */
   @Public()
   @Patch('forgot-password')
@@ -117,61 +136,42 @@ export class AuthController {
     @Body() forgotPasswordDto: ForgotPasswordDto,
   ): Promise<MessageResponse> {
     await this.authService.forgotPassword(forgotPasswordDto);
-    return { message: 'Password reset token sent to your email' };
+    return { message: '重置密码邮件已发送' };
   }
 
   /**
-   * @description Resets the user's password using a token.
-   * @param dto
-   * @returns Promise<MessageResponse>
+   * 重置密码（通过token）
    */
   @Public()
   @Patch('reset-password')
   async resetPassword(@Body() dto: ResetPasswordDto): Promise<MessageResponse> {
-    const { newPassword, confirmPassword } = dto;
-    if (newPassword !== confirmPassword) {
-      throw new BadRequestException('两次输入的密码不一致');
-    }
-    if (!validatePasswordStrength(newPassword)) {
-      throw new BadRequestException('密码过于简单');
-    }
+    this.checkPassword(dto.newPassword, dto.confirmPassword);
     await this.authService.resetPassword(dto);
-    return { message: 'Password changed successfully' };
+    return { message: '密码重置成功' };
   }
 
   /**
-   * @description Changes the user's password.
-   * @param dto
-   * @returns Promise<MessageResponse>
+   * 修改密码
    */
   @Patch('change-password')
   async changePassword(
     @Body() dto: ChangePasswordDto,
   ): Promise<MessageResponse> {
-    const { password, confirmPassword } = dto;
-    if (password !== confirmPassword) {
-      throw new BadRequestException('两次输入的密码不一致');
-    }
-    if (!validatePasswordStrength(password)) {
-      throw new BadRequestException('密码过于简单');
-    }
+    this.checkPassword(dto.password, dto.confirmPassword);
     await this.authService.changePassword(dto);
-    return { message: 'Password changed successfully' };
+    return { message: '密码修改成功' };
   }
 
   /**
-   * @description Refreshes the access token using a refresh token.
-   * @param  dto
-   * @returns Promise<RefreshTokenResponse>
+   * 刷新token
    */
-  // @UseGuards(JwtRefreshGuard)
   @Patch('refresh-token')
   async refreshToken(
     @Body() dto: RefreshTokenDto,
   ): Promise<RefreshTokenResponse> {
     const data = await this.authService.refreshToken(dto);
     return {
-      message: 'Refresh token generated successfully',
+      message: '刷新token成功',
       access_token: data.access_token,
       refresh_token: data.refresh_token,
       access_token_refresh_time: data.access_token_refresh_time,
@@ -179,34 +179,15 @@ export class AuthController {
     };
   }
 
-  @Post('send-email-otp')
-  async sendEmailOtp(@Body('email') email: string) {
-    // 查重
-    const existUser = await this.authService.findUserByEmail(email);
-    if (existUser) throw new BadRequestException('该邮箱已注册');
-    if (await this.authService.isRegisterOtpLimited(email))
-      throw new BadRequestException('注册过于频繁，请稍后再试');
-    // 生成并发送验证码
-    await this.authService.sendRegisterEmailOtp(email);
-    return { message: '验证码已发送' };
-  }
-
-  @Post('verify-email-otp')
-  async verifyEmailOtp(@Body() dto: { email: string; otp: string }) {
-    await this.authService.verifyRegisterEmailOtp(dto.email, dto.otp);
-    return { message: '验证码校验通过' };
-  }
-
-  @Post('register')
-  async register1(@Body() dto: CreateUserDto) {
-    const { password, confirmPassword } = dto;
-
+  /**
+   * 校验密码一致性和强度
+   */
+  private checkPassword(password: string, confirmPassword: string) {
     if (password !== confirmPassword) {
       throw new BadRequestException('两次输入的密码不一致');
     }
     if (!validatePasswordStrength(password)) {
       throw new BadRequestException('密码过于简单');
     }
-    return this.authService.registerWithEmailOtp(dto);
   }
 }
