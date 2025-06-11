@@ -11,13 +11,14 @@ export const drizzleProvider = [
     provide: DrizzleAsyncProvider,
     inject: [ConfigService],
     useFactory: (configService: ConfigService) => {
-      console.log('configService', configService.get<string>('DATABASE_URL'));
       const connectionString = configService.get<string>('DATABASE_URL');
       const pool = new Pool({
         connectionString,
       });
-
-      return drizzle(pool, { schema }) as NodePgDatabase<typeof schema>;
+      // 自动配置别名：将 ts 中的 camelCase 转换为 PostgreSQL 的 snake_case
+      return drizzle(pool, { schema, casing: 'snake_case' }) as NodePgDatabase<
+        typeof schema
+      >;
     },
   },
 ];

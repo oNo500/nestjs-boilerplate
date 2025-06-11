@@ -21,7 +21,8 @@
     "gs": "nest generate service --no-spec --flat",
     "g": "nest g --no-spec",
     "db:generate": "drizzle-kit generate",
-    "db:migrate": "drizzle-kit migrate"
+    "db:migrate": "drizzle-kit migrate",
+    "db:studio": "pnpm drizzle-kit studio"
   },
   "dependencies": {
     "@nestjs-modules/mailer": "^2.0.2",
@@ -47,6 +48,7 @@
     "pino-pretty": "^13.0.0",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
+    "ua-parser-js": "^2.0.3",
     "zod": "^3.25.56"
   },
   "devDependencies": {
@@ -65,6 +67,7 @@
     "@types/nodemailer": "^6.4.17",
     "@types/pg": "^8.15.4",
     "@types/supertest": "^6.0.2",
+    "@types/ua-parser-js": "^0.7.39",
     "drizzle-kit": "^0.31.1",
     "eslint": "^9.18.0",
     "eslint-config-prettier": "^10.0.1",

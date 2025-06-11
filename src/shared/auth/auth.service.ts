@@ -52,6 +52,7 @@ import { InferSelectModel } from 'drizzle-orm';
 import { DrizzleAsyncProvider } from '@/database/drizzle.provider';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import schema from '@/database/schema';
+import { DeviceInfoDto } from './dto/device-info.dto';
 
 @Injectable()
 export class AuthService {
@@ -108,20 +109,8 @@ export class AuthService {
    */
 
   async validateUser(dto: ValidateUserDto): Promise<User> {
-    const user = await this.db
-      .select({
-        id: users.id,
-        username: users.username,
-        email: users.email,
-        password: users.password,
-        isEmailVerified: users.isEmailVerified,
-        emailVerifiedAt: users.emailVerifiedAt,
-        createdAt: users.createdAt,
-        updatedAt: users.updatedAt,
-        profile: {
-          name: profiles.name,
-        },
-      })
+    const result = await this.db
+      .select()
       .from(users)
       .leftJoin(profiles, eq(users.id, profiles.userId))
       .where(
@@ -130,12 +119,15 @@ export class AuthService {
       .limit(1)
       .then((rows) => rows[0]);
 
-    if (!user) throw new NotFoundException('User not found');
+    if (!result) throw new NotFoundException('User not found');
 
-    const isValid = await validateString(dto.password, user.password ?? '');
+    const isValid = await validateString(
+      dto.password,
+      result.users.password ?? '',
+    );
     if (!isValid) throw new UnauthorizedException('Invalid credentials');
 
-    return user;
+    return { ...result.profiles, ...result.users };
   }
   /**
    * @description Register user account with email and password
@@ -201,45 +193,60 @@ export class AuthService {
    * @param dto
    * @return Promise<LoginUserInterface>
    */
-  async signIn(dto: SignInUserDto): Promise<LoginUserInterface> {
-    const user = (await this.validateUser(dto)) as User & {
-      profile?: { name?: string };
-    };
-    const tokens = await this.generateTokens(user);
-    const now = new Date();
-    // drizzle-orm 插入 session
-    const [session] = await this.db
-      .insert(sessions)
-      .values({
+  async signIn(
+    dto: SignInUserDto,
+    deviceInfo: DeviceInfoDto,
+  ): Promise<LoginUserInterface> {
+    try {
+      const user = (await this.validateUser(dto)) as User & {
+        profile?: { name?: string };
+      };
+      const tokens = await this.generateTokens(user);
+      const now = new Date();
+
+      // drizzle-orm 插入 session
+      const sessionData = {
         userId: user.id,
         refreshToken: tokens.refresh_token,
-        ip: dto.ip,
-        deviceName: dto.device_name,
-        deviceOs: dto.device_os,
-        deviceType: dto.device_type,
-        browser: dto.browser,
-        location: dto.location,
-        userAgent: dto.userAgent,
+        ip: deviceInfo.ip ?? null,
+        deviceName: deviceInfo.device_name ?? null,
+        deviceOs: deviceInfo.device_os ?? null,
+        deviceType: deviceInfo.device_type ?? null,
+        browser: deviceInfo.browser ?? null,
+        location: deviceInfo.location ?? null,
+        userAgent: deviceInfo.userAgent ?? null,
         createdAt: now,
         updatedAt: now,
-      })
-      .returning();
-    await this.mailService.sendEmail({
-      to: [user.email],
-      subject: 'SignIn with your email',
-      html: SignInSuccessMail({
-        username: user.profile?.name ?? '',
-        loginTime: session.createdAt ?? '',
-        ipAddress: session.ip ?? '',
-        location: session.location ?? '',
-        device: session.deviceName ?? '',
-      }),
-    });
-    const session_refresh_time = generateRefreshTime(); //3 days default
-    return {
-      data: user,
-      tokens: { ...tokens, session_token: session.id, session_refresh_time },
-    };
+      };
+      const filteredSessionData = Object.fromEntries(
+        Object.entries(sessionData).filter(
+          ([, v]) => v !== undefined && v !== null,
+        ),
+      ) as typeof sessionData;
+      const [session] = await this.db
+        .insert(sessions)
+        .values(filteredSessionData)
+        .returning();
+      await this.mailService.sendEmail({
+        to: [user.email],
+        subject: 'SignIn with your email',
+        html: SignInSuccessMail({
+          username: user.profile?.name ?? '',
+          loginTime: session.createdAt ?? '',
+          ipAddress: session.ip ?? '',
+          location: session.location ?? '',
+          device: session.deviceName ?? '',
+        }),
+      });
+      const session_refresh_time = generateRefreshTime(); //3 days default
+      return {
+        data: user,
+        tokens: { ...tokens, session_token: session.id, session_refresh_time },
+      };
+    } catch (error) {
+      console.error(error);
+      throw new NotFoundException('User not found');
+    }
   }
 
   /**
@@ -303,18 +310,8 @@ export class AuthService {
    */
   async forgotPassword(dto: ForgotPasswordDto): Promise<void> {
     // 1. 查找用户
-    const user = await this.db
-      .select({
-        id: users.id,
-        email: users.email,
-        username: users.username,
-        password: users.password,
-        isEmailVerified: users.isEmailVerified,
-        emailVerifiedAt: users.emailVerifiedAt,
-        createdAt: users.createdAt,
-        updatedAt: users.updatedAt,
-        profileName: profiles.name,
-      })
+    const result = await this.db
+      .select()
       .from(users)
       .leftJoin(profiles, eq(users.id, profiles.userId))
       .where(
@@ -322,7 +319,7 @@ export class AuthService {
       )
       .limit(1)
       .then((rows) => rows[0]);
-    if (!user) throw new NotFoundException('User not found');
+    if (!result) throw new NotFoundException('User not found');
     // 2. 生成 OTP
     const passwordResetToken = generateOTP();
     const now = new Date();
@@ -335,10 +332,10 @@ export class AuthService {
     });
     // 3. 发送邮件
     await this.mailService.sendEmail({
-      to: [user.email],
+      to: [result.users.email],
       subject: 'Reset your password',
       html: ResetPasswordMail({
-        name: user.profileName ?? '',
+        name: result?.profiles?.name ?? '',
         code: passwordResetToken,
       }),
     });
@@ -351,18 +348,8 @@ export class AuthService {
    */
   async resetPassword(dto: ResetPasswordDto): Promise<void> {
     // 1. 查找用户
-    const user = await this.db
-      .select({
-        id: users.id,
-        email: users.email,
-        username: users.username,
-        password: users.password,
-        isEmailVerified: users.isEmailVerified,
-        emailVerifiedAt: users.emailVerifiedAt,
-        createdAt: users.createdAt,
-        updatedAt: users.updatedAt,
-        profileName: profiles.name,
-      })
+    const result = await this.db
+      .select()
       .from(users)
       .leftJoin(profiles, eq(users.id, profiles.userId))
       .where(
@@ -370,7 +357,7 @@ export class AuthService {
       )
       .limit(1)
       .then((rows) => rows[0]);
-    if (!user) throw new NotFoundException('User not found');
+    if (!result) throw new NotFoundException('User not found');
     // 2. 查找 OTP
     const otp = await this.db
       .select()
@@ -387,15 +374,15 @@ export class AuthService {
     await this.db
       .update(users)
       .set({ password: await hashString(dto.newPassword) })
-      .where(eq(users.id, user.id));
+      .where(eq(users.id, result.users.id));
     // 4. 删除 OTP
     await this.db.delete(otps).where(eq(otps.id, otp.id));
     // 5. 发送邮件
     await this.mailService.sendEmail({
-      to: [user.email],
+      to: [result.users.email],
       subject: 'Password Reset Successful',
       html: ChangePasswordSuccessMail({
-        name: user.profileName ?? '',
+        name: result.profiles?.name ?? '',
       }),
     });
   }
@@ -406,9 +393,7 @@ export class AuthService {
    * @return Promise<void>
    */
   async changePassword(dto: ChangePasswordDto): Promise<void> {
-    const user = (await this.validateUser(dto)) as User & {
-      profileName?: string;
-    };
+    const user = await this.validateUser(dto);
     await this.db
       .update(users)
       .set({ password: await hashString(dto.newPassword) })
@@ -417,7 +402,7 @@ export class AuthService {
       to: [user.email],
       subject: 'Password Change Successful',
       html: ChangePasswordSuccessMail({
-        name: user.profileName ?? '',
+        name: user.username ?? '',
       }),
     });
   }
@@ -448,14 +433,14 @@ export class AuthService {
    */
   async refreshToken(dto: RefreshTokenDto): Promise<RefreshTokenInterface> {
     // 查找用户
-    const user = await this.db
+    const result = await this.db
       .select()
       .from(users)
       .where(eq(users.id, dto.user_id))
       .limit(1)
       .then((rows) => rows[0]);
-    if (!user) throw new NotFoundException('User not found');
-    const { access_token, refresh_token } = await this.generateTokens(user);
+    if (!result) throw new NotFoundException('User not found');
+    const { access_token, refresh_token } = await this.generateTokens(result);
     // 查找 session
     const session = await this.db
       .select()

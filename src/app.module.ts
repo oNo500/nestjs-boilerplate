@@ -12,10 +12,21 @@ import { MailModule } from '@/shared/mail/mail.module';
 import { DrizzleModule } from '@/shared/drizzle/drizzle.module';
 import { NodeMailerModule } from '@/core/node-mailer/node-mailer.module';
 import { HealthModule } from './shared/health/health.module';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
+  providers: [
+    // {
+    //   provide: APP_GUARD,
+    //   useClass: ThrottlerGuard,
+    // },
+    AppService,
+  ],
   imports: [
     LoggerModule,
+    JwtModule.register({
+      global: true,
+    }),
     ConfigModule.forRoot({
       isGlobal: true,
       validate: validateEnv,
@@ -28,16 +39,14 @@ import { HealthModule } from './shared/health/health.module';
     HealthModule,
   ],
   controllers: [AppController],
-  providers: [
-    // {
-    //   provide: APP_GUARD,
-    //   useClass: ThrottlerGuard,
-    // },
-    AppService,
-  ],
 })
 export class AppModule implements NestModule {
+  /**
+   * 配置全局中间件
+   * @param consumer 中间件消费者，用于应用中间件到路由
+   */
   configure(consumer: MiddlewareConsumer) {
+    // 将 LoggerMiddleware 应用到所有路由
     consumer.apply(LoggerMiddleware).forRoutes('*');
   }
 }

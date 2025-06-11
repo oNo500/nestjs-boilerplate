@@ -5,6 +5,7 @@ import {
   Param,
   Patch,
   Post,
+  Req,
   // UseGuards,
 } from '@nestjs/common';
 
@@ -28,7 +29,7 @@ import { ResetPasswordDto } from '@/shared/auth/dto/reset-password.dto';
 import { SignInUserDto } from '@/shared/auth/dto/signIn-user.dto';
 import { SignOutUserDto } from '@/shared/auth/dto/signOut-user.dto';
 import { SignOutAllDeviceUserDto } from '@/shared/auth/dto/signOutAllDevice-user.dto';
-
+import { UAParser } from 'ua-parser-js';
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
@@ -54,8 +55,25 @@ export class AuthController {
    */
   @Public()
   @Post('sign-in')
-  async signIn(@Body() signInUserDto: SignInUserDto): Promise<SignInResponse> {
-    const data = await this.authService.signIn(signInUserDto);
+  async signIn(
+    @Body() signInUserDto: SignInUserDto,
+    @Req() request: Request,
+  ): Promise<SignInResponse> {
+    const userAgent = (request.headers['user-agent'] || '') as string;
+
+    const parser = new UAParser(userAgent);
+    const device = parser.getDevice();
+    const browser = parser.getBrowser();
+    const os = parser.getOS();
+    const data = await this.authService.signIn(signInUserDto, {
+      device_name: device.model || undefined,
+      device_os: os.name || undefined,
+      device_type: device.type || undefined,
+      browser: browser.name || undefined,
+      userAgent: userAgent || undefined,
+      ip: undefined,
+      location: undefined,
+    });
     const { ...result } = data.data; // TODO 移除 password 和 sessions 字段
     return {
       message: 'User signed in successfully',
