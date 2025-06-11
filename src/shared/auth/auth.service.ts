@@ -56,6 +56,7 @@ import { DrizzleAsyncProvider } from '@/database/drizzle.provider';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import schema from '@/database/schema';
 import { DeviceInfoDto } from './dto/device-info.dto';
+import { VerifyEmailOtpDto } from './dto/verify-email-otp.dto';
 
 @Injectable()
 export class AuthService {
@@ -400,7 +401,7 @@ export class AuthService {
       .where(
         and(
           eq(otpsTable.type, 'EMAIL_REGISTER'),
-          or(eq(otpsTable.userId, email)),
+          or(eq(otpsTable.email, email)),
           gt(otpsTable.createdAt, oneHourAgo),
         ),
       );
@@ -442,15 +443,15 @@ export class AuthService {
   }
 
   async verifyRegisterEmailOtp(
-    email: string,
-    otp: string,
+    dto: VerifyEmailOtpDto,
   ): Promise<{ id: string; otp: string; type: string; expires: Date }> {
+    const { email, otp } = dto;
     const record = await this.db
       .select()
       .from(otpsTable)
       .where(
         and(
-          eq(otpsTable.userId, email),
+          eq(otpsTable.email, email),
           eq(otpsTable.otp, otp),
           eq(otpsTable.type, 'EMAIL_REGISTER'),
         ),
@@ -467,7 +468,7 @@ export class AuthService {
     dto: CreateUserDto,
   ): Promise<RegisterUserInterface> {
     const { email, password, otp } = dto;
-    const otpRecord = await this.verifyRegisterEmailOtp(email, otp);
+    const otpRecord = await this.verifyRegisterEmailOtp({ email, otp });
     //密码强度校验
 
     // 4. 创建用户

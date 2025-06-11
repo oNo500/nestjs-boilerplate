@@ -31,6 +31,8 @@ import { ResetPasswordDto } from '@/shared/auth/dto/reset-password.dto';
 import { SignInUserDto } from '@/shared/auth/dto/signIn-user.dto';
 import { SignOutUserDto } from '@/shared/auth/dto/signOut-user.dto';
 import { SignOutAllDeviceUserDto } from '@/shared/auth/dto/signOutAllDevice-user.dto';
+import { SendEmailOtpDto } from './dto/send-email-otp.dto';
+import { VerifyEmailOtpDto } from './dto/verify-email-otp.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -69,7 +71,8 @@ export class AuthController {
    * 发送注册邮箱验证码
    */
   @Post('send-email-otp')
-  async sendEmailOtp(@Body('email') email: string) {
+  async sendEmailOtp(@Body() dto: SendEmailOtpDto) {
+    const { email } = dto;
     const existUser = await this.authService.findUserByEmail(email);
     if (existUser) throw new BadRequestException('该邮箱已注册');
     if (await this.authService.isRegisterOtpLimited(email))
@@ -82,8 +85,8 @@ export class AuthController {
    * 校验注册邮箱验证码
    */
   @Post('verify-email-otp')
-  async verifyEmailOtp(@Body() dto: { email: string; otp: string }) {
-    await this.authService.verifyRegisterEmailOtp(dto.email, dto.otp);
+  async verifyEmailOtp(@Body() dto: VerifyEmailOtpDto) {
+    await this.authService.verifyRegisterEmailOtp(dto);
     return { message: '验证码校验通过' };
   }
 
