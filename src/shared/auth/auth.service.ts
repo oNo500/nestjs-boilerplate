@@ -5,14 +5,7 @@ import {
   hashString,
   validateString,
 } from '@/shared/util';
-import {
-  eq,
-  or,
-  and,
-  gt,
-  TransactionRollbackError,
-  InferInsertModel,
-} from 'drizzle-orm';
+import { eq, or, and, gt, InferInsertModel } from 'drizzle-orm';
 import { Env } from '@/config/env';
 import {
   AuthTokensInterface,
@@ -22,7 +15,6 @@ import {
 } from '@/shared/auth/auth.interface';
 import {
   ChangePasswordDto,
-  ConfirmEmailDto,
   CreateUserDto,
   ForgotPasswordDto,
   RefreshTokenDto,
@@ -37,8 +29,6 @@ import { sessionsTable } from '@/database/schema/sessions';
 import { MailService } from '@/shared/mail/mail.service';
 import {
   ChangePasswordSuccessMail,
-  ConfirmEmailSuccessMail,
-  RegisterSuccessMail,
   ResetPasswordMail,
 } from '@/shared/mail/templates';
 import { profilesTable } from '@/database/schema/profiles';
@@ -59,9 +49,7 @@ import { DrizzleAsyncProvider } from '@/database/drizzle.provider';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import schema from '@/database/schema';
 import { DeviceInfoDto } from './dto/device-info.dto';
-import { validatePasswordStrength } from '../util/validate/password-strength';
 import { pickBy } from 'lodash-es';
-import { Otp } from './entities/otp.entity';
 
 @Injectable()
 export class AuthService {
@@ -166,15 +154,9 @@ export class AuthService {
       // drizzle-orm 插入 session
       type Session = InferInsertModel<typeof sessionsTable>;
       const sessionData: Session = {
+        ...deviceInfo,
         userId: user.id,
         refreshToken: tokens.refresh_token,
-        ip: deviceInfo.ip,
-        deviceName: deviceInfo.deviceName,
-        deviceOs: deviceInfo.deviceOS,
-        deviceType: deviceInfo.deviceType,
-        browser: deviceInfo.browser,
-        location: deviceInfo.location,
-        userAgent: deviceInfo.userAgent,
         createdAt: now,
         updatedAt: now,
       };
@@ -204,55 +186,6 @@ export class AuthService {
   }
 
   /**
-   * @description Confirm Email Account
-   * @param dto
-   * @return Promise<void>
-   */
-  async confirmEmail(dto: ConfirmEmailDto): Promise<void> {
-    // 1. 查找用户
-    const user = await this.db
-      .select()
-      .from(usersTable)
-      .leftJoin(profilesTable, eq(usersTable.id, profilesTable.userId))
-      .where(eq(usersTable.email, dto.email))
-      .limit(1)
-      .then((rows) => rows[0]);
-    if (!user) throw new NotFoundException('User not found');
-    // 2. 查找 OTP
-    const otp = await this.db
-      .select()
-      .from(otpsTable)
-      .where(
-        and(
-          eq(otpsTable.otp, dto.token),
-          eq(otpsTable.type, 'EMAIL_CONFIRMATION'),
-        ),
-      )
-      .limit(1)
-      .then((rows) => rows[0]);
-    if (!otp) throw new NotFoundException('Invalid confirmation code');
-    if (otp.otp !== dto.token)
-      throw new BadRequestException('Invalid confirmation code');
-    if (otp.expires && new Date(otp.expires) < new Date())
-      throw new BadRequestException('Email confirm token expired');
-    // 3. 更新用户
-    await this.db
-      .update(usersTable)
-      .set({ isEmailVerified: true, emailVerifiedAt: new Date() })
-      .where(eq(usersTable.id, user.users.id));
-    // 4. 删除 OTP
-    await this.db.delete(otpsTable).where(eq(otpsTable.id, otp.id));
-    // 5. 发送邮件
-    await this.mailService.sendEmail({
-      to: [user.users.email],
-      subject: 'Confirmation Successful',
-      html: ConfirmEmailSuccessMail({
-        name: user.profiles?.username ?? '',
-      }),
-    });
-  }
-
-  /**
    * @description Forgot your password, to get your password reset token
    * @param dto
    * @return Promise<void>
@@ -262,7 +195,6 @@ export class AuthService {
     const result = await this.db
       .select()
       .from(usersTable)
-      .leftJoin(profilesTable, eq(usersTable.id, profilesTable.userId))
       .where(or(eq(usersTable.email, dto.identifier)))
       .limit(1)
       .then((rows) => rows[0]);
@@ -279,10 +211,10 @@ export class AuthService {
     });
     // 3. 发送邮件
     await this.mailService.sendEmail({
-      to: [result.users.email],
+      to: [result.email],
       subject: 'Reset your password',
       html: ResetPasswordMail({
-        name: result?.profiles?.name ?? '',
+        name: result?.username ?? '',
         code: passwordResetToken,
       }),
     });
@@ -298,7 +230,6 @@ export class AuthService {
     const result = await this.db
       .select()
       .from(usersTable)
-      .leftJoin(profilesTable, eq(usersTable.id, profilesTable.userId))
       .where(or(eq(usersTable.email, dto.identifier)))
       .limit(1)
       .then((rows) => rows[0]);
@@ -324,17 +255,9 @@ export class AuthService {
     await this.db
       .update(usersTable)
       .set({ password: await hashString(dto.newPassword) })
-      .where(eq(usersTable.id, result.users.id));
+      .where(eq(usersTable.id, result.id));
     // 4. 删除 OTP
     await this.db.delete(otpsTable).where(eq(otpsTable.id, otp.id));
-    // 5. 发送邮件
-    await this.mailService.sendEmail({
-      to: [result.users.email],
-      subject: 'Password Reset Successful',
-      html: ChangePasswordSuccessMail({
-        name: result.profiles?.name ?? '',
-      }),
-    });
   }
 
   /**
@@ -541,9 +464,6 @@ export class AuthService {
     const { email, password, otp } = dto;
     const otpRecord = await this.verifyRegisterEmailOtp(email, otp);
     //密码强度校验
-    if (!validatePasswordStrength(password)) {
-      throw new BadRequestException('密码过于简单');
-    }
 
     // 4. 创建用户
     const now = new Date();

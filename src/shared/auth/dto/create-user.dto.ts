@@ -14,5 +14,9 @@ export class CreateUserDto {
 
   @ApiProperty()
   @IsString()
+  confirmPassword: string;
+
+  @ApiProperty()
+  @IsString()
   otp: string; // TODO：长度限制
 }

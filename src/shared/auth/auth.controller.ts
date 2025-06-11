@@ -13,6 +13,7 @@ import {
 import { Public } from '@/core/decorators/public.decorators';
 // import { JwtRefreshGuard } from '@/core/guards/jwt-refresh.guard';
 import { AuthService } from './auth.service';
+import { getDeviceInfo } from '@/shared/util/os';
 
 import {
   MessageResponse,
@@ -22,7 +23,6 @@ import {
   SignInResponse,
 } from '@/shared/auth/auth.interface';
 import { ChangePasswordDto } from '@/shared/auth/dto/change-password.dto';
-import { ConfirmEmailDto } from '@/shared/auth/dto/confirm-email.dto';
 import { CreateUserDto } from '@/shared/auth/dto/create-user.dto';
 import { ForgotPasswordDto } from '@/shared/auth/dto/forgot-password.dto';
 import { RefreshTokenDto } from '@/shared/auth/dto/refresh-token.dto';
@@ -30,24 +30,10 @@ import { ResetPasswordDto } from '@/shared/auth/dto/reset-password.dto';
 import { SignInUserDto } from '@/shared/auth/dto/signIn-user.dto';
 import { SignOutUserDto } from '@/shared/auth/dto/signOut-user.dto';
 import { SignOutAllDeviceUserDto } from '@/shared/auth/dto/signOutAllDevice-user.dto';
-import { UAParser } from 'ua-parser-js';
+import { validatePasswordStrength } from '../util/validate/password-strength';
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
-
-  /**
-   * @description Registers a new user.
-   * @param createUserDto
-   * @returns Promise<MessageResponse>
-   */
-  @Public()
-  @Post('sign-up')
-  async register(
-    @Body() createUserDto: CreateUserDto,
-  ): Promise<MessageResponse> {
-    await this.authService.register(createUserDto);
-    return { message: 'User registered successfully' };
-  }
 
   /**
    * @description Signs in a user.
@@ -55,26 +41,15 @@ export class AuthController {
    * @returns Promise<SignInResponse>
    */
   @Public()
-  @Post('sign-in')
+  @Post('login')
   async signIn(
     @Body() signInUserDto: SignInUserDto,
     @Req() request: Request,
   ): Promise<SignInResponse> {
     const userAgent = (request.headers['user-agent'] || '') as string;
 
-    const parser = new UAParser(userAgent);
-    const device = parser.getDevice();
-    const browser = parser.getBrowser();
-    const os = parser.getOS();
-    const data = await this.authService.signIn(signInUserDto, {
-      deviceName: device.model,
-      deviceOS: os.name,
-      deviceType: device.type,
-      browser: browser.name,
-      userAgent: userAgent,
-      ip: undefined,
-      location: undefined,
-    });
+    const device = getDeviceInfo(userAgent);
+    const data = await this.authService.signIn(signInUserDto, device);
     const { ...result } = data.data; // TODO 移除 password 和 sessions 字段
     return {
       message: 'User signed in successfully',
@@ -132,19 +107,6 @@ export class AuthController {
   }
 
   /**
-   * @description Confirms the user's email.
-   * @param confirmEmailDto
-   * @returns Promise<MessageResponse>
-   */
-  @Patch('confirm-email')
-  async confirmEmail(
-    @Body() confirmEmailDto: ConfirmEmailDto,
-  ): Promise<MessageResponse> {
-    await this.authService.confirmEmail(confirmEmailDto);
-    return { message: 'Email confirmed successfully' };
-  }
-
-  /**
    * @description Sends a password reset email.
    * @param forgotPasswordDto
    * @returns Promise<MessageResponse>
@@ -166,6 +128,13 @@ export class AuthController {
   @Public()
   @Patch('reset-password')
   async resetPassword(@Body() dto: ResetPasswordDto): Promise<MessageResponse> {
+    const { newPassword, confirmPassword } = dto;
+    if (newPassword !== confirmPassword) {
+      throw new BadRequestException('两次输入的密码不一致');
+    }
+    if (!validatePasswordStrength(newPassword)) {
+      throw new BadRequestException('密码过于简单');
+    }
     await this.authService.resetPassword(dto);
     return { message: 'Password changed successfully' };
   }
@@ -179,6 +148,13 @@ export class AuthController {
   async changePassword(
     @Body() dto: ChangePasswordDto,
   ): Promise<MessageResponse> {
+    const { password, confirmPassword } = dto;
+    if (password !== confirmPassword) {
+      throw new BadRequestException('两次输入的密码不一致');
+    }
+    if (!validatePasswordStrength(password)) {
+      throw new BadRequestException('密码过于简单');
+    }
     await this.authService.changePassword(dto);
     return { message: 'Password changed successfully' };
   }
@@ -223,6 +199,14 @@ export class AuthController {
 
   @Post('register')
   async register1(@Body() dto: CreateUserDto) {
+    const { password, confirmPassword } = dto;
+
+    if (password !== confirmPassword) {
+      throw new BadRequestException('两次输入的密码不一致');
+    }
+    if (!validatePasswordStrength(password)) {
+      throw new BadRequestException('密码过于简单');
+    }
     return this.authService.registerWithEmailOtp(dto);
   }
 }

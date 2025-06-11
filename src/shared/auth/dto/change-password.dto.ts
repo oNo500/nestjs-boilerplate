@@ -19,4 +19,10 @@ export class ChangePasswordDto {
     message: 'New password must be a string',
   })
   newPassword: string;
+
+  @ApiProperty()
+  @IsString({
+    message: 'Confirm password must be a string',
+  })
+  confirmPassword: string;
 }
