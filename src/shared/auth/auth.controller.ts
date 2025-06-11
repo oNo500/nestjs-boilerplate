@@ -7,6 +7,7 @@ import {
   Patch,
   Post,
   Req,
+  UseGuards,
   // UseGuards,
 } from '@nestjs/common';
 
@@ -33,6 +34,7 @@ import { SignOutUserDto } from '@/shared/auth/dto/signOut-user.dto';
 import { SignOutAllDeviceUserDto } from '@/shared/auth/dto/signOutAllDevice-user.dto';
 import { SendEmailOtpDto } from './dto/send-email-otp.dto';
 import { VerifyEmailOtpDto } from './dto/verify-email-otp.dto';
+import { JwtRefreshGuard } from '@/core/guards';
 
 @Controller('auth')
 export class AuthController {
@@ -168,6 +170,7 @@ export class AuthController {
   /**
    * 刷新token
    */
+  @UseGuards(JwtRefreshGuard)
   @Patch('refresh-token')
   async refreshToken(
     @Body() dto: RefreshTokenDto,

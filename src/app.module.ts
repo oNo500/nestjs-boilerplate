@@ -1,6 +1,5 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { LoggerModule } from './core/logger/logger.module';
 import { LoggerMiddleware } from '@/core/middleware/logger.middleware';
 
@@ -13,17 +12,27 @@ import { DrizzleModule } from '@/shared/drizzle/drizzle.module';
 import { NodeMailerModule } from '@/core/node-mailer/node-mailer.module';
 import { HealthModule } from './shared/health/health.module';
 import { JwtModule } from '@nestjs/jwt';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtAuthGuard, RolesGuard } from '@/core/guards';
+import { ThrottlerGuard } from '@nestjs/throttler';
+import { ThrottleModule } from '@/core/throttle/throttle.module';
 
 @Module({
   providers: [
-    // {
-    //   provide: APP_GUARD,
-    //   useClass: ThrottlerGuard,
-    // },
-    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
   ],
   imports: [
-    LoggerModule,
     JwtModule.register({
       global: true,
     }),
@@ -31,8 +40,10 @@ import { JwtModule } from '@nestjs/jwt';
       isGlobal: true,
       validate: validateEnv,
     }),
+    LoggerModule,
     AuthModule,
     UsersModule,
+    ThrottleModule,
     NodeMailerModule,
     MailModule,
     DrizzleModule,

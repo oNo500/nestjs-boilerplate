@@ -4,8 +4,6 @@ import { AuthService } from './auth.service';
 import { UsersModule } from '@/features/users/users.module';
 import { jwtConstants } from '@/core/constants';
 import { JwtModule } from '@nestjs/jwt';
-import { APP_GUARD } from '@nestjs/core';
-import { AuthGuard } from './auth.guard';
 import { MailModule } from '../mail/mail.module';
 
 @Module({
@@ -19,12 +17,6 @@ import { MailModule } from '../mail/mail.module';
     }),
   ],
   controllers: [AuthController],
-  providers: [
-    // {
-    //   provide: APP_GUARD,
-    //   useClass: AuthGuard,
-    // },
-    AuthService,
-  ],
+  providers: [AuthService],
 })
 export class AuthModule {}
