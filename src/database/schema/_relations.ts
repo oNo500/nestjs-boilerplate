@@ -1,33 +1,33 @@
 import { relations } from 'drizzle-orm';
-import { users } from './users';
-import { profiles } from './profiles';
-import { sessions } from './sessions';
+import { usersTable } from './users';
+import { profilesTable } from './profiles';
+import { sessionsTable } from './sessions';
 
 // User relations
-export const usersRelations = relations(users, ({ one, many }) => ({
+export const usersRelations = relations(usersTable, ({ one, many }) => ({
   // User has one Profile
-  profile: one(profiles, {
-    fields: [users.id],
-    references: [profiles.userId],
+  profile: one(profilesTable, {
+    fields: [usersTable.id],
+    references: [profilesTable.userId],
   }),
   // User has many Sessions
-  sessions: many(sessions),
+  sessions: many(sessionsTable),
 }));
 
 // Profile relations
-export const profilesRelations = relations(profiles, ({ one }) => ({
+export const profilesRelations = relations(profilesTable, ({ one }) => ({
   // Profile belongs to one User
-  user: one(users, {
-    fields: [profiles.userId],
-    references: [users.id],
+  user: one(usersTable, {
+    fields: [profilesTable.userId],
+    references: [usersTable.id],
   }),
 }));
 
 // Session relations
-export const sessionsRelations = relations(sessions, ({ one }) => ({
+export const sessionsRelations = relations(sessionsTable, ({ one }) => ({
   // Session belongs to one User
-  user: one(users, {
-    fields: [sessions.userId],
-    references: [users.id],
+  user: one(usersTable, {
+    fields: [sessionsTable.userId],
+    references: [usersTable.id],
   }),
 }));

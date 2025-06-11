@@ -1,10 +1,10 @@
 import { pgTable, uuid, varchar, text, timestamp } from 'drizzle-orm/pg-core';
-import { users } from './users';
+import { usersTable } from './users';
 import { genderEnum } from './_enums';
 
-export const profiles = pgTable('profiles', {
+export const profilesTable = pgTable('profiles', {
   id: uuid('id').primaryKey().defaultRandom(),
-  name: varchar('name', { length: 255 }).notNull(),
+  username: varchar('username', { length: 255 }).notNull(),
   gender: genderEnum('gender').default('UNKNOWN').notNull(),
   phoneNumber: varchar('phone_number', { length: 50 }).unique(),
   profilePicture: text('profile_picture'),
@@ -14,7 +14,7 @@ export const profiles = pgTable('profiles', {
   // Foreign key for one-to-one relationship
   userId: uuid('user_id')
     .notNull()
-    .references(() => users.id, { onDelete: 'cascade' })
+    .references(() => usersTable.id, { onDelete: 'cascade' })
     .unique(),
 
   createdAt: timestamp('created_at', { withTimezone: true })

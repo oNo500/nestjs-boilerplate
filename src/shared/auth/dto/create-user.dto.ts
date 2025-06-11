@@ -11,4 +11,8 @@ export class CreateUserDto {
     message: 'Password must be a string',
   })
   password: string;
+
+  @ApiProperty()
+  @IsString()
+  otp: string; // TODO：长度限制
 }

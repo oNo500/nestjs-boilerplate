@@ -1,7 +1,7 @@
 import { pgTable, uuid, text, timestamp } from 'drizzle-orm/pg-core';
-import { users } from './users';
+import { usersTable } from './users';
 
-export const sessions = pgTable('sessions', {
+export const sessionsTable = pgTable('sessions', {
   id: uuid('id').primaryKey().defaultRandom(),
   ip: text('ip').default('unknown'),
   location: text('location').default('unknown'),
@@ -15,7 +15,7 @@ export const sessions = pgTable('sessions', {
   // Foreign key for many-to-one relationship
   userId: uuid('user_id')
     .notNull()
-    .references(() => users.id, { onDelete: 'cascade' }),
+    .references(() => usersTable.id, { onDelete: 'cascade' }),
 
   createdAt: timestamp('created_at', { withTimezone: true })
     .defaultNow()

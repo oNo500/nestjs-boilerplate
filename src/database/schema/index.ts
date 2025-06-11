@@ -5,7 +5,7 @@ import * as sessions from './sessions';
 import * as otps from './otps';
 import * as relations from './_relations';
 
-export const schema = {
+const schema = {
   ...enums,
   ...users,
   ...profiles,
@@ -13,5 +13,4 @@ export const schema = {
   ...otps,
   ...relations,
 };
-
 export default schema;

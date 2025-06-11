@@ -1,8 +1,8 @@
-import { sessions } from '@/database/schema/sessions';
-import { users } from '@/database/schema/users';
+import { sessionsTable } from '@/database/schema/sessions';
+import { usersTable } from '@/database/schema/users';
 import { InferSelectModel } from 'drizzle-orm';
-export type User = InferSelectModel<typeof users>;
-export type Session = InferSelectModel<typeof sessions>;
+export type User = InferSelectModel<typeof usersTable>;
+export type Session = InferSelectModel<typeof sessionsTable>;
 /**
  * @description Sign in response
  */

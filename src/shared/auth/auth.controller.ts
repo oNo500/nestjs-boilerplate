@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Get,
@@ -66,11 +67,11 @@ export class AuthController {
     const browser = parser.getBrowser();
     const os = parser.getOS();
     const data = await this.authService.signIn(signInUserDto, {
-      device_name: device.model || undefined,
-      device_os: os.name || undefined,
-      device_type: device.type || undefined,
-      browser: browser.name || undefined,
-      userAgent: userAgent || undefined,
+      deviceName: device.model,
+      deviceOS: os.name,
+      deviceType: device.type,
+      browser: browser.name,
+      userAgent: userAgent,
       ip: undefined,
       location: undefined,
     });
@@ -200,5 +201,28 @@ export class AuthController {
       access_token_refresh_time: data.access_token_refresh_time,
       session_token: data.session_token,
     };
+  }
+
+  @Post('send-email-otp')
+  async sendEmailOtp(@Body('email') email: string) {
+    // 查重
+    const existUser = await this.authService.findUserByEmail(email);
+    if (existUser) throw new BadRequestException('该邮箱已注册');
+    if (await this.authService.isRegisterOtpLimited(email))
+      throw new BadRequestException('注册过于频繁，请稍后再试');
+    // 生成并发送验证码
+    await this.authService.sendRegisterEmailOtp(email);
+    return { message: '验证码已发送' };
+  }
+
+  @Post('verify-email-otp')
+  async verifyEmailOtp(@Body() dto: { email: string; otp: string }) {
+    await this.authService.verifyRegisterEmailOtp(dto.email, dto.otp);
+    return { message: '验证码校验通过' };
+  }
+
+  @Post('register')
+  async register1(@Body() dto: CreateUserDto) {
+    return this.authService.registerWithEmailOtp(dto);
   }
 }
