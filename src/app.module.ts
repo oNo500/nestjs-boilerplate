@@ -1,10 +1,10 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
-import { LoggerModule } from './common/modules/logger/logger.module';
+import { LoggerModule } from '@/common/modules/logger/logger.module';
 import { LoggerMiddleware } from '@/common/middleware/logger.middleware';
 
 import { ConfigModule } from '@nestjs/config';
-import { validateEnv } from '@/config/env';
-import { AuthModule } from '@/features/auth/auth.module';
+import { validateEnv } from './config/env';
+import { AuthModule } from '@/features/auth/auth.module.js';
 import { UsersModule } from '@/features/users/users.module';
 import { MailModule } from '@/features/mail/mail.module';
 import { DrizzleModule } from '@/common/modules/drizzle/drizzle.module';

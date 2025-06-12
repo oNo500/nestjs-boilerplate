@@ -20,7 +20,9 @@ export class HealthController {
   // 获取行数
   @Get('count')
   async count() {
-    const result = await this.db.select({ count: count() }).from(schema.users);
+    const result = await this.db
+      .select({ count: count() })
+      .from(schema.usersTable);
     return result;
   }
 
