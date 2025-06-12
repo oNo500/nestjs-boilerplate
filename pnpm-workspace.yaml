@@ -1,0 +1,12 @@
+packages:
+  - "apps/*"
+  - "packages/*"
+
+public-hoist-pattern:
+  - eslint
+  - prettier
+  - typescript
+  - vite
+  - vitest
+  - playwright*
+

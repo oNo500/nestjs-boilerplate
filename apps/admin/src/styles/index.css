@@ -1,0 +1,37 @@
+@import '@repo/ui';
+
+@keyframes tech-scroll-left {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.tech-scroll-animate {
+  display: flex;
+  width: max-content;
+  animation: tech-scroll-left 30s linear infinite;
+}
+
+@keyframes tech-breath {
+  0%,
+  100% {
+    opacity: 0.7;
+    filter: blur(0px);
+  }
+  50% {
+    opacity: 1;
+    filter: blur(2px);
+  }
+}
+.animate-tech-breath {
+  animation: tech-breath 3s ease-in-out infinite;
+}
+.drop-shadow-glow {
+  filter: drop-shadow(0 0 8px #a5b4fc) drop-shadow(0 0 16px #c084fc80);
+}
+.bg-gradient-radial {
+  background: radial-gradient(circle, var(--tw-gradient-stops));
+}

@@ -1,0 +1,70 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+
+<Meta title="Intro"/>
+
+# UI 组件库简介
+
+本组件库基于 React，适用于中后台、管理系统等场景，支持主题定制与现代化开发体验。组件风格参考 [shadcn/ui](https://ui.shadcn.com/) 并结合团队实际需求进行优化。
+
+---
+
+## 快速开始
+
+**安装依赖**
+
+```bash
+pnpm add @repo/ui
+```
+
+**引入全局样式**
+
+在项目入口文件（如 `main.tsx` 或 `app.tsx`）中引入：
+
+```ts
+import '@repo/ui/styles/globals.css';
+```
+
+**使用组件**
+
+```tsx
+import { Button } from '@repo/ui/components/button';
+
+<Button variant="primary">按钮</Button>
+```
+
+---
+
+## 组件一览
+
+- **Button 按钮**：多变体、多尺寸，支持图标与加载态
+- **Avatar 头像**：用户头像展示
+- **DropdownMenu 下拉菜单**：多级菜单与交互
+- **Sonner 通知**：轻量级消息提示
+- **Label 标签**、**Input 输入框**、**Form 表单**、**Card 卡片** 等
+
+详见左侧各组件文档。
+
+---
+
+## 主题与定制
+
+- 主题色与暗色模式详见 [Colors](/?path=/docs/colors) 文档
+- 支持自定义 CSS 变量，详见 `globals.css`
+- 可结合 Tailwind CSS 等工具灵活扩展
+
+---
+
+## Storybook 指南
+
+- 通过 Storybook 可交互预览所有组件
+- 支持 Props 配置、主题切换、代码示例等
+- 进阶用法与配置详见 [Configure your project](/?path=/docs/configure-your-project)
+
+---
+
+## 参考与致谢
+
+- 设计与实现参考 [shadcn/ui](https://ui.shadcn.com/)
+- 感谢开源社区的贡献
+
+

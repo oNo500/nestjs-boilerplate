@@ -1,0 +1,14 @@
+{
+  "extends": "@repo/ts-config/tsconfig.base.react.json",
+  "compilerOptions": {
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
+    "allowImportingTsExtensions": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@repo/ui/*": ["../../packages/ui/src/*"],
+      "@repo/icons/*": ["../../packages/ui/src/assets/icons/*"]
+    }
+  },
+  "include": ["src"]
+}

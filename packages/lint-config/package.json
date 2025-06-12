@@ -1,0 +1,39 @@
+{
+  "name": "@repo/lint-config",
+  "version": "0.0.0",
+  "peerDependencies": {
+    "eslint": "^9.28.0",
+    "typescript": "^5.8.3"
+  },
+  "devDependencies": {
+    "eslint-plugin-react-refresh": "^0.4.20",
+    "@eslint/js": "^9.28.0",
+    "@repo/ts-config": "workspace:*",
+    "@next/eslint-plugin-next": "^15.3.3",
+    "@types/eslint-plugin-jsx-a11y": "^6.10.0",
+    "@types/node": "^22.15.29",
+    "@typescript-eslint/parser": "^8.33.0",
+    "@typescript-eslint/utils": "^8.33.0",
+    "eslint-config-flat-gitignore": "^2.1.0",
+    "eslint-config-prettier": "^10.1.5",
+    "eslint-import-resolver-typescript": "^4.4.2",
+    "eslint-plugin-import-x": "^4.15.0",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-only-warn": "^1.1.0",
+    "eslint-plugin-prettier": "^5.4.1",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-turbo": "^2.5.4",
+    "globals": "^16.2.0",
+    "typescript-eslint": "^8.33.0"
+  },
+  "exports": {
+    "./base": "./base.ts",
+    "./next-js": "./next.ts",
+    "./react-internal": "./react-internal.ts",
+    "./react-vite": "./react-vite.ts",
+    "./nest-js": "./nest.ts"
+  },
+  "private": true,
+  "type": "module"
+}

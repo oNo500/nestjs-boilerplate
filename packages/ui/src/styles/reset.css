@@ -1,0 +1,52 @@
+@layer base {
+  button:not(:disabled),
+  [type='button']:not(:disabled),
+  [type='reset']:not(:disabled),
+  [type='submit']:not(:disabled),
+  [type='color']:not(:disabled),
+  [type='file']:not(:disabled),
+  [type='range']:not(:disabled),
+  [type='date']:not(:disabled),
+  [type='time']:not(:disabled),
+  [type='datetime-local']:not(:disabled),
+  [type='month']:not(:disabled),
+  [type='week']:not(:disabled),
+  a:not([aria-disabled='true']),
+  select:not(:disabled),
+  option:not(:disabled),
+  [type='checkbox']:not(:disabled),
+  [type='radio']:not(:disabled),
+  label[for]:not([aria-disabled='true']),
+  details:not([aria-disabled='true']),
+  summary:not([aria-disabled='true']),
+  dialog[open] button:not(:disabled),
+  audio[controls]:not(:disabled),
+  video[controls]:not(:disabled),
+  [role='button']:not([aria-disabled='true']):not(.disabled),
+  [role='link']:not([aria-disabled='true']):not(.disabled),
+  [role='checkbox']:not([aria-disabled='true']):not(.disabled),
+  [role='radio']:not([aria-disabled='true']):not(.disabled),
+  [role='tab']:not([aria-disabled='true']):not(.disabled),
+  [role='menuitem']:not([aria-disabled='true']):not(.disabled),
+  [role='option']:not([aria-disabled='true']):not(.disabled),
+  [role='switch']:not([aria-disabled='true']):not(.disabled),
+  [aria-haspopup]:not([aria-disabled='true']):not(.disabled),
+  [tabindex]:not([tabindex='-1']):not([aria-disabled='true']):not(.disabled),
+  [contenteditable='true']:not([aria-disabled='true']):not(.disabled) {
+    cursor: pointer;
+  }
+}
+
+body {
+  margin: 0;
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
+    'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family:
+    source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}

@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig.json",
+  "display": "Base NestJS",
+  "compilerOptions": {
+    "target": "esnext",
+
+    "module": "commonjs",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "forceConsistentCasingInFileNames": true,
+    "allowSyntheticDefaultImports": true,
+    "removeComments": true,
+    "incremental": true,
+
+    // 宽松检查
+    "skipLibCheck": true,
+    // "strict": false,
+
+    // 编译
+    "noEmit": false,
+    "outDir": "./dist",
+    "declaration": true,
+    "sourceMap": true
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig.json",
+  "display": "Base",
+
+  /*
+   * ═══════════════════════════════════════════════════════════════════════════════════════
+   * TypeScript 基础配置文件
+   * 适用于现代 TypeScript 项目的严格配置
+   * ═══════════════════════════════════════════════════════════════════════════════════════
+   *
+   * 🔧 基础选项:
+   *   • esModuleInterop      - 允许默认导入非ES模块的模块
+   *   • skipLibCheck         - 跳过库文件的类型检查，加快编译速度
+   *   • target               - 指定编译后输出的JavaScript版本 (ES2022)
+   *   • resolveJsonModule    - 允许导入JSON模块
+   *   • moduleDetection      - 强制模块检测
+   *   • isolatedModules      - 每个文件作为单独的模块进行编译
+   *   • verbatimModuleSyntax - 保留导入导出语法不变
+   *   • useDefineForClassFields - 建议为 true
+   *
+   * 🔒 严格模式:
+   *   • strict                     - 启用所有严格类型检查选项
+   *   • noUncheckedIndexedAccess   - 索引签名类型会包含 undefined
+   *   • noImplicitOverride         - 子类重写父类方法时必须显式使用 override 关键字
+   *   • noUncheckedSideEffectImports - 防止未检查的副作用导入
+   *   • erasableSyntaxOnly         - 5.8.3 新增，向前兼容运行时 TypeScript
+   *
+   * ⚡ 性能优化:
+   *   • incremental - 启用增量编译
+   *
+   * 🚀 非转译模式:
+   *   • module  - 保持模块类型不变
+   *   • noEmit  - 不输出编译结果
+   * ═══════════════════════════════════════════════════════════════════════════════════════
+   */
+
+  "compilerOptions": {
+    // 🔧 基础选项
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "target": "esnext",
+    "resolveJsonModule": true,
+    "moduleDetection": "force",
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true,
+    "useDefineForClassFields": true,
+
+    // 🔒 严格模式
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "noUncheckedSideEffectImports": true,
+
+    // ⚡ 性能优化
+    "incremental": true,
+
+    // 🚀 非转译模式
+    "module": "preserve",
+    "noEmit": true
+  }
+}
