@@ -6,7 +6,6 @@ import {
   ExecutionContext,
   Inject,
   Injectable,
-  Logger,
   UnauthorizedException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -31,7 +30,6 @@ export class JwtRefreshGuard implements CanActivate {
     private readonly db: NodePgDatabase<typeof schema>,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService<Env>,
-    private logger: Logger,
   ) {}
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest<AuthenticatedRequest>();
@@ -48,7 +46,8 @@ export class JwtRefreshGuard implements CanActivate {
       });
       console.log(request.user);
     } catch (error) {
-      this.logger.error(error);
+      // this.logger.error(error);
+      console.log(error); // TODO 使用log
       throw new UnauthorizedException('Invalid Refresh Token');
     }
     const session = await this.db

@@ -4,7 +4,7 @@ import {
   generateRefreshTime,
   hashString,
   validateString,
-} from '@/shared/util';
+} from './utils';
 import {
   eq,
   or,
@@ -20,7 +20,7 @@ import {
   RefreshTokenInterface,
   RegisterUserInterface,
   User,
-} from '@/shared/auth/auth.interface';
+} from './auth.interface';
 import {
   ChangePasswordDto,
   CreateUserDto,
@@ -31,14 +31,14 @@ import {
   SignOutAllDeviceUserDto,
   SignOutUserDto,
   ValidateUserDto,
-} from '@/shared/auth/dto';
+} from './dto';
 import { otpsTable } from '@/database/schema/otps';
 import { sessionsTable } from '@/database/schema/sessions';
-import { MailService } from '@/shared/mail/mail.service';
+import { MailService } from '../mail/mail.service';
 import {
   ChangePasswordSuccessMail,
   ResetPasswordMail,
-} from '@/shared/mail/templates';
+} from '../mail/templates';
 import { profilesTable } from '@/database/schema/profiles';
 import { usersTable } from '@/database/schema/users';
 import {
