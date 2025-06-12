@@ -11,11 +11,11 @@ import {
   // UseGuards,
 } from '@nestjs/common';
 
-import { Public } from '@/core/decorators/public.decorators';
+import { Public } from '@/common/decorators';
 // import { JwtRefreshGuard } from '@/core/guards/jwt-refresh.guard';
 import { AuthService } from './auth.service';
-import { getDeviceInfo } from '@/shared/util/os';
-import { validatePasswordStrength } from '../util/validate/password-strength';
+import { getDeviceInfo } from './utils/os';
+import { validatePasswordStrength } from './utils/password';
 
 import {
   MessageResponse,
@@ -23,18 +23,18 @@ import {
   SessionResponse,
   SessionsResponse,
   SignInResponse,
-} from '@/shared/auth/auth.interface';
-import { ChangePasswordDto } from '@/shared/auth/dto/change-password.dto';
-import { CreateUserDto } from '@/shared/auth/dto/create-user.dto';
-import { ForgotPasswordDto } from '@/shared/auth/dto/forgot-password.dto';
-import { RefreshTokenDto } from '@/shared/auth/dto/refresh-token.dto';
-import { ResetPasswordDto } from '@/shared/auth/dto/reset-password.dto';
-import { SignInUserDto } from '@/shared/auth/dto/signIn-user.dto';
-import { SignOutUserDto } from '@/shared/auth/dto/signOut-user.dto';
-import { SignOutAllDeviceUserDto } from '@/shared/auth/dto/signOutAllDevice-user.dto';
+} from './auth.interface';
+import { ChangePasswordDto } from './dto/change-password.dto';
+import { CreateUserDto } from './dto/create-user.dto';
+import { ForgotPasswordDto } from './dto/forgot-password.dto';
+import { RefreshTokenDto } from './dto/refresh-token.dto';
+import { ResetPasswordDto } from './dto/reset-password.dto';
+import { SignInUserDto } from './dto/signIn-user.dto';
+import { SignOutUserDto } from './dto/signOut-user.dto';
+import { SignOutAllDeviceUserDto } from './dto/signOutAllDevice-user.dto';
 import { SendEmailOtpDto } from './dto/send-email-otp.dto';
 import { VerifyEmailOtpDto } from './dto/verify-email-otp.dto';
-import { JwtRefreshGuard } from '@/core/guards';
+import { JwtRefreshGuard } from '@/common/guards';
 
 @Controller('auth')
 export class AuthController {

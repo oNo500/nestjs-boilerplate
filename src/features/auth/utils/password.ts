@@ -5,8 +5,4 @@ export const validatePasswordStrength = (password: string) => {
   }
   // TODO: 根据实际规则补全
   return true;
-  // 2. 密码复杂度校验
-  //   const regex =
-  //     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-  //   return regex.test(password);
 };

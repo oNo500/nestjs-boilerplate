@@ -1,4 +1,4 @@
-import { APP_NAME, APP_URL } from '@/core/constants';
+import { APP_NAME, APP_URL } from '@/common/constants';
 
 export const RegisterSuccessMail = ({
   name,
