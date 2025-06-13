@@ -5,7 +5,7 @@ import { env } from '@/config/env';
 import type { APIResponse, LoginData } from '@/types/api';
 
 export const authHandlers = [
-  http.post(`${env.API_URL}/api/auth/register`, async ({ request }) => {
+  http.post(`${env.API_URL}/api/auth/register`, ({ request }) => {
     return HttpResponse.json(
       {
         success: true,
@@ -27,7 +27,7 @@ export const authHandlers = [
       },
     );
   }),
-  http.post(`${env.API_URL}/api/auth/login`, async ({ request }) => {
+  http.post(`${env.API_URL}/api/auth/login`, ({ request }) => {
     return HttpResponse.json(
       {
         success: true,
@@ -49,7 +49,7 @@ export const authHandlers = [
       },
     );
   }),
-  http.post(`${env.API_URL}/api/auth/logout`, async ({ request }) => {
+  http.post(`${env.API_URL}/api/auth/logout`, ({ request }) => {
     return HttpResponse.json(
       {
         success: true,

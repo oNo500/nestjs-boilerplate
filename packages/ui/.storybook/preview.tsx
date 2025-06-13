@@ -45,8 +45,8 @@ const preview: Preview = {
   },
 
   decorators: [
-    (story, context) => {
-      const selectedTheme = context.globals.backgrounds?.value || theme.base;
+    (story, context: { globals: { backgrounds?: { value?: string } } }) => {
+      const selectedTheme = context.globals.backgrounds?.value ?? theme.base;
       return <div className={selectedTheme}>{story()}</div>;
     },
   ],

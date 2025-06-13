@@ -2,6 +2,6 @@
   "extends": "./tsconfig.base.json",
   "display": "Base Node",
   "compilerOptions": {
-    "lib": ["ESNext"]
+    "lib": ["ESNext"],
   }
 }

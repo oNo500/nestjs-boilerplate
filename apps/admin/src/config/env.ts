@@ -11,7 +11,7 @@ const createEnv = () => {
       .default('false'),
   });
   const envVars = Object.entries(import.meta.env).reduce<Record<string, string>>((acc, curr) => {
-    const [key, value] = curr;
+    const [key, value] = curr as [string, string];
     if (key.startsWith('VITE_')) {
       acc[key.slice(5)] = value;
     } else {
@@ -25,7 +25,7 @@ const createEnv = () => {
       `Invalid env provided.
     The following variables are missing or invalid:
     ${Object.entries(parsedEnv.error.flatten().fieldErrors)
-      .map(([k, v]) => `- ${k}: ${v}`)
+      .map(([k, v]) => `- ${k}: ${v.join(', ')}`)
       .join('\n')}
     `,
     );

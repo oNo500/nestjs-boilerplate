@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 
 import { LoggerModule } from '@/common/modules/logger/logger.module';
 import { HealthModule } from '@/features/health/health.module';
+import { DrizzleModule } from '@/common/modules/drizzle/drizzle.module';
 import { validateEnv } from '@/config/env';
 
 @Module({
@@ -12,6 +13,7 @@ import { validateEnv } from '@/config/env';
       validate: validateEnv,
     }),
     LoggerModule,
+    DrizzleModule,
     HealthModule,
   ],
 })

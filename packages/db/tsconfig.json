@@ -1,4 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
-  "extends": "@repo/ts-config/tsconfig.base.node.json"
+  "extends": "@repo/ts-config/tsconfig.base.node.json",
+  "compilerOptions": {
+    "incremental": false
+  }
 }

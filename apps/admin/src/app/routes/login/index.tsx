@@ -10,8 +10,8 @@ import { paths } from '@/config/paths';
 const LoginPage = () => {
   const navigate = useNavigate();
 
-  const onSuccess = async () => {
-    navigate(paths.home.getHref());
+  const onSuccess = (): void => {
+    void navigate(paths.home.getHref());
   };
   return (
     <div className="flex min-h-svh w-full items-center justify-center">

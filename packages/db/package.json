@@ -1,13 +1,13 @@
 {
-  "name": "db",
+  "name": "@repo/db",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
   "scripts": {
     "generate": "drizzle-kit generate",
     "migrate": "drizzle-kit migrate",
     "studio": "drizzle-kit studio",
-    "lint:fix": "eslint . --ext .ts,.js --fix"
+    "lint:fix": "eslint . --ext .ts,.js --fix",
+    "build": "tsup"
   },
   "keywords": [],
   "author": "",
@@ -15,19 +15,28 @@
   "packageManager": "pnpm@10.11.0",
   "exports": {
     ".": {
-      "types": "./src/schema/index.ts"
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.js",
+      "default": "./dist/index.js"
     }
   },
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
   "dependencies": {
+    "@repo/lint-config": "workspace:*",
+    "@repo/ts-config": "workspace:*",
     "dotenv": "^16.5.0",
     "drizzle-orm": "^0.44.2",
-    "pg": "^8.16.0",
-    "@repo/lint-config": "workspace:*",
-    "@repo/ts-config": "workspace:*"
+    "pg": "^8.16.0"
   },
   "devDependencies": {
+    "@rollup/plugin-typescript": "^12.1.2",
     "@types/pg": "^8.15.4",
     "drizzle-kit": "^0.31.1",
+    "rollup": "^4.43.0",
+    "tsup": "^8.5.0",
     "tsx": "^4.20.2"
   }
 }

@@ -29,7 +29,7 @@ const tseslintConfig = tseslint.config(
   {
     name: 'base/typescript-eslint/recommended',
     files: ['**/*.mjs', '**/*.ts?(x)'],
-    extends: [...tseslintConfigs.recommendedTypeChecked] as FlatConfig.ConfigArray,
+    extends: [...tseslintConfigs.recommended] as FlatConfig.ConfigArray,
     languageOptions: {
       ecmaVersion: 'latest',
       globals: {

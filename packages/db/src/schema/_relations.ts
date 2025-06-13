@@ -4,29 +4,38 @@ import { usersTable } from './users';
 import { profilesTable } from './profiles';
 import { sessionsTable } from './sessions';
 
-// User relations
+/**
+ * 用户表关系定义
+ *
+ * - 一个用户对应一条个人资料（Profile）
+ * - 一个用户对应多条会话记录（Session）
+ */
 export const usersRelations = relations(usersTable, ({ one, many }) => ({
-  // User has one Profile
   profile: one(profilesTable, {
     fields: [usersTable.id],
     references: [profilesTable.userId],
   }),
-  // User has many Sessions
   sessions: many(sessionsTable),
 }));
 
-// Profile relations
+/**
+ * 个人资料表关系定义
+ *
+ * - 每条个人资料属于一个用户（User）
+ */
 export const profilesRelations = relations(profilesTable, ({ one }) => ({
-  // Profile belongs to one User
   user: one(usersTable, {
     fields: [profilesTable.userId],
     references: [usersTable.id],
   }),
 }));
 
-// Session relations
+/**
+ * 会话表关系定义
+ *
+ * - 每条会话记录属于一个用户（User）
+ */
 export const sessionsRelations = relations(sessionsTable, ({ one }) => ({
-  // Session belongs to one User
   user: one(usersTable, {
     fields: [sessionsTable.userId],
     references: [usersTable.id],
