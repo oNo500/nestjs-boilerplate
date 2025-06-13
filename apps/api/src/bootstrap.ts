@@ -26,7 +26,7 @@ export const bootstrap = async (app: NestExpressApplication) => {
         method: RequestMethod.GET,
       },
       {
-        path: '/api-docs',
+        path: '/docs',
         method: RequestMethod.GET,
       },
       {
@@ -60,7 +60,14 @@ export const bootstrap = async (app: NestExpressApplication) => {
   app.useGlobalInterceptors(new LoggerErrorInterceptor());
   await app.listen(configService.get('PORT'), () => {
     logger.log(
-      `This application started at ${configService.get('HOST')}:${configService.get('PORT')}`,
+      [
+        '',
+        '�� 服务已启动!',
+        `🌍 地址: http://${configService.get('HOST')}:${configService.get('PORT')}`,
+        `📚 文档: http://${configService.get('HOST')}:${configService.get('PORT')}/api-docs`,
+        `🌱 环境: ${configService.get('NODE_ENV')}`,
+        `⏰ 启动时间: ${new Date().toLocaleString()}`,
+      ].join('\n'),
     );
   });
 };

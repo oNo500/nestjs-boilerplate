@@ -8,3 +8,6 @@ export const otpTypeEnum = pgEnum('otp_type', [
   'EMAIL_REGISTER', // 邮箱注册
   'PASSWORD_RESET', // 密码重置
 ]);
+
+export type OTPType = (typeof otpTypeEnum.enumValues)[number];
+export type Gender = (typeof genderEnum.enumValues)[number];

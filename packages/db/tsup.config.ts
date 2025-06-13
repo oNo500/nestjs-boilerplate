@@ -7,5 +7,4 @@ export default defineConfig({
   clean: true,
   dts: true,
   format: ['esm', 'cjs'],
-  //   external: ['drizzle-orm', 'drizzle-orm/postgres-js', 'pg', 'pg-core'],
 });

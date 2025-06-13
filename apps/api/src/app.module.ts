@@ -1,10 +1,17 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { JwtModule } from '@nestjs/jwt';
+import { APP_GUARD } from '@nestjs/core';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 
 import { LoggerModule } from '@/common/modules/logger/logger.module';
 import { HealthModule } from '@/features/health/health.module';
 import { DrizzleModule } from '@/common/modules/drizzle/drizzle.module';
 import { validateEnv } from '@/config/env';
+import { AuthGuard, RolesGuard } from '@/common/guards';
+import { LoggerMiddleware } from '@/common/middleware';
+import { NodeMailerModule } from '@/common/modules/node-mailer/node-mailer.module';
+import { AuthModule } from '@/features/auth/auth.module';
 
 @Module({
   imports: [
@@ -12,9 +19,40 @@ import { validateEnv } from '@/config/env';
       isGlobal: true,
       validate: validateEnv,
     }),
+    JwtModule.register({
+      global: true,
+    }),
+    ThrottlerModule.forRoot({
+      throttlers: [
+        {
+          ttl: 60000,
+          limit: 10,
+        },
+      ],
+    }),
     LoggerModule,
     DrizzleModule,
     HealthModule,
+    AuthModule,
+    NodeMailerModule,
+  ],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
   ],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LoggerMiddleware).forRoutes('*');
+  }
+}
