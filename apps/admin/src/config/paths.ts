@@ -1,4 +1,7 @@
 export const paths = {
+  github: {
+    path: 'https://github.com/oNo500/nestjs-boilerplate',
+  },
   home: {
     path: '/',
     getHref: () => '/',
