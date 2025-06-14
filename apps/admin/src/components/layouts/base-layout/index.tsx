@@ -8,10 +8,17 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@repo/ui/components/breadcrumb';
+import { Link, Outlet, useMatches } from 'react-router';
+
+import { paths } from '@/config/paths';
 
 import { AppSidebar } from './app-sidebar';
 
-const BaseLayout = ({ children }: { children: React.ReactNode }) => {
+const BaseLayout = () => {
+  const matches = useMatches();
+  const current = matches[matches.length - 1] as { handle: { title: string } };
+  const title = current?.handle?.title;
+
   return (
     <SidebarProvider>
       <AppSidebar />
@@ -23,17 +30,21 @@ const BaseLayout = ({ children }: { children: React.ReactNode }) => {
             <Breadcrumb>
               <BreadcrumbList>
                 <BreadcrumbItem className="hidden md:block">
-                  <BreadcrumbLink href="#">Building Your Application</BreadcrumbLink>
+                  <BreadcrumbLink asChild>
+                    <Link to={paths.home.getHref()}>Dashboard</Link>
+                  </BreadcrumbLink>
                 </BreadcrumbItem>
                 <BreadcrumbSeparator className="hidden md:block" />
                 <BreadcrumbItem>
-                  <BreadcrumbPage>Data Fetching</BreadcrumbPage>
+                  <BreadcrumbPage>{title}</BreadcrumbPage>
                 </BreadcrumbItem>
               </BreadcrumbList>
             </Breadcrumb>
           </div>
         </header>
-        <div className="flex flex-1 flex-col gap-4 p-4 pt-0">{children}</div>
+        <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+          <Outlet />
+        </div>
       </SidebarInset>
     </SidebarProvider>
   );

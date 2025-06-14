@@ -1,6 +1,3 @@
-import BaseLayout from '@/components/layouts/base-layout';
-import Hero from '@/features/home/components/hero';
-import TechStack from '@/features/home/components/tech-stack';
 import Overview from '@/features/home/components/overview';
 import ProgrammingLanguagesUsage from '@/features/home/components/programming-languages-usage';
 import TechnologyTackDistribution from '@/features/home/components/technology-tack-distribution';
@@ -8,7 +5,7 @@ import MonthlyDevelopmentActivity from '@/features/home/components/monthly-devel
 
 const Home = () => {
   return (
-    <BaseLayout>
+    <>
       <Overview />
       <div className="grid auto-rows-min gap-4 md:grid-cols-2">
         <div className="bg-muted/50 aspect-video rounded-xl p-4">
@@ -24,7 +21,7 @@ const Home = () => {
         <h2 className="pb-6 text-xl font-bold">Programming Languages Usage</h2>
         <ProgrammingLanguagesUsage />
       </div>
-    </BaseLayout>
+    </>
   );
 };
 

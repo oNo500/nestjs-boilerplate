@@ -9,8 +9,9 @@ import {
   Map,
   PieChart,
   Settings2,
-  SquareTerminal,
 } from 'lucide-react';
+
+import { paths } from '@/config/paths';
 
 export const menuData = {
   user: {
@@ -38,21 +39,17 @@ export const menuData = {
   navMain: [
     {
       title: 'Dashboard',
-      url: '#',
+      url: paths.home.getHref(),
       icon: Home,
       isActive: true,
       items: [
         {
-          title: 'History',
-          url: '#',
+          title: 'Overview',
+          url: paths.home.getHref(),
         },
         {
-          title: 'Starred',
-          url: '#',
-        },
-        {
-          title: 'Settings',
-          url: '#',
+          title: 'Analytics',
+          url: paths.home.analytics.getHref(),
         },
       ],
     },
@@ -63,41 +60,19 @@ export const menuData = {
       items: [
         {
           title: 'Genesis',
-          url: '#',
+          url: paths.models.genesis.getHref(),
         },
         {
           title: 'Explorer',
-          url: '#',
+          url: paths.models.explorer.getHref(),
         },
         {
           title: 'Quantum',
-          url: '#',
+          url: paths.models.quantum.getHref(),
         },
       ],
     },
-    {
-      title: 'Documentation',
-      url: '#',
-      icon: BookOpen,
-      items: [
-        {
-          title: 'Introduction',
-          url: '#',
-        },
-        {
-          title: 'Get Started',
-          url: '#',
-        },
-        {
-          title: 'Tutorials',
-          url: '#',
-        },
-        {
-          title: 'Changelog',
-          url: '#',
-        },
-      ],
-    },
+
     {
       title: 'Settings',
       url: '#',
@@ -105,19 +80,19 @@ export const menuData = {
       items: [
         {
           title: 'General',
-          url: '#',
+          url: paths.settings.general.getHref(),
         },
         {
           title: 'Team',
-          url: '#',
+          url: paths.settings.team.getHref(),
         },
         {
           title: 'Billing',
-          url: '#',
+          url: paths.settings.billing.getHref(),
         },
         {
           title: 'Limits',
-          url: '#',
+          url: paths.settings.limits.getHref(),
         },
       ],
     },

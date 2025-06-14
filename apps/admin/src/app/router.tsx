@@ -1,21 +1,72 @@
 import { RouterProvider, createBrowserRouter, useRouteError } from 'react-router';
 
 import { ErrorFallback } from '@/components/errors/error-fallback';
+import BaseLayout from '@/components/layouts/base-layout';
 
-// React Router 错误边界组件
 const RouterErrorBoundary = () => {
   const error = useRouteError();
   return <ErrorFallback error={error} resetErrorBoundary={() => window.location.reload()} />;
 };
+
+const Placeholder = async () => ({
+  Component: (await import('@/features/home/components/placeholder')).default,
+});
 
 const router = createBrowserRouter([
   {
     path: '/',
     ErrorBoundary: RouterErrorBoundary,
     HydrateFallback: () => null,
-    lazy: async () => ({
-      Component: (await import('@/app/routes/home')).default,
-    }),
+    Component: BaseLayout,
+    handle: { title: 'Dashboard' },
+    children: [
+      {
+        path: '/',
+        handle: { title: 'Overview', parent: 'Dashboard' },
+        lazy: async () => ({
+          Component: (await import('@/app/routes/home')).default,
+        }),
+      },
+      {
+        path: '/analytics',
+        handle: { title: 'Analytics', parent: 'Dashboard' },
+        lazy: Placeholder,
+      },
+      {
+        path: '/genesis',
+        handle: { title: 'Genesis', parent: 'Models' },
+        lazy: Placeholder,
+      },
+      {
+        path: '/explorer',
+        handle: { title: 'Explorer', parent: 'Models' },
+      },
+      {
+        path: '/quantum',
+        handle: { title: 'Quantum', parent: 'Models' },
+        lazy: Placeholder,
+      },
+      {
+        path: '/general',
+        handle: { title: 'General', parent: 'Settings' },
+        lazy: Placeholder,
+      },
+      {
+        path: '/team',
+        handle: { title: 'Team', parent: 'Settings' },
+        lazy: Placeholder,
+      },
+      {
+        path: '/billing',
+        handle: { title: 'Billing', parent: 'Settings' },
+        lazy: Placeholder,
+      },
+      {
+        path: '/limits',
+        handle: { title: 'Limits', parent: 'Settings' },
+        lazy: Placeholder,
+      },
+    ],
   },
   {
     path: '/login',

@@ -22,14 +22,17 @@ const data = [
     size: 400,
     fill: '#3178c6', // TypeScript 品牌色
   },
+  {
+    name: 'Next.js',
+    size: 500,
+    fill: '#000000', // Next.js 品牌色
+  },
 ];
 
 const MonthlyDevelopmentActivity = () => {
   return (
     <ChartContainer config={{}} className="min-h-[200px] w-full">
-      <ResponsiveContainer width="100%" height="100%">
-        <Treemap width={400} height={200} data={data} dataKey="size" aspectRatio={1} stroke="#fff" fill="#8884d8" />
-      </ResponsiveContainer>
+      <Treemap width={400} height={200} data={data} dataKey="size" aspectRatio={1} stroke="#fff" fill="#8884d8" />
     </ChartContainer>
   );
 };

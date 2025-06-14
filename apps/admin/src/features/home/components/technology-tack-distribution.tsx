@@ -22,6 +22,11 @@ const data = [
     value: 500,
     fill: '#3B82F6',
   },
+  {
+    name: 'AI',
+    value: 100,
+    fill: '#8B5CF6',
+  },
 ];
 
 const style = {
