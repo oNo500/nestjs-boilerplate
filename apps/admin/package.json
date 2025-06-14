@@ -1,5 +1,5 @@
 {
-  "name": "react-vite",
+  "name": "web-admin",
   "version": "0.0.0",
   "dependencies": {
     "@hookform/resolvers": "^5.0.1",
@@ -19,6 +19,7 @@
     "react-error-boundary": "^6.0.0",
     "react-hook-form": "^7.56.4",
     "react-router": "^7.6.1",
+    "recharts": "^2.15.3",
     "tailwindcss": "^4.1.8",
     "zod": "^3.25.46",
     "zustand": "^5.0.5"
@@ -52,6 +53,9 @@
     "lint:fix": "eslint . --fix",
     "preview": "vite preview",
     "check-types": "tsc --noEmit --pretty"
+  },
+  "overrides": {
+    "react-is": "^19.1.0"
   },
   "type": "module"
 }

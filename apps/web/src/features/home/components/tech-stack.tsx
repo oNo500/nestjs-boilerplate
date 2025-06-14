@@ -1,4 +1,4 @@
-import { cn } from '@repo/ui/utils';
+import { cn } from '@repo/ui/lib/utils';
 import NextLogo from '@repo/icons/nextdotjs.svg';
 import ReactLogo from '@repo/icons/react.svg';
 import ShadcnLogo from '@repo/icons/shadcnui.svg';
