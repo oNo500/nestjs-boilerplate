@@ -7,13 +7,12 @@ import { Logger, LoggerErrorInterceptor } from 'nestjs-pino';
 import { swagger } from '@/config/swagger';
 import { Env } from '@/config/env';
 
+import { TransformInterceptor } from './common/interceptor/transform.interceptor';
+
 export const bootstrap = async (app: NestExpressApplication) => {
   const configService = app.get(ConfigService<Env>);
   const logger = app.get(Logger);
 
-  if (configService.get('NODE_ENV') !== 'production') {
-    swagger(app);
-  }
   app.use(
     helmet({
       permittedCrossDomainPolicies: false,
@@ -56,8 +55,13 @@ export const bootstrap = async (app: NestExpressApplication) => {
       },
     }),
   );
+  if (configService.get('NODE_ENV') !== 'production') {
+    swagger(app);
+  }
 
   app.useGlobalInterceptors(new LoggerErrorInterceptor());
+  app.useGlobalInterceptors(new TransformInterceptor());
+  // app.useGlobalFilters(new AllExceptionsFilter());
   await app.listen(configService.get('PORT'), () => {
     logger.log(
       [

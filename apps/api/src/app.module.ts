@@ -1,9 +1,10 @@
 import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
-import { APP_GUARD } from '@nestjs/core';
+import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 
+import { HttpExceptionFilter } from '@/common/filters/http-exception.filter';
 import { LoggerModule } from '@/common/modules/logger/logger.module';
 import { HealthModule } from '@/features/health/health.module';
 import { DrizzleModule } from '@/common/modules/drizzle/drizzle.module';
@@ -48,6 +49,10 @@ import { AuthModule } from '@/features/auth/auth.module';
     {
       provide: APP_GUARD,
       useClass: ThrottlerGuard,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: HttpExceptionFilter,
     },
   ],
 })

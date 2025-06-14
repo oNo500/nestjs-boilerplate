@@ -11,6 +11,7 @@ import { pick } from 'lodash';
 import { Logger } from 'nestjs-pino';
 
 import { Drizzle } from '@/common/decorators';
+import { UserNotFoundException } from '@/common/error';
 
 import { LoginDto } from './dto/login-dto';
 import { hashPassword, validatePassword } from './utils/password';
@@ -34,7 +35,7 @@ export class AuthService {
     const { users, profiles } = await this.findUserByEmail(email);
 
     if (!users) {
-      throw new UnauthorizedException('用户不存在');
+      throw new UserNotFoundException('用户不存在');
     }
 
     if (!(await validatePassword(password, users.password))) {
@@ -167,7 +168,10 @@ export class AuthService {
     }
   }
 
-  async findUserByEmail(email: string) {
+  async findUserByEmail(email: string): Promise<{
+    users: typeof usersTable.$inferSelect;
+    profiles: typeof profilesTable.$inferSelect;
+  }> {
     const result = await this.db
       .select()
       .from(usersTable)
@@ -175,6 +179,11 @@ export class AuthService {
       .where(eq(usersTable.email, email))
       .limit(1)
       .then((res) => res[0]);
-    return result;
+    return (
+      result || {
+        users: null,
+        profiles: null,
+      }
+    );
   }
 }
