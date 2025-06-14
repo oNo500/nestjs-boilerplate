@@ -13,6 +13,8 @@ import {
 } from '@repo/ui/components/dropdown-menu';
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from '@repo/ui/components/sidebar';
 
+import { useLogout } from '@/auth';
+
 export function NavUser({
   user,
 }: {
@@ -23,7 +25,7 @@ export function NavUser({
   };
 }) {
   const { isMobile } = useSidebar();
-
+  const { mutate, isPending } = useLogout();
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -85,7 +87,7 @@ export function NavUser({
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem disabled={isPending} onClick={() => mutate()}>
               <LogOut />
               Log out
             </DropdownMenuItem>

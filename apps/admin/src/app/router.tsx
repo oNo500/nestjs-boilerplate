@@ -1,7 +1,8 @@
-import { RouterProvider, createBrowserRouter, useRouteError } from 'react-router';
+import { RouterProvider, createBrowserRouter, redirect, useRouteError } from 'react-router';
 
 import { ErrorFallback } from '@/components/errors/error-fallback';
 import BaseLayout from '@/components/layouts/base-layout';
+import { authStore } from '@/auth/auth-store';
 
 const RouterErrorBoundary = () => {
   const error = useRouteError();
@@ -12,6 +13,12 @@ const Placeholder = async () => ({
   Component: (await import('@/features/home/components/placeholder')).default,
 });
 
+const requireAuth = async () => {
+  if (!authStore.getState().isAuthenticated) {
+    throw redirect('/login');
+  }
+};
+
 const router = createBrowserRouter([
   {
     path: '/',
@@ -19,6 +26,7 @@ const router = createBrowserRouter([
     HydrateFallback: () => null,
     Component: BaseLayout,
     handle: { title: 'Dashboard' },
+    loader: requireAuth,
     children: [
       {
         path: '/',
