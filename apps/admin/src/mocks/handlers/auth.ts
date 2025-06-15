@@ -27,7 +27,8 @@ export const authHandlers = [
       },
     );
   }),
-  http.post(`${env.API_URL}/api/auth/login`, ({ request }) => {
+  http.post(`${env.API_URL}/api/auth/login`, async ({ request }) => {
+    const { email } = await request.clone().json();
     return HttpResponse.json(
       {
         success: true,
@@ -35,8 +36,9 @@ export const authHandlers = [
         data: {
           user: {
             id: '1',
-            name: 'testuser',
-            email: 'testuser@example.com',
+            name: email.split('@')[0],
+            email,
+            avatar: 'https://github.com/shadcn.png',
           },
           token: 'mock-jwt-token',
           expiresIn: 1000,

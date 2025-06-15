@@ -22,6 +22,7 @@ export const userHandlers = [
         id: '1',
         name: 'testuser',
         email: 'testuser@example.com',
+        avatar: 'https://github.com/shadcn.png',
       },
     });
   }),

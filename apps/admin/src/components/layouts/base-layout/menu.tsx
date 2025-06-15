@@ -1,15 +1,4 @@
-import {
-  AudioWaveform,
-  BookOpen,
-  Bot,
-  Command,
-  Frame,
-  GalleryVerticalEnd,
-  Home,
-  Map,
-  PieChart,
-  Settings2,
-} from 'lucide-react';
+import { AudioWaveform, Bot, Command, Frame, GalleryVerticalEnd, Home, Map, PieChart, Settings2 } from 'lucide-react';
 
 import { paths } from '@/config/paths';
 

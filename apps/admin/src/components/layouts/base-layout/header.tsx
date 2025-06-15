@@ -11,7 +11,7 @@ import {
 } from '@repo/ui/components/breadcrumb';
 import GithubIcon from '@repo/icons/github.svg?react';
 
-import ThemeToggle from '@/components/ui/theme-toggle';
+import ThemeToggle from '@/components/layouts/base-layout/theme-toggle';
 import { paths } from '@/config/paths';
 
 const Header = ({ title }: { title: string }) => {
@@ -34,7 +34,7 @@ const Header = ({ title }: { title: string }) => {
           </BreadcrumbList>
         </Breadcrumb>
       </div>
-      <div className="flex items-center gap-2 px-4">
+      <div className="flex items-center gap-4 px-4">
         <Link to={paths.github.path} target="_blank">
           <GithubIcon />
         </Link>
