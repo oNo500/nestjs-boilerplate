@@ -7,37 +7,58 @@ import {
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 
-import { UserNotFoundException } from '@/common/error';
-
 @Catch()
 export class HttpExceptionFilter implements ExceptionFilter {
-  catch(exception: UserNotFoundException, host: ArgumentsHost) {
-    const response = host.switchToHttp().getResponse();
-    response.status(404).json({
-      message: exception.message,
-      code: 'USER_NOT_FOUND',
+  catch(exception: unknown, host: ArgumentsHost) {
+    const ctx = host.switchToHttp();
+    const response = ctx.getResponse<Response>();
+    const request = ctx.getRequest<Request>();
+
+    const status =
+      exception instanceof HttpException
+        ? exception.getStatus()
+        : HttpStatus.INTERNAL_SERVER_ERROR;
+
+    const { error, message } = this.normalizeError(exception);
+
+    const traceId =
+      request.headers['x-request-id'] ||
+      request.headers['x-correlation-id'] ||
+      request.id ||
+      request.url;
+
+    response.status(status).json({
+      error: {
+        code: error,
+        message,
+      },
+      mate: {
+        traceId,
+        timestamp: new Date().toISOString(),
+      },
     });
   }
-  // catch(exception: unknown, host: ArgumentsHost) {
-  //   const ctx = host.switchToHttp();
-  //   const response = ctx.getResponse<Response>();
-  //   const request = ctx.getRequest<Request>();
 
-  //   const status =
-  //     exception instanceof HttpException
-  //       ? exception.getStatus()
-  //       : HttpStatus.INTERNAL_SERVER_ERROR;
-
-  //   const message =
-  //     exception instanceof HttpException
-  //       ? exception.getResponse()
-  //       : 'Internal server error';
-
-  //   // response.status(status).json({
-  //   //   code: status,
-  //   //   message,
-  //   //   path: request.url,
-  //   //   timestamp: new Date().toISOString(),
-  //   // });
-  // }
+  private normalizeError(exception: unknown): {
+    error: string;
+    message: string;
+  } {
+    if (exception instanceof HttpException) {
+      const res = exception.getResponse();
+      if (typeof res === 'string') {
+        return { error: exception.name, message: res };
+      }
+      if (typeof res === 'object' && res !== null) {
+        const obj = res as any;
+        return {
+          error: obj.error || exception.name,
+          message: obj.message || obj.msg || 'Unknown error',
+        };
+      }
+    }
+    return {
+      error: 'INTERNAL_SERVER_ERROR',
+      message: (exception as any)?.message || 'Internal server error',
+    };
+  }
 }

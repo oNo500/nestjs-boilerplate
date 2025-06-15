@@ -7,7 +7,7 @@ import { queryClient } from '@/lib/query-client';
 
 import { authStore } from './auth-store';
 
-import type { ApiResponse, ApiError, LoginData, User } from '@/types/api';
+import type { ApiError, LoginData, User } from '@/types/api';
 
 // 类型定义
 export interface LoginRequest {
@@ -30,12 +30,9 @@ export interface AuthResponse {
 export const useLogin = () => {
   const { login } = authStore();
   return useMutation({
-    mutationFn: async (data: LoginRequest): Promise<LoginData> => {
-      const response = await apiClient.post<ApiResponse<LoginData>>('/api/auth/login', data);
-      return response.data;
-    },
+    mutationFn: async (data: LoginRequest) => await apiClient.post<LoginData>('/api/auth/login', data),
     onSuccess: (data) => {
-      login(data.token, data.user);
+      login(data.accessToken, data.user);
       toast.success(`Login success, welcome back ${data.user.name || data.user.email}!`);
     },
     onError: (error: ApiError) => {
@@ -48,12 +45,10 @@ export const useLogin = () => {
 export const useRegister = () => {
   const { login } = authStore();
   return useMutation({
-    mutationFn: async (data: RegisterRequest): Promise<LoginData> => {
-      const response = await apiClient.post<ApiResponse<LoginData>>('/api/auth/register', data);
-      return response.data;
-    },
+    mutationFn: async (data: RegisterRequest): Promise<LoginData> =>
+      await apiClient.post<LoginData>('/api/auth/register', data),
     onSuccess: (data) => {
-      login(data.token, data.user);
+      login(data.accessToken, data.user);
       toast.success('Registration successful, please log in with your new account');
     },
     onError: (error: ApiError) => {
@@ -66,10 +61,7 @@ export const useRegister = () => {
 export const useCurrentUser = () => {
   return useQuery({
     queryKey: ['current-user'],
-    queryFn: async (): Promise<User> => {
-      const response = await apiClient.get<ApiResponse<User>>('/api/auth/me');
-      return response.data;
-    },
+    queryFn: async () => await apiClient.get<User>('/api/auth/me'),
   });
 };
 

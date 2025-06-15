@@ -3,6 +3,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { Suspense } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { ThemeProvider } from 'next-themes';
+import { Toaster } from '@repo/ui/components/sonner';
 
 import { ErrorFallback } from '@/components/errors/error-fallback';
 import { env } from '@/config/env';
@@ -24,6 +25,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
             {children}
           </ThemeProvider>
           {env.MODE === 'development' && <ReactQueryDevtools />}
+          <Toaster />
         </QueryClientProvider>
       </ErrorBoundary>
     </Suspense>

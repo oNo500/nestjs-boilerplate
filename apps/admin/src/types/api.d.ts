@@ -34,6 +34,5 @@ export interface User {
 
 export interface LoginData {
   user: User;
-  token: string;
-  expiresIn: number;
+  accessToken: string;
 }
