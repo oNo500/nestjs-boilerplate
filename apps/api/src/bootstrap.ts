@@ -18,6 +18,7 @@ export const bootstrap = async (app: NestExpressApplication) => {
       permittedCrossDomainPolicies: false,
     }),
   );
+
   app.setGlobalPrefix('api', {
     exclude: [
       {

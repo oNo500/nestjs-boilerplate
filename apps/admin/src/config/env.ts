@@ -2,7 +2,7 @@ import * as z from 'zod';
 
 const createEnv = () => {
   const envSchema = z.object({
-    API_URL: z.string().url(),
+    API_URL: z.string(),
     MODE: z.enum(['development', 'production', 'test']),
     ENABLE_MOCK: z
       .string()

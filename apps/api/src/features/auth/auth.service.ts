@@ -50,14 +50,8 @@ export class AuthService {
     return {
       ...sessionRecord,
       user: {
-        ...pick(users, ['id', 'email', 'createdAt', 'updatedAt']),
-        profile: pick(profiles, [
-          'id',
-          'name',
-          'avatar',
-          'createdAt',
-          'updatedAt',
-        ]),
+        ...pick(users, ['email']),
+        ...pick(profiles, ['id', 'username', 'avatar']),
       },
     };
   }
@@ -73,6 +67,45 @@ export class AuthService {
     if (optRecord.expiresAt && optRecord.expiresAt < new Date()) {
       throw new BadRequestException('验证码已过期');
     }
+
+    const now = new Date();
+
+    try {
+      return await this.db.transaction(async (trx) => {
+        const [user] = await trx
+          .insert(usersTable)
+          .values({
+            email,
+            username: email.split('@')[0],
+            password: await hashPassword(password),
+            updatedAt: now,
+            createdAt: now,
+          })
+          .returning();
+
+        await trx
+          .insert(profilesTable)
+          .values({
+            userId: user.id,
+            username: user.username,
+            updatedAt: now,
+            createdAt: now,
+          })
+          .returning();
+
+        await trx.delete(otpsTable).where(eq(otpsTable.receiver, email));
+
+        return user;
+      });
+    } catch (error) {
+      this.logger.error(error);
+      throw new InternalServerErrorException('注册失败');
+    }
+  }
+
+  // skip code for dev
+  async registerDev(dto: RegisterDto) {
+    const { email, password } = dto;
 
     const now = new Date();
 

@@ -7,12 +7,16 @@ import { useForm } from 'react-hook-form';
 
 import { type RegisterRequest, useRegister } from '@/auth/use-auth';
 
-const formSchema = z.object({
-  firstName: z.string().min(1, { message: 'First Name is required' }),
-  lastName: z.string().min(1, { message: 'Last Name is required' }),
-  email: z.string().min(1, { message: 'Email is required' }),
-  password: z.string().min(1, { message: 'Password is required' }),
-});
+const formSchema = z
+  .object({
+    email: z.string().min(1, { message: 'Email is required' }),
+    password: z.string().min(1, { message: 'Password is required' }),
+    confirmPassword: z.string().min(1, { message: 'Confirm Password is required' }),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    path: ['confirmPassword'],
+    message: 'Passwords do not match',
+  });
 
 const RegisterForm = ({
   className,
@@ -24,10 +28,9 @@ const RegisterForm = ({
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      firstName: '',
-      lastName: '',
       email: '',
       password: '',
+      confirmPassword: '',
     },
   });
   const registerMutation = useRegister();
@@ -35,41 +38,20 @@ const RegisterForm = ({
     const payload: RegisterRequest = {
       email: values.email,
       password: values.password,
-      name: `${values.firstName} ${values.lastName}`.trim(),
+      confirmPassword: values.confirmPassword,
+      code: '123456', // TODO: code from email
     };
-    onSuccess(payload);
+    registerMutation.mutate(payload, {
+      onSuccess: () => {
+        onSuccess(payload);
+      },
+    });
   }
   return (
     <div className={className}>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <div className="space-y-8">
-            <FormField
-              control={form.control}
-              name="firstName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>First Name</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Enter your first name" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="lastName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Last Name</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Enter your last name" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
             <FormField
               control={form.control}
               name="email"
@@ -91,12 +73,25 @@ const RegisterForm = ({
                   <FormItem>
                     <FormLabel>Password</FormLabel>
                     <FormControl>
-                      <Input placeholder="Enter your password" {...field} />
+                      <Input placeholder="Enter your password" {...field} type="password" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 );
               }}
+            />
+            <FormField
+              control={form.control}
+              name="confirmPassword"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Confirm Password</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Confirm your password" {...field} type="password" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
             <Button className="w-full" type="submit">
               Sign Up

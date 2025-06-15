@@ -58,10 +58,17 @@ src/
 
 ```json
 {
-  "success": true,
-  "data": {
-    "id": 1,
-    "name": "John Doe"
+  "data": [
+    { "id": 1, "name": "张三" },
+    { "id": 2, "name": "李四" }
+  ],
+  "meta": {
+    "total": 50,
+    "page": 1,
+    "pageSize": 10,
+    "hasMore": true,
+    "traceId": "abc123",
+    "timestamp": "2025-06-15T10:00:00Z"
   }
 }
 ```
@@ -70,19 +77,39 @@ src/
 
 ```json
 {
-  "success": false,
   "error": {
-    "code": "",
-    "message": "",
-    "detail": [
-      {
-        "field": "name",
-        "message": "Name is required"
-      }
+    "code": "VALIDATION_ERROR",
+    "message": "参数校验失败",
+    "details": [
+      { "field": "email", "message": "邮箱格式不正确" }
     ]
+  },
+  "meta": {
+    "traceId": "abc123",
+    "timestamp": "2025-06-15T10:00:00Z"
   }
 }
 ```
+#### ts
+```typescript
+
+export interface ApiResponse<T = unknown> {
+  data?: T;
+  error?: ApiError;
+  meta?: Meta;
+}
+export interface ApiError {
+  code: string;
+  message: string;
+  details?: FieldError[];
+}
+
+export interface FieldError {
+  field: string;
+  message: string;
+}
+```
+
 
 #### 错误
 
@@ -172,3 +199,4 @@ Service 层的职责：
 	•	请求参数格式错误（可以交给管道）
 	•	权限不足（可交给守卫）
 	•	捕获 service 抛出的业务异常，决定是否直接响应或包装后返回
+  

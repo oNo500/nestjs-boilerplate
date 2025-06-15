@@ -2,12 +2,12 @@ import { toast } from '@repo/ui/components/sonner';
 import { useMutation, useQuery } from '@tanstack/react-query';
 
 import { paths } from '@/config/paths';
-import { apiClient } from '@/lib/api-client';
+import apiClient from '@/lib/api-client';
 import { queryClient } from '@/lib/query-client';
 
 import { authStore } from './auth-store';
 
-import type { APIResponse, ApiError, LoginData, User } from '@/types/api';
+import type { ApiResponse, ApiError, LoginData, User } from '@/types/api';
 
 // 类型定义
 export interface LoginRequest {
@@ -18,7 +18,8 @@ export interface LoginRequest {
 export interface RegisterRequest {
   email: string;
   password: string;
-  name?: string;
+  confirmPassword: string;
+  code: string;
 }
 
 export interface AuthResponse {
@@ -30,8 +31,8 @@ export const useLogin = () => {
   const { login } = authStore();
   return useMutation({
     mutationFn: async (data: LoginRequest): Promise<LoginData> => {
-      const response = await apiClient.post<APIResponse<LoginData>>('/api/auth/login', data);
-      return response.data.data;
+      const response = await apiClient.post<ApiResponse<LoginData>>('/api/auth/login', data);
+      return response.data;
     },
     onSuccess: (data) => {
       login(data.token, data.user);
@@ -48,8 +49,8 @@ export const useRegister = () => {
   const { login } = authStore();
   return useMutation({
     mutationFn: async (data: RegisterRequest): Promise<LoginData> => {
-      const response = await apiClient.post<APIResponse<LoginData>>('/api/auth/register', data);
-      return response.data.data;
+      const response = await apiClient.post<ApiResponse<LoginData>>('/api/auth/register', data);
+      return response.data;
     },
     onSuccess: (data) => {
       login(data.token, data.user);
@@ -66,8 +67,8 @@ export const useCurrentUser = () => {
   return useQuery({
     queryKey: ['current-user'],
     queryFn: async (): Promise<User> => {
-      const response = await apiClient.get<APIResponse<User>>('/api/auth/me');
-      return response.data.data;
+      const response = await apiClient.get<ApiResponse<User>>('/api/auth/me');
+      return response.data;
     },
   });
 };

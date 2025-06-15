@@ -12,6 +12,6 @@ const main = async () => {
 };
 
 main().catch((err) => {
-  console.error('Error during main:', err);
+  console.error(err);
   process.exit(1);
 });
