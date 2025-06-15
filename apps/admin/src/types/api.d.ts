@@ -1,5 +1,3 @@
-// 错误响应类型
-
 export interface ApiResponse<T = unknown> {
   data: T;
   error: ApiError;

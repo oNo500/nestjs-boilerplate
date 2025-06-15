@@ -36,6 +36,7 @@ export const useLogin = () => {
       toast.success(`Login success, welcome back ${data.user.name || data.user.email}!`);
     },
     onError: (error: ApiError) => {
+      console.log('error', error);
       toast.error(error.message || 'Please check your email and password');
     },
   });
