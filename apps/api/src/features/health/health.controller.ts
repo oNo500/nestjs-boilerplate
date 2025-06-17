@@ -8,8 +8,13 @@ import { HealthService } from './health.service';
 @Controller('health')
 export class HealthController {
   constructor(private readonly healthService: HealthService) {}
+
+  @Get('test')
+  healthCheck() {
+    return 'Http working fine';
+  }
   @Get()
-  async healthCheck() {
-    return await this.healthService.drizzleIsHealth();
+  async check() {
+    return await this.healthService.check();
   }
 }

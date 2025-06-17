@@ -5,54 +5,67 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
-import { otpsTable, profilesTable, usersTable } from '@repo/db';
+import { otpsTable, profilesTable, passportTable, usersTable } from '@repo/db';
 import { eq } from 'drizzle-orm';
-import { pick } from 'lodash';
+import { pickBy } from 'lodash';
 import { Logger } from 'nestjs-pino';
 
 import { Drizzle } from '@/common/decorators';
 import { UserNotFoundException } from '@/common/error';
+import { DeviceType } from '@/common/decorators/device.decorator';
+import { JwtValidateUser } from '@/types/jwt';
 
-import { LoginDto } from './dto/login-dto';
 import { hashPassword, validatePassword } from './utils/password';
 import { RegisterDto } from './dto/register-dto';
 import { OptsService } from './opts.service';
 import { ResetPasswordDto } from './dto/rest-password';
-import { SessionService } from './session.service';
 import { ChangePasswordDto } from './dto/change-password-dto';
+import { User } from './auth.interface';
+import { TokenService } from './token.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     @Drizzle() private readonly db: NodePgDatabase,
     private readonly optsService: OptsService,
-    private readonly sessionService: SessionService,
     private readonly logger: Logger,
+    private readonly tokenService: TokenService,
   ) {}
 
-  async login(dto: LoginDto, userAgent: string) {
-    const { email, password } = dto;
-    const { users, profiles } = await this.findUserByEmail(email);
+  async validateUser(email: string, password: string) {
+    const user = await this.db
+      .select()
+      .from(usersTable)
+      .where(eq(usersTable.email, email))
+      .limit(1)
+      .then((res) => res[0]);
 
-    if (!users) {
+    if (!user) {
       throw new UserNotFoundException('用户不存在');
     }
 
-    if (!(await validatePassword(password, users.password))) {
+    if (!(await validatePassword(password, user.password))) {
       throw new UnauthorizedException('密码错误');
     }
 
-    const sessionRecord = await this.sessionService.createSession(
-      users,
-      userAgent,
-    );
+    return user;
+  }
 
+  async login(user: User, device: DeviceType) {
+    const { accessToken, refreshToken } =
+      await this.tokenService.createJwtToken(user);
+    const now = new Date();
+    await this.db.insert(passportTable).values({
+      userId: user.id,
+      refreshToken: refreshToken,
+      userAgent: device.userAgent,
+      createdAt: now,
+      updatedAt: now,
+      ...pickBy(device),
+    });
     return {
-      ...sessionRecord,
-      user: {
-        ...pick(users, ['email']),
-        ...pick(profiles, ['id', 'username', 'avatar']),
-      },
+      accessToken,
+      refreshToken,
     };
   }
 
@@ -61,11 +74,11 @@ export class AuthService {
     const optRecord = await this.optsService.verifyOtp(email, code);
 
     if (!optRecord) {
-      throw new BadRequestException('验证吗错误');
+      throw new BadRequestException('Verification code error');
     }
 
     if (optRecord.expiresAt && optRecord.expiresAt < new Date()) {
-      throw new BadRequestException('验证码已过期');
+      throw new BadRequestException('Verification code expired');
     }
 
     const now = new Date();
@@ -76,7 +89,6 @@ export class AuthService {
           .insert(usersTable)
           .values({
             email,
-            username: email.split('@')[0],
             password: await hashPassword(password),
             updatedAt: now,
             createdAt: now,
@@ -87,7 +99,7 @@ export class AuthService {
           .insert(profilesTable)
           .values({
             userId: user.id,
-            username: user.username,
+            displayName: user.email.split('@')[0],
             updatedAt: now,
             createdAt: now,
           })
@@ -99,46 +111,7 @@ export class AuthService {
       });
     } catch (error) {
       this.logger.error(error);
-      throw new InternalServerErrorException('注册失败');
-    }
-  }
-
-  // skip code for dev
-  async registerDev(dto: RegisterDto) {
-    const { email, password } = dto;
-
-    const now = new Date();
-
-    try {
-      return await this.db.transaction(async (trx) => {
-        const [user] = await trx
-          .insert(usersTable)
-          .values({
-            email,
-            username: email.split('@')[0],
-            password: await hashPassword(password),
-            updatedAt: now,
-            createdAt: now,
-          })
-          .returning();
-
-        await trx
-          .insert(profilesTable)
-          .values({
-            userId: user.id,
-            username: user.username,
-            updatedAt: now,
-            createdAt: now,
-          })
-          .returning();
-
-        await trx.delete(otpsTable).where(eq(otpsTable.receiver, email));
-
-        return user;
-      });
-    } catch (error) {
-      this.logger.error(error);
-      throw new InternalServerErrorException('注册失败');
+      throw new InternalServerErrorException('Register failed');
     }
   }
 
@@ -146,16 +119,16 @@ export class AuthService {
     const { email, code, password, confirmPassword } = dto;
 
     if (password !== confirmPassword) {
-      throw new BadRequestException('两次输入的密码不一致');
+      throw new BadRequestException('Passwords do not match');
     }
 
     const optRecord = await this.optsService.verifyOtp(email, code);
 
     if (!optRecord) {
-      throw new BadRequestException('验证码错误');
+      throw new BadRequestException('Verification code error');
     }
     if (optRecord.expiresAt && optRecord.expiresAt < new Date()) {
-      throw new BadRequestException('验证码已过期');
+      throw new BadRequestException('Verification code expired');
     }
 
     try {
@@ -170,12 +143,12 @@ export class AuthService {
       });
     } catch (error) {
       this.logger.error(error);
-      throw new InternalServerErrorException('修改密码失败');
+      throw new InternalServerErrorException('Reset password failed');
     }
   }
 
-  async logout(sessionID: string) {
-    await this.sessionService.deleteSession(sessionID);
+  async logout(id: string) {
+    await this.tokenService.removeToken(id);
   }
 
   async changePassword(dto: ChangePasswordDto & { email: string }) {
@@ -183,11 +156,11 @@ export class AuthService {
     const { users } = await this.findUserByEmail(email);
 
     if (password !== confirmPassword) {
-      throw new BadRequestException('两次输入的密码不一致');
+      throw new BadRequestException('Passwords do not match');
     }
 
     if (!(await validatePassword(oldPassword, users.password))) {
-      throw new BadRequestException('旧密码错误');
+      throw new BadRequestException('Old password error');
     }
 
     try {
@@ -197,7 +170,7 @@ export class AuthService {
         .where(eq(usersTable.email, email));
     } catch (error) {
       this.logger.error(error);
-      throw new InternalServerErrorException('修改密码失败');
+      throw new InternalServerErrorException('Change password failed');
     }
   }
 
@@ -212,11 +185,6 @@ export class AuthService {
       .where(eq(usersTable.email, email))
       .limit(1)
       .then((res) => res[0]);
-    return (
-      result || {
-        users: null,
-        profiles: null,
-      }
-    );
+    return result;
   }
 }

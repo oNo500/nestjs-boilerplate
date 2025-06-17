@@ -1,10 +1,5 @@
 import * as argon2 from 'argon2';
 
-/**
- * @description Plain text transform to hex
- * @param password
- * @return Promise<string>
- */
 const hashPassword = async (password: string): Promise<string> => {
   return await argon2.hash(password, {
     type: argon2.argon2id,
@@ -14,12 +9,6 @@ const hashPassword = async (password: string): Promise<string> => {
   });
 };
 
-/**
- * @description Compare plain password with hashed password
- * @param plainPassword
- * @param hashedPassword
- * @return Promise<boolean>
- */
 const validatePassword = async (
   plainPassword: string,
   hashedPassword: string,

@@ -15,20 +15,20 @@ export class MailService {
       ...mailOptions,
     });
   }
-  // 发送注册验证码
+
   async sendRegisterCode(email: string, code: string) {
     await this.sendEmail({
       to: [email],
-      subject: '注册验证码',
-      html: `您的注册验证码是：${code}，10分钟内有效。`,
+      subject: 'Register Verification Code',
+      html: `Your register verification code is: ${code}, valid for 10 minutes.`,
     });
   }
-  // 发送重置密码验证码
+
   async sendResetPasswordCode(email: string, code: string) {
     await this.sendEmail({
       to: [email],
-      subject: '重置密码验证码',
-      html: `您的重置密码验证码是：${code}，10分钟内有效。`,
+      subject: 'Reset Password Verification Code',
+      html: `Your reset password verification code is: ${code}, valid for 10 minutes.`,
     });
   }
 }

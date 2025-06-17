@@ -14,6 +14,8 @@ export const EnvSchema = z.object({
   MAIL_USERNAME: z.string(),
   MAIL_PASSWORD: z.string(),
   DATABASE_URL: z.string(),
+  ALLOWED_ORIGINS: z.string().default('*'),
+  API_PREFIX: z.string().default('api'),
 });
 
 export type Env = z.infer<typeof EnvSchema>;

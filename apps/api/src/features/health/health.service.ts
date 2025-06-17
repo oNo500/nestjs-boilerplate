@@ -1,21 +1,36 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Schema } from '@repo/db';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
-import { sql } from 'drizzle-orm';
+import {
+  DiskHealthIndicator,
+  HealthCheckService,
+  HttpHealthIndicator,
+  MemoryHealthIndicator,
+} from '@nestjs/terminus';
+import { ConfigService } from '@nestjs/config';
 
-import { Drizzle } from '@/common/decorators';
+import { DrizzleHealthIndicator } from './drizzle-health.indicator';
 
 @Injectable()
 export class HealthService {
-  constructor(@Drizzle() private readonly db: NodePgDatabase<Schema>) {}
+  constructor(
+    private health: HealthCheckService,
+    private http: HttpHealthIndicator,
+    private disk: DiskHealthIndicator,
+    private memory: MemoryHealthIndicator,
+    private config: ConfigService,
+    private databaseHealth: DrizzleHealthIndicator,
+  ) {}
 
-  async drizzleIsHealth() {
-    try {
-      await this.db.execute(sql`SELECT 1`);
-      return { status: 'ok', message: '数据库连接正常' };
-    } catch (error) {
-      console.error('数据库健康检查失败', error);
-      throw new InternalServerErrorException('数据库健康检查失败');
-    }
+  async check() {
+    return await this.health.check([
+      async () => this.databaseHealth.isHealthy('drizzle'),
+      async () => this.memory.checkRSS('memory_rss', 3000 * 1024 * 1024),
+      async () =>
+        this.disk.checkStorage('disk health', {
+          thresholdPercent: 0.8,
+          path: '/',
+        }),
+    ]);
   }
 }

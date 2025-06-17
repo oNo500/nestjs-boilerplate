@@ -9,10 +9,11 @@ import { LoggerModule } from '@/common/modules/logger/logger.module';
 import { HealthModule } from '@/features/health/health.module';
 import { DrizzleModule } from '@/common/modules/drizzle/drizzle.module';
 import { validateEnv } from '@/config/env';
-import { AuthGuard, RolesGuard } from '@/common/guards';
 import { LoggerMiddleware } from '@/common/middleware';
 import { NodeMailerModule } from '@/common/modules/node-mailer/node-mailer.module';
 import { AuthModule } from '@/features/auth/auth.module';
+import { UserModule } from '@/features/user/user.module';
+import { JwtAuthGuard, RolesGuard } from '@/common/guards';
 
 @Module({
   imports: [
@@ -36,12 +37,9 @@ import { AuthModule } from '@/features/auth/auth.module';
     HealthModule,
     AuthModule,
     NodeMailerModule,
+    UserModule,
   ],
   providers: [
-    {
-      provide: APP_GUARD,
-      useClass: AuthGuard,
-    },
     {
       provide: APP_GUARD,
       useClass: RolesGuard,

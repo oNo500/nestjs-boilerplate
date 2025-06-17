@@ -2,17 +2,16 @@ import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
-import { sessionsTable } from '@repo/db';
-import { pickBy } from 'lodash';
+import { passportTable } from '@repo/db';
 import { eq } from 'drizzle-orm';
 
 import { Drizzle } from '@/common/decorators';
+import { AuthTokensInterface, JwtPayload } from '@/types/jwt';
 
-import { AuthTokensInterface, User } from './auth.interface';
-import { getDeviceInfo } from './utils/os';
+import { User } from './auth.interface';
 
 @Injectable()
-export class SessionService {
+export class TokenService {
   constructor(
     private readonly jwtService: JwtService,
     private readonly config: ConfigService,
@@ -20,11 +19,11 @@ export class SessionService {
   ) {}
 
   async generateTokens(user: User): Promise<AuthTokensInterface> {
-    const payload = {
+    const payload: JwtPayload = {
       sub: user.id,
-      username: user.username,
       role: user.role,
     };
+
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.signAsync(payload, {
         secret: this.config.get('ACCESS_TOKEN_SECRET'),
@@ -43,39 +42,23 @@ export class SessionService {
   }
 
   generateRefreshTime = (day = 3): string => {
-    const threeDays = day * 24 * 60 * 60 * 1000; // TODO: 和环境变量里的是什么关系？
+    const threeDays = day * 24 * 60 * 60 * 1000;
     const refreshTime = new Date(Date.now() + threeDays);
     return refreshTime.toISOString();
   };
 
-  // 创建 session 连接
-  async createSession(user: User, userAgent: string) {
+  async createJwtToken(user: User) {
     const { accessToken, refreshToken } = await this.generateTokens(user);
-    const device = getDeviceInfo(userAgent);
-    const now = new Date();
     const sessionRefreshTime = this.generateRefreshTime();
-
-    const [session] = await this.db
-      .insert(sessionsTable)
-      .values({
-        userId: user.id,
-        refreshToken: refreshToken,
-        userAgent: userAgent,
-        createdAt: now,
-        updatedAt: now,
-        ...pickBy(device),
-      })
-      .returning();
-
     return {
-      sessionID: session.id,
       accessToken,
       refreshToken,
       sessionRefreshTime,
     };
   }
 
-  async deleteSession(sessionID: string) {
-    await this.db.delete(sessionsTable).where(eq(sessionsTable.id, sessionID));
+  async removeToken(id: string) {
+    // TODO: 多设备问题
+    await this.db.delete(passportTable).where(eq(passportTable.userId, id));
   }
 }

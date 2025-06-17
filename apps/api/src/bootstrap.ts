@@ -3,23 +3,54 @@ import { ConfigService } from '@nestjs/config';
 import helmet from 'helmet';
 import { RequestMethod, ValidationPipe } from '@nestjs/common';
 import { Logger, LoggerErrorInterceptor } from 'nestjs-pino';
+import chalk from 'chalk';
+import bodyParser from 'body-parser';
+import compression from 'compression';
 
 import { swagger } from '@/config/swagger';
 import { Env } from '@/config/env';
 
 import { TransformInterceptor } from './common/interceptor/transform.interceptor';
+import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 
 export const bootstrap = async (app: NestExpressApplication) => {
   const configService = app.get(ConfigService<Env>);
   const logger = app.get(Logger);
 
+  app.set('query parser', 'extended');
+
+  // =========================================================
+  // configure swagger
+  // =========================================================
+  if (configService.get('NODE_ENV') !== 'production') {
+    swagger(app);
+  }
+
+  // ======================================================
+  // security and middlewares
+  // ======================================================
+
+  app.enable('trust proxy');
+  app.set('etag', 'strong');
   app.use(
-    helmet({
-      permittedCrossDomainPolicies: false,
-    }),
+    bodyParser.json({ limit: '10mb' }),
+    bodyParser.urlencoded({ limit: '10mb', extended: true }),
   );
 
-  app.setGlobalPrefix('api', {
+  app.use(compression());
+  app.use(helmet());
+  app.enableCors({
+    credentials: true,
+    methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
+    maxAge: 3600,
+    origin: configService.get('ALLOWED_ORIGINS'),
+  });
+
+  // =====================================================
+  // configure global pipes, filters, interceptors
+  // =====================================================
+
+  app.setGlobalPrefix(configService.get('API_PREFIX'), {
     exclude: [
       {
         path: '/',
@@ -33,17 +64,15 @@ export const bootstrap = async (app: NestExpressApplication) => {
         path: '/health',
         method: RequestMethod.GET,
       },
+      {
+        path: '/health/test',
+        method: RequestMethod.GET,
+      },
     ],
   });
 
   app.useStaticAssets('./uploads', {
     prefix: '/assets',
-  });
-
-  app.enableCors({
-    credentials: true,
-    // origin:  // TODO: add origin
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
   });
 
   app.useGlobalPipes(
@@ -54,24 +83,38 @@ export const bootstrap = async (app: NestExpressApplication) => {
       transformOptions: {
         enableImplicitConversion: true, // 启用隐式类型转换（如字符串转数字）
       },
+      disableErrorMessages: configService.get('NODE_ENV') === 'production',
     }),
   );
-  if (configService.get('NODE_ENV') !== 'production') {
-    swagger(app);
-  }
 
   app.useGlobalInterceptors(new LoggerErrorInterceptor());
   app.useGlobalInterceptors(new TransformInterceptor());
-  // app.useGlobalFilters(new AllExceptionsFilter());
+  app.useGlobalFilters(new HttpExceptionFilter());
   await app.listen(configService.get('PORT'), () => {
     logger.log(
       [
         '',
-        '�� 服务已启动!',
-        `🌍 地址: http://${configService.get('HOST')}:${configService.get('PORT')}`,
-        `📚 文档: http://${configService.get('HOST')}:${configService.get('PORT')}/api-docs`,
-        `🌱 环境: ${configService.get('NODE_ENV')}`,
-        `⏰ 启动时间: ${new Date().toLocaleString()}`,
+        chalk.magentaBright(
+          '╔══════════════════════════════════════════════════════╗',
+        ),
+        chalk.green.bold('  🚀 Service Started!'),
+        chalk.cyanBright(
+          '  ────────────────────────────────────────────────────',
+        ),
+        chalk.blueBright('  🌍 URL: ') +
+          chalk.whiteBright.underline(
+            `http://${configService.get('HOST')}:${configService.get('PORT')}`,
+          ),
+        chalk.yellowBright('  📚 Docs: ') +
+          chalk.whiteBright.underline(
+            `http://${configService.get('HOST')}:${configService.get('PORT')}/docs`,
+          ),
+        chalk.cyanBright('  🌱 Env: ') +
+          chalk.whiteBright(`${configService.get('NODE_ENV')}`),
+        chalk.magentaBright(
+          '╚══════════════════════════════════════════════════════╝',
+        ),
+        '',
       ].join('\n'),
     );
   });

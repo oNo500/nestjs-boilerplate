@@ -42,6 +42,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
   private normalizeError(exception: unknown): {
     error: string;
     message: string;
+    stack?: string;
   } {
     if (exception instanceof HttpException) {
       const res = exception.getResponse();
@@ -53,12 +54,14 @@ export class HttpExceptionFilter implements ExceptionFilter {
         return {
           error: obj.error || exception.name,
           message: obj.message || obj.msg || 'Unknown error',
+          stack: exception.stack,
         };
       }
     }
     return {
       error: 'INTERNAL_SERVER_ERROR',
       message: (exception as any)?.message || 'Internal server error',
+      stack: (exception as any)?.stack || undefined,
     };
   }
 }

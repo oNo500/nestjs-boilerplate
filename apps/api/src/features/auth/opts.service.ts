@@ -2,8 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { otpsTable, OTPType } from '@repo/db';
 import { and, eq } from 'drizzle-orm';
-import { ISendMailOptions, MailerService } from '@nestjs-modules/mailer';
-import { ConfigService } from '@nestjs/config';
 
 import { Drizzle } from '@/common/decorators';
 
@@ -11,11 +9,7 @@ import { generateCode } from './utils/code';
 
 @Injectable()
 export class OptsService {
-  constructor(
-    @Drizzle() private readonly db: NodePgDatabase,
-    private readonly mailerService: MailerService,
-    private readonly config: ConfigService,
-  ) {}
+  constructor(@Drizzle() private readonly db: NodePgDatabase) {}
 
   async generateOtpCode(email: string, type: OTPType) {
     const code = generateCode();
@@ -30,7 +24,7 @@ export class OptsService {
 
     return code;
   }
-  // 验证
+
   async verifyOtp(email: string, code: string) {
     const record = await this.db
       .select()
@@ -46,12 +40,5 @@ export class OptsService {
       .then((res) => res[0]);
 
     return record;
-  }
-
-  async sendEmail(mailOptions: ISendMailOptions): Promise<void> {
-    await this.mailerService.sendMail({
-      from: `♻️ Turborepo ⚡ <${this.config.get('MAIL_USERNAME')}>`,
-      ...mailOptions,
-    });
   }
 }

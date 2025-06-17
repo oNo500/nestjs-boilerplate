@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "dependencies": {
     "@hookform/resolvers": "^5.0.1",
+    "@nestjs/jwt": "^11.0.0",
     "@repo/lint-config": "workspace:*",
     "@repo/ts-config": "workspace:*",
     "@repo/ui": "workspace:*",
@@ -14,6 +15,7 @@
     "dotenv": "^16.5.0",
     "lucide-react": "^0.511.0",
     "next-themes": "^0.4.6",
+    "passport-jwt": "^4.0.1",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-error-boundary": "^6.0.0",
@@ -26,6 +28,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.28.0",
+    "@types/passport-jwt": "^4.0.1",
     "@types/react": "^19.1.6",
     "@types/react-dom": "^19.1.5",
     "@vitejs/plugin-react-swc": "^3.10.0",

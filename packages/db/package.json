@@ -5,6 +5,7 @@
   "scripts": {
     "generate": "drizzle-kit generate",
     "migrate": "drizzle-kit migrate",
+    "seed": "tsx src/seeds/index.ts",
     "studio": "drizzle-kit studio",
     "lint:fix": "eslint . --ext .ts,.js --fix",
     "build": "tsup"
@@ -27,6 +28,7 @@
   "dependencies": {
     "@repo/lint-config": "workspace:*",
     "@repo/ts-config": "workspace:*",
+    "argon2": "^0.43.0",
     "dotenv": "^16.5.0",
     "drizzle-orm": "^0.44.2",
     "pg": "^8.16.0"
