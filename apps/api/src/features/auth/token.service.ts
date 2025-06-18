@@ -58,7 +58,6 @@ export class TokenService {
   }
 
   async removeToken(id: string) {
-    // TODO: 多设备问题
     await this.db.delete(passportTable).where(eq(passportTable.userId, id));
   }
 }

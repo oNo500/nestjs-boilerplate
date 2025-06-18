@@ -1,11 +1,4 @@
-import {
-  BadRequestException,
-  Body,
-  Controller,
-  Post,
-  Req,
-  UseGuards,
-} from '@nestjs/common';
+import { BadRequestException, Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
 import { Request } from 'express';
 
 import { Public } from '@/common/decorators';
@@ -33,11 +26,7 @@ export class AuthController {
   @Public()
   @UseGuards(LocalAuthGuard)
   @Post('login')
-  async login(
-    @Body() body: LoginDto,
-    @Device() device: DeviceType,
-    @Req() request: Request,
-  ) {
+  async login(@Body() body: LoginDto, @Device() device: DeviceType, @Req() request: Request) {
     const user = request.user as User;
     return {
       ...(await this.authService.login(user, device)),
@@ -59,10 +48,7 @@ export class AuthController {
   }
 
   @Post('change-password')
-  async changePassword(
-    @Body() body: ChangePasswordDto,
-    @Req() request: Request,
-  ) {
+  async changePassword(@Body() body: ChangePasswordDto, @Req() request: Request) {
     const sessionID = request.headers['authorization'] as string;
     // TODO: 权限控制的时候统一处理
     await this.authService.changePassword({ ...body, email: sessionID });
@@ -80,10 +66,7 @@ export class AuthController {
   @Post('send-register-code')
   async sendRegisterCode(@Body() body: SendCodeDto) {
     try {
-      const code = await this.optsService.generateOtpCode(
-        body.email,
-        'EMAIL_REGISTER',
-      );
+      const code = await this.optsService.generateOtpCode(body.email, 'EMAIL_REGISTER');
       await this.mailService.sendRegisterCode(body.email, code);
     } catch (error) {
       throw new BadRequestException(error.message);
@@ -94,10 +77,7 @@ export class AuthController {
   @Post('send-reset-password-code')
   async sendResetPasswordCode(@Body() body: SendCodeDto) {
     try {
-      const code = await this.optsService.generateOtpCode(
-        body.email,
-        'PASSWORD_RESET',
-      );
+      const code = await this.optsService.generateOtpCode(body.email, 'PASSWORD_RESET');
       await this.mailService.sendResetPasswordCode(body.email, code);
     } catch (error) {
       throw new BadRequestException(error.message);

@@ -9,10 +9,7 @@ const hashPassword = async (password: string): Promise<string> => {
   });
 };
 
-const validatePassword = async (
-  plainPassword: string,
-  hashedPassword: string,
-): Promise<boolean> => {
+const validatePassword = async (plainPassword: string, hashedPassword: string): Promise<boolean> => {
   try {
     return await argon2.verify(hashedPassword, plainPassword);
   } catch (e) {

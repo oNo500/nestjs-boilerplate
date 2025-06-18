@@ -1,31 +1,31 @@
 import { ChartContainer } from '@repo/ui/components/chart';
-import { ResponsiveContainer, Treemap } from 'recharts';
+import { Treemap } from 'recharts';
 
 const data = [
   {
     name: 'React',
     size: 300,
-    fill: '#61dafb', // React 品牌色
+    fill: '#61dafb',
   },
   {
     name: 'Node.js',
     size: 200,
-    fill: '#339933', // Node.js 品牌色
+    fill: '#339933',
   },
   {
     name: 'Python',
     size: 300,
-    fill: '#3776ab', // Python 品牌色
+    fill: '#3776ab',
   },
   {
     name: 'TypeScript',
     size: 400,
-    fill: '#3178c6', // TypeScript 品牌色
+    fill: '#3178c6',
   },
   {
     name: 'Next.js',
     size: 500,
-    fill: '#000000', // Next.js 品牌色
+    fill: '#000000',
   },
 ];
 

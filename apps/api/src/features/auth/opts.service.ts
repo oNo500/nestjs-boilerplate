@@ -29,13 +29,7 @@ export class OptsService {
     const record = await this.db
       .select()
       .from(otpsTable)
-      .where(
-        and(
-          eq(otpsTable.receiver, email),
-          eq(otpsTable.code, code),
-          eq(otpsTable.type, 'EMAIL_REGISTER'),
-        ),
-      )
+      .where(and(eq(otpsTable.receiver, email), eq(otpsTable.code, code), eq(otpsTable.type, 'EMAIL_REGISTER')))
       .limit(1)
       .then((res) => res[0]);
 

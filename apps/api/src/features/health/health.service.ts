@@ -1,12 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Schema } from '@repo/db';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
-import {
-  DiskHealthIndicator,
-  HealthCheckService,
-  HttpHealthIndicator,
-  MemoryHealthIndicator,
-} from '@nestjs/terminus';
+import { DiskHealthIndicator, HealthCheckService, HttpHealthIndicator, MemoryHealthIndicator } from '@nestjs/terminus';
 import { ConfigService } from '@nestjs/config';
 
 import { DrizzleHealthIndicator } from './drizzle-health.indicator';

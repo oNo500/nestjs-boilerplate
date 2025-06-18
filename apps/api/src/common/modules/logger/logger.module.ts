@@ -68,10 +68,7 @@ const developmentPinoOptions = [
   },
 ];
 
-const pinoOptions =
-  process.env.NODE_ENV === 'production'
-    ? productionPinoOptions
-    : developmentPinoOptions;
+const pinoOptions = process.env.NODE_ENV === 'production' ? productionPinoOptions : developmentPinoOptions;
 
 @Module({
   imports: [
@@ -80,12 +77,9 @@ const pinoOptions =
         return {
           forRoutes: ['*'],
           pinoHttp: {
-            exclude: [
-              { method: ['GET', 'POST', 'PUT', 'DELETE'], path: 'docs' },
-            ],
+            exclude: [{ method: ['GET', 'POST', 'PUT', 'DELETE'], path: 'docs' }],
 
-            timestamp: () =>
-              `,"timestamp":"${new Date(Date.now()).toISOString()}"`,
+            timestamp: () => `,"timestamp":"${new Date(Date.now()).toISOString()}"`,
 
             // quietReqLogger: true,
             // quietResLogger: true,
@@ -122,10 +116,7 @@ const pinoOptions =
                   ...pick(request.headers, ['user-agent', 'referer', 'host']),
                 };
               },
-              res(response: {
-                statusCode: number;
-                headers: Record<string, any>;
-              }) {
+              res(response: { statusCode: number; headers: Record<string, any> }) {
                 return {
                   ...pick(response, ['statusCode']),
                   ...pick(response.headers, ['content-length', 'content-type']),

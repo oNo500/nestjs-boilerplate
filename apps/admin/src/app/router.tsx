@@ -98,7 +98,6 @@ const router = createBrowserRouter([
     }),
   },
 ]);
-const LoadingFallback = () => <div>加载中...</div>;
 
 export const AppRouter = () => {
   return <RouterProvider router={router} />;

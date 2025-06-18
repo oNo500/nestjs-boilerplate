@@ -14,9 +14,7 @@ export const drizzleProvider = [
       const pool = new Pool({
         connectionString,
       });
-      return drizzle(pool, { schema, casing: 'snake_case' }) as NodePgDatabase<
-        typeof schema
-      >;
+      return drizzle(pool, { schema, casing: 'snake_case' }) as NodePgDatabase<typeof schema>;
     },
   },
 ];

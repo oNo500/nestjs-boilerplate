@@ -88,26 +88,15 @@ export const bootstrap = async (app: NestExpressApplication) => {
     logger.log(
       [
         '',
-        chalk.magentaBright(
-          '╔══════════════════════════════════════════════════════╗',
-        ),
+        chalk.magentaBright('╔══════════════════════════════════════════════════════╗'),
         chalk.green.bold('  🚀 Service Started!'),
-        chalk.cyanBright(
-          '  ────────────────────────────────────────────────────',
-        ),
+        chalk.cyanBright('  ────────────────────────────────────────────────────'),
         chalk.blueBright('  🌍 URL: ') +
-          chalk.whiteBright.underline(
-            `http://${configService.get('HOST')}:${configService.get('PORT')}`,
-          ),
+          chalk.whiteBright.underline(`http://${configService.get('HOST')}:${configService.get('PORT')}`),
         chalk.yellowBright('  📚 Docs: ') +
-          chalk.whiteBright.underline(
-            `http://${configService.get('HOST')}:${configService.get('PORT')}/docs`,
-          ),
-        chalk.cyanBright('  🌱 Env: ') +
-          chalk.whiteBright(`${configService.get('NODE_ENV')}`),
-        chalk.magentaBright(
-          '╚══════════════════════════════════════════════════════╝',
-        ),
+          chalk.whiteBright.underline(`http://${configService.get('HOST')}:${configService.get('PORT')}/docs`),
+        chalk.cyanBright('  🌱 Env: ') + chalk.whiteBright(`${configService.get('NODE_ENV')}`),
+        chalk.magentaBright('╚══════════════════════════════════════════════════════╝'),
         '',
       ].join('\n'),
     );

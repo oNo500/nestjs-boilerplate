@@ -9,7 +9,6 @@ import { authStore } from './auth-store';
 
 import type { ApiError, LoginData, User } from '@/types/api';
 
-// 类型定义
 export interface LoginRequest {
   email: string;
   password: string;
@@ -42,7 +41,6 @@ export const useLogin = () => {
   });
 };
 
-// 注册
 export const useRegister = () => {
   const { login } = authStore();
   return useMutation({
@@ -58,7 +56,6 @@ export const useRegister = () => {
   });
 };
 
-// 获取当前用户信息
 export const useCurrentUser = () => {
   return useQuery({
     queryKey: ['current-user'],
@@ -66,7 +63,6 @@ export const useCurrentUser = () => {
   });
 };
 
-// 登出
 export const useLogout = () => {
   const { logout } = authStore();
   return useMutation({

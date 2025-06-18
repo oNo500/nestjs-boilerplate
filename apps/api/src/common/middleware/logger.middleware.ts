@@ -2,8 +2,7 @@ import { Injectable, NestMiddleware } from '@nestjs/common';
 import { NextFunction, Request, Response } from 'express';
 import { Logger } from 'nestjs-pino';
 
-const concatStr = (strings: (number | string)[], divider?: string): string =>
-  strings.join(divider ?? ' ');
+const concatStr = (strings: (number | string)[], divider?: string): string => strings.join(divider ?? ' ');
 
 @Injectable()
 export class LoggerMiddleware implements NestMiddleware {

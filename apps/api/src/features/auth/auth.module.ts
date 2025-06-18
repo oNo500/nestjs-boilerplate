@@ -16,14 +16,7 @@ import { TokenService } from './token.service';
 
 @Module({
   imports: [NodeMailerModule, ConfigModule, PassportModule],
-  providers: [
-    AuthService,
-    OptsService,
-    MailService,
-    LocalStrategy,
-    JwtStrategy,
-    TokenService,
-  ],
+  providers: [AuthService, OptsService, MailService, LocalStrategy, JwtStrategy, TokenService],
   controllers: [AuthController],
 })
 export class AuthModule {}

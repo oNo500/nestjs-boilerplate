@@ -1,9 +1,4 @@
-import {
-  BadRequestException,
-  Injectable,
-  InternalServerErrorException,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { otpsTable, profilesTable, passportTable, usersTable } from '@repo/db';
 import { eq } from 'drizzle-orm';
@@ -52,8 +47,7 @@ export class AuthService {
   }
 
   async login(user: User, device: DeviceType) {
-    const { accessToken, refreshToken } =
-      await this.tokenService.createJwtToken(user);
+    const { accessToken, refreshToken } = await this.tokenService.createJwtToken(user);
     const now = new Date();
     await this.db.insert(passportTable).values({
       userId: user.id,

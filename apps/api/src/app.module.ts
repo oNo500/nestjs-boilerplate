@@ -15,8 +15,6 @@ import { AuthModule } from '@/features/auth/auth.module';
 import { UserModule } from '@/features/user/user.module';
 import { RolesGuard } from '@/common/guards';
 
-import { SharedModule } from './features/shared/shared.module';
-
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -40,7 +38,6 @@ import { SharedModule } from './features/shared/shared.module';
     AuthModule,
     NodeMailerModule,
     UserModule,
-    SharedModule,
   ],
   providers: [
     {

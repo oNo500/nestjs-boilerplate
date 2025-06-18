@@ -133,11 +133,29 @@ const turboConfig = [
   },
 ] as FlatConfig.Config[];
 
+// =========================================
+// prettier
+// =========================================
+const prettierConfig = [
+  pluginPrettierRecommended as FlatConfig.Config,
+  {
+    name: 'base/prettier/custom',
+    rules: {
+      'prettier/prettier': [
+        'error',
+        {
+          printWidth: 120,
+        },
+      ],
+    },
+  },
+] as FlatConfig.Config[];
+
 export const config = [
   ...eslintConfig,
   ...tseslintConfig,
   ...importConfig,
   ...turboConfig,
   ...ignoresConfig,
-  pluginPrettierRecommended as FlatConfig.Config,
+  ...prettierConfig,
 ] satisfies FlatConfig.Config[];
