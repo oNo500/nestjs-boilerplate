@@ -42,17 +42,17 @@
     "vite": "^6.3.5",
     "vite-plugin-svgr": "^4.3.0"
   },
+  "overrides": {
+    "react-is": "^19.1.0"
+  },
   "private": true,
   "scripts": {
     "build": "tsc -b && vite build",
-    "start": "vite --port 5173",
+    "check-types": "tsc --noEmit --pretty",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "preview": "vite preview",
-    "check-types": "tsc --noEmit --pretty"
-  },
-  "overrides": {
-    "react-is": "^19.1.0"
+    "start": "vite --port 5173"
   },
   "type": "module"
 }

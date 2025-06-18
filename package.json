@@ -1,5 +1,5 @@
 {
-  "name": "react-template",
+  "name": "NestJS Boilerplate",
   "devDependencies": {
     "@commitlint/cli": "^19.8.1",
     "@commitlint/config-conventional": "^19.8.1",
@@ -20,15 +20,15 @@
   "engines": {
     "node": ">=22.11.0"
   },
+  "license": "MIT",
   "packageManager": "pnpm@10.11.0",
   "private": true,
   "scripts": {
     "build": "turbo run build --log-order=grouped",
     "check-types": "turbo run check-types",
-    "start": "turbo run start",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "lint": "turbo run lint",
     "lint:fix": "turbo run lint:fix",
-    "prepare": "husky"
+    "start": "turbo run start"
   }
 }
