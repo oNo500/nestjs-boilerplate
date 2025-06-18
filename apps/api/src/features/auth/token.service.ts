@@ -6,7 +6,7 @@ import { passportTable } from '@repo/db';
 import { eq } from 'drizzle-orm';
 
 import { Drizzle } from '@/common/decorators';
-import { AuthTokensInterface, JwtPayload } from '@/types/jwt';
+import { AuthTokensInterface, JwtPayload } from '@/types/interface/jwt';
 
 import { User } from './auth.interface';
 

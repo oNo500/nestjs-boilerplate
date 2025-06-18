@@ -1,7 +1,7 @@
 import { Controller, Get } from '@nestjs/common';
 
 import { CurrentUser } from '@/common/decorators/current-user.decorator';
-import { JwtValidateUser } from '@/types/jwt';
+import { JwtValidateUser } from '@/types/interface/jwt';
 
 import { UserService } from './user.service';
 

@@ -4,8 +4,8 @@ import { PassportModule } from '@nestjs/passport';
 import { APP_GUARD } from '@nestjs/core';
 
 import { NodeMailerModule } from '@/common/modules/node-mailer/node-mailer.module';
-import { LocalStrategy } from '@/common/strategies/local.strategy';
-import { JwtStrategy } from '@/common/strategies/jwt.strategy';
+import { LocalStrategy } from '@/features/auth/strategies/local.strategy';
+import { JwtStrategy } from '@/features/auth/strategies/jwt.strategy';
 import { JwtAuthGuard } from '@/common/guards';
 
 import { AuthService } from './auth.service';
@@ -23,10 +23,6 @@ import { TokenService } from './token.service';
     LocalStrategy,
     JwtStrategy,
     TokenService,
-    {
-      provide: APP_GUARD,
-      useClass: JwtAuthGuard,
-    },
   ],
   controllers: [AuthController],
 })

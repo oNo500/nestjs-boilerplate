@@ -13,7 +13,9 @@ import { LoggerMiddleware } from '@/common/middleware';
 import { NodeMailerModule } from '@/common/modules/node-mailer/node-mailer.module';
 import { AuthModule } from '@/features/auth/auth.module';
 import { UserModule } from '@/features/user/user.module';
-import { JwtAuthGuard, RolesGuard } from '@/common/guards';
+import { RolesGuard } from '@/common/guards';
+
+import { SharedModule } from './features/shared/shared.module';
 
 @Module({
   imports: [
@@ -38,6 +40,7 @@ import { JwtAuthGuard, RolesGuard } from '@/common/guards';
     AuthModule,
     NodeMailerModule,
     UserModule,
+    SharedModule,
   ],
   providers: [
     {

@@ -39,6 +39,7 @@
     "@repo/db": "workspace:*",
     "@repo/lint-config": "workspace:*",
     "@repo/ts-config": "workspace:*",
+    "@supercharge/request-ip": "^1.2.0",
     "argon2": "^0.43.0",
     "axios": "^1.9.0",
     "body-parser": "^2.2.0",

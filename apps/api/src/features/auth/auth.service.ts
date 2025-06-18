@@ -13,7 +13,7 @@ import { Logger } from 'nestjs-pino';
 import { Drizzle } from '@/common/decorators';
 import { UserNotFoundException } from '@/common/error';
 import { DeviceType } from '@/common/decorators/device.decorator';
-import { JwtValidateUser } from '@/types/jwt';
+import { JwtValidateUser } from '@/types/interface/jwt';
 
 import { hashPassword, validatePassword } from './utils/password';
 import { RegisterDto } from './dto/register-dto';
