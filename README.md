@@ -56,6 +56,9 @@ cp apps/api/.env.example apps/api/.env
 
 # Frontend Admin
 cp apps/admin/.env.example apps/admin/.env
+
+# Database
+cp packages/db/.env.example packages/db/.env
 ```
 
 Update the `.env` files with your local configuration, including `DATABASE_URL`, email service credentials, and other necessary values.
