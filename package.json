@@ -25,7 +25,7 @@
   "scripts": {
     "build": "turbo run build --log-order=grouped",
     "check-types": "turbo run check-types",
-    "dev": "turbo run dev",
+    "start": "turbo run start",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "lint": "turbo run lint",
     "lint:fix": "turbo run lint:fix",

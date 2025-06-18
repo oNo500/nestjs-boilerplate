@@ -4,8 +4,7 @@ import helmet from 'helmet';
 import { RequestMethod, ValidationPipe } from '@nestjs/common';
 import { Logger, LoggerErrorInterceptor } from 'nestjs-pino';
 import chalk from 'chalk';
-import bodyParser from 'body-parser';
-import compression from 'compression';
+import * as compression from 'compression';
 
 import { swagger } from '@/config/swagger';
 import { Env } from '@/config/env';
@@ -29,13 +28,8 @@ export const bootstrap = async (app: NestExpressApplication) => {
   // ======================================================
   // security and middlewares
   // ======================================================
-
   app.enable('trust proxy');
   app.set('etag', 'strong');
-  app.use(
-    bodyParser.json({ limit: '10mb' }),
-    bodyParser.urlencoded({ limit: '10mb', extended: true }),
-  );
 
   app.use(compression());
   app.use(helmet());

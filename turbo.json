@@ -5,25 +5,17 @@
     "build": {
       "dependsOn": ["^build"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
-      "outputs": [".next/**", "!.next/cache/**"],
-      "env": ["NODE_ENV", "SENTRY_AUTH_TOKEN"]
-    },
-    "storybook": {
-      "cache": false,
-      "persistent": true
+      "env": ["NODE_ENV"]
     },
     "lint": {
       "dependsOn": ["^lint"]
     },
-    "check-types": {
-      "dependsOn": ["^check-types"]
-    },
-    "dev": {
-      "cache": false,
-      "persistent": true
-    },
     "lint:fix": {
       "dependsOn": ["^lint:fix"]
+    },
+    "start": {
+      "cache": false,
+      "persistent": true
     }
   }
 }
