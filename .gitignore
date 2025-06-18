@@ -40,3 +40,7 @@ yarn-error.log*
 *.tsbuildinfo
 *storybook.log
 storybook-static
+
+
+# Database
+packages/db/migrations
