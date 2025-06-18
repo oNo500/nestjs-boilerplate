@@ -11,7 +11,7 @@ const Configuration: UserConfig = {
     ],
     'type-empty': [2, 'never'],
     'subject-empty': [2, 'never'],
-    'subject-max-length': [2, 'always', 50],
+    'subject-max-length': [2, 'always', 80],
     'subject-full-stop': [2, 'never', '.'],
     'subject-case': [2, 'never', ['sentence-case', 'start-case', 'pascal-case', 'upper-case']],
     'scope-max-length': [2, 'always', 10],

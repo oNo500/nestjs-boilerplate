@@ -1,4 +1,3 @@
-
 # NestJS + React Full-Stack Boilerplate
 
 [![Status](https://img.shields.io/badge/status-active-success.svg)]()
@@ -71,11 +70,14 @@ docker-compose -f docker/docker-compose.yml up -d
 
 ```bash
 # Run database migrations
-pnpm -F @repo/db migrate
+cd packages/db
+pnpm generate && pnpm migrate && pnpm build
 
 # (Optional) Seed initial data
 pnpm -F @repo/db seed
 ```
+
+> Note: After changing the schema, run pnpm generate, then pnpm migrate && pnpm build.
 
 ### Start the Development Servers
 
