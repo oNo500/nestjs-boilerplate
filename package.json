@@ -1,34 +1,28 @@
 {
-  "name": "NestJS Boilerplate",
+  "name": "boilerplate",
+  "type": "module",
+  "scripts": {
+    "dev": "turbo run dev"
+  },
   "devDependencies": {
-    "@commitlint/cli": "^19.8.1",
-    "@commitlint/config-conventional": "^19.8.1",
-    "@commitlint/types": "^19.8.1",
-    "@nestjs/cli": "^11.0.7",
-    "@repo/lint-config": "workspace:*",
-    "@repo/ts-config": "workspace:*",
-    "@trivago/prettier-plugin-sort-imports": "^5.2.2",
-    "eslint": "^9.28.0",
-    "husky": "^9.1.7",
-    "jiti": "^2.4.2",
-    "prettier": "^3.5.3",
-    "prettier-plugin-tailwindcss": "^0.6.12",
-    "syncpack": "14.0.0-alpha.12",
-    "turbo": "^2.5.4",
-    "typescript": "^5.8.3"
+    "@types/node": "^24.10.2",
+    "eslint": "^9.39.2",
+    "globals": "16.5.0",
+    "jiti": "2.6.1",
+    "prettier": "^3.7.4",
+    "syncpack": "14.0.0-alpha.32",
+    "turbo": "^2.6.3",
+    "typescript": "^5.9.3"
   },
   "engines": {
-    "node": ">=22.11.0"
+    "node": ">=22.18.0"
   },
-  "license": "MIT",
-  "packageManager": "pnpm@10.11.0",
-  "private": true,
-  "scripts": {
-    "build": "turbo run build --log-order=grouped",
-    "check-types": "turbo run check-types",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "lint": "turbo run lint",
-    "lint:fix": "turbo run lint:fix",
-    "start": "turbo run start"
+  "packageManager": "pnpm@10.25.0",
+  "pnpm": {
+    "peerDependencyRules": {
+      "allowAny": [
+        "antd"
+      ]
+    }
   }
 }

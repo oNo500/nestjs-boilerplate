@@ -1,12 +1,6 @@
 packages:
-  - "apps/*"
-  - "packages/*"
+  - packages/*
+  - apps/*
 
-public-hoist-pattern:
-  - eslint
-  - prettier
-  - typescript
-  - vite
-  - vitest
-  - playwright*
-
+overrides:
+  "@types/node": "24.10.2"

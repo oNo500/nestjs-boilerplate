@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "display": "Vitest",
+
+  // ============================================================
+  // TypeScript Vitest Configuration
+  // ============================================================
+  // Use cases:
+  //   - Vitest unit tests
+  //   - Vitest integration tests
+  //   - React/Vue component tests
+  //   - Node.js code tests
+  //
+  // Key features:
+  //   - Vitest globals API support (describe, it, expect)
+  //   - Both DOM and Node.js environment support
+  //   - Relaxed strict checks (for test code)
+  //   - No compiled output
+  // ============================================================
+
+  "extends": "./tsconfig.base.json",
+
+  "compilerOptions": {
+
+    // ==========================================================
+    // Module System
+    // ==========================================================
+
+    "module": "ESNext",
+    // ES module syntax
+
+    "moduleResolution": "Bundler",
+    // Bundler mode
+
+    // ==========================================================
+    // Output
+    // ==========================================================
+
+    "noEmit": true,
+    // No compiled output files
+    // Vitest handles test execution
+
+    // ==========================================================
+    // Environment
+    // ==========================================================
+
+    "types": ["vitest/globals", "node"],
+    // Include Vitest global API and Node.js types
+
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
+    // Both DOM and ES environment support
+    // Component tests require DOM types
+
+    // ==========================================================
+    // Relaxed for Tests
+    // ==========================================================
+
+    "noUnusedLocals": false,
+    // Allow unused variables in tests
+    // e.g., test helper variables, mock data
+
+    "noUnusedParameters": false
+    // Allow unused parameters in tests
+    // e.g., placeholder params in callbacks
+  }
+}

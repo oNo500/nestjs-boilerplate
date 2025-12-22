@@ -1,0 +1,4 @@
+{
+  "extends": "@workspace/typescript-config/tsconfig.library.json",
+  "include": ["src", "*.config.ts", "eslint.config.mts"]
+}

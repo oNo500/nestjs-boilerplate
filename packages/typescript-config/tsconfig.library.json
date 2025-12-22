@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "display": "Library",
+
+  // ============================================================
+  // TypeScript Library Configuration
+  // ============================================================
+  // Use cases:
+  //   - npm package development
+  //   - Utility library development
+  //   - Component library development
+  //   - Projects using bundlers (tsdown/Vite/esbuild)
+  //
+  // Key features:
+  //   - Generates type declaration files (.d.ts)
+  //   - Bundler mode (module: Preserve)
+  //   - Full TypeScript support
+  // ============================================================
+
+  "extends": "./tsconfig.base.json",
+
+  "compilerOptions": {
+
+    // ==========================================================
+    // Module System
+    // ==========================================================
+
+    "module": "Preserve",
+    // Preserve original module syntax, let bundler handle it
+
+    "moduleResolution": "bundler",
+    // Bundler mode: compatible with Vite/tsdown/esbuild
+
+    // ==========================================================
+    // Output
+    // ==========================================================
+
+    "declaration": true,
+    // Generate .d.ts type declaration files
+    // Required for library publishing, provides type support for consumers
+
+    "sourceMap": true,
+    // Generate .js.map debug mapping files
+    // Allows viewing TypeScript source during debugging
+
+    // ==========================================================
+    // Bundler Mode
+    // ==========================================================
+
+    "noEmit": true,
+    // Type checking only, no output files (handled by bundler)
+
+    "allowJs": false,
+    // Disable JS files (library should be pure TS, conflicts with isolatedDeclarations)
+
+    "isolatedDeclarations": true,
+    // Isolated declaration generation, works with bundler to generate .d.ts
+
+    "noPropertyAccessFromIndexSignature": true
+    // Force bracket notation for index signature property access
+
+    // Note: outDir/rootDir determined by each project's bundler config
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "allow": [
+      "Bash(pnpm start)",
+      "Bash(npm view:*)",
+      "WebSearch",
+      "WebFetch(domain:keyv.org)",
+      "mcp__morphllm-fast-apply__read_file",
+      "mcp__morphllm-fast-apply__list_directory",
+      "mcp__morphllm-fast-apply__search_files",
+      "mcp__morphllm-fast-apply__read_multiple_files",
+      "mcp__morphllm-fast-apply__get_file_info",
+      "mcp__morphllm-fast-apply__edit_file",
+      "Bash(xargs:*)",
+      "Bash(tree:*)",
+      "Bash(find:*)",
+      "mcp__serena__list_dir",
+      "mcp__serena__activate_project",
+      "mcp__serena__read_file"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

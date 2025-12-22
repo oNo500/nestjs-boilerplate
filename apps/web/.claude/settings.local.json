@@ -1,0 +1,30 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__morphllm-fast-apply__list_directory",
+      "mcp__morphllm-fast-apply__read_file",
+      "mcp__context7__resolve-library-id",
+      "mcp__morphllm-fast-apply__directory_tree",
+      "mcp__context7__get-library-docs",
+      "mcp__serena__initial_instructions",
+      "mcp__serena__activate_project",
+      "mcp__serena__check_onboarding_performed",
+      "mcp__serena__list_dir",
+      "mcp__serena__read_file",
+      "mcp__firecrawl-mcp__firecrawl_search",
+      "mcp__serena__find_file",
+      "WebFetch(domain:mswjs.io)",
+      "mcp__brave-search__brave_web_search",
+      "WebFetch(domain:dev.to)",
+      "WebFetch(domain:github.com)",
+      "mcp__serena__think_about_collected_information",
+      "mcp__morphllm-fast-apply__write_file",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(cat:*)",
+      "Bash(mv:*)",
+      "Bash(npm run typecheck:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

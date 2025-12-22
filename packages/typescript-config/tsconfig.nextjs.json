@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "display": "Next.js",
+
+  // ============================================================
+  // TypeScript Next.js Configuration
+  // ============================================================
+  // Use cases:
+  //   - Next.js projects
+  //   - React SSR/SSG applications
+  //   - Full-stack React applications
+  //
+  // Key features:
+  //   - TypeScript for type checking only
+  //   - Next.js handles compilation and bundling
+  //   - JSX and React support
+  //   - Includes DOM types
+  // ============================================================
+
+  "extends": "./tsconfig.base.json",
+
+  "compilerOptions": {
+    // ==========================================================
+    // Module System
+    // ==========================================================
+
+    "module": "ESNext",
+    // Preserve ES module syntax, let Next.js handle it
+
+    "moduleResolution": "Bundler",
+    // Bundler mode, supports package.json exports
+
+    // ==========================================================
+    // Output
+    // ==========================================================
+
+    "noEmit": true,
+    // No compiled output files
+    // TypeScript for type checking only
+    // Actual compilation handled by Next.js
+
+    // ==========================================================
+    // JSX
+    // ==========================================================
+
+    // "jsx": "preserve",
+    // Preserve JSX syntax, let Next.js handle transformation
+    "jsx": "react-jsx",
+    // Next.js 16 uses react-jsx
+
+    // ==========================================================
+    // Environment
+    // ==========================================================
+
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
+    // Include browser DOM API types
+
+    // ==========================================================
+    // Next.js Specific
+    // ==========================================================
+
+    "allowSyntheticDefaultImports": true,
+    // Allow default imports from modules without default exports
+
+    "incremental": true,
+    // Enable incremental compilation for faster builds
+
+    "plugins": [{ "name": "next" }]
+    // Next.js compiler plugin
+  }
+}

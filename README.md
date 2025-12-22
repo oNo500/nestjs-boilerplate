@@ -13,14 +13,14 @@ A production-ready full-stack **Monorepo Boilerplate** powered by **NestJS**, **
 
 ```bash
 ├── apps/
-│   ├── admin/               # Frontend admin panel (React 19 + Vite)
-│   └── api/                 # NestJS backend service
-├── packages/                # Shared modules and libraries
-│   ├── db/                  # Drizzle ORM schemas, migrations, and seed data
-│   ├── ui/                  # Shared React component library (shadcn/ui)
-│   ├── lint-config/         # Shared ESLint configuration
-│   └── ts-config/           # Shared TypeScript configurations
-├── .husky/                  # Git hooks
+│   ├── api/                 # NestJS backend (DDD architecture)
+│   └── web/                 # Next.js 16 frontend
+├── packages/
+│   ├── database/            # Drizzle ORM schemas & migrations
+│   ├── eslint-config/       # Shared ESLint configuration
+│   ├── icons/               # SVG icon library with React components
+│   ├── typescript-config/   # Shared TypeScript configurations
+│   └── ui/                  # Shared React component library (shadcn/ui)
 ├── pnpm-workspace.yaml      # Monorepo workspace configuration
 ├── turbo.json               # Turborepo configuration
 └── README.md
@@ -31,10 +31,10 @@ A production-ready full-stack **Monorepo Boilerplate** powered by **NestJS**, **
 ## 🚀 Features
 
 - 📦 **Full-Stack Monorepo**: Managed with Turborepo and pnpm workspaces for unified configuration and blazing-fast builds.
-- 🛡️ **Enterprise-Grade Backend**: NestJS 11, Drizzle ORM, JWT/RBAC authentication, Swagger docs, and Pino logging.
-- ✨ **Modern Frontend Stack**: React 19, Vite, Tailwind CSS, Zustand, and TanStack Query.
+- 🛡️ **Enterprise-Grade Backend**: NestJS 11 with DDD architecture, Drizzle ORM, JWT/RBAC authentication, Swagger docs, and Pino structured logging.
+- ✨ **Modern Frontend Stack**: Next.js 16, React 19, TailwindCSS 4, and TanStack Query.
 - 🎨 **Component-Driven UI Development**: Shared UI library built with shadcn/ui and Storybook.
-- 🔧 **Robust Developer Tooling**: ESLint, Prettier, Husky, and automated code checks.
+- 🔧 **Robust Developer Tooling**: ESLint, Prettier, Vitest, Playwright, and automated code checks.
 
 ---
 
@@ -54,11 +54,11 @@ pnpm install
 # Backend API
 cp apps/api/.env.example apps/api/.env
 
-# Frontend Admin
-cp apps/admin/.env.example apps/admin/.env
+# Frontend Web
+cp apps/web/.env.example apps/web/.env
 
 # Database
-cp packages/db/.env.example packages/db/.env
+cp packages/database/.env.example packages/database/.env
 ```
 
 Update the `.env` files with your local configuration, including `DATABASE_URL`, email service credentials, and other necessary values.
@@ -73,14 +73,14 @@ docker-compose -f docker/docker-compose.yml up -d
 
 ```bash
 # Run database migrations
-cd packages/db
-pnpm generate && pnpm migrate && pnpm build
+cd packages/database
+pnpm db:generate && pnpm db:migrate
 
 # (Optional) Seed initial data
-pnpm -F @repo/db seed
+pnpm db:seed
 ```
 
-> Note: After changing the schema, run pnpm generate, then pnpm migrate && pnpm build.
+> Note: After changing the schema, run `pnpm db:generate`, then `pnpm db:migrate`.
 
 ### Start the Development Servers
 
@@ -93,7 +93,7 @@ pnpm start
 ## 📌 Roadmap
 
 - [ ] Integrate **Single Sign-On (SSO)** module
-- [ ] Add **Vitest** for unit testing and write test cases
+- [x] ~~Add **Vitest** for unit testing and write test cases~~
 - [ ] Document **deployment guides**, including Docker and CI/CD automation
 - [ ] Expand and refine **project documentation**
 

@@ -1,4 +1,0 @@
-{
-  "extends": "@repo/ts-config/tsconfig.base.node.json",
-  "include": ["vite.config.ts", "eslint.config.ts"]
-}

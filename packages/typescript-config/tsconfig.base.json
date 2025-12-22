@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "display": "Base",
+
+  // ============================================================
+  // TypeScript Base Configuration
+  // ============================================================
+  // Common base config for other tsconfig files to extend
+  // Does not include scenario-specific settings (module, noEmit, declaration, etc.)
+  // ============================================================
+
+  "compilerOptions": {
+
+    // ==========================================================
+    // Target
+    // ==========================================================
+
+    "target": "esnext",
+    // Compile to latest ES features
+
+    "lib": ["ESNext"],
+    // Standard library (no DOM - inherited configs add as needed)
+
+    // ==========================================================
+    // Module & Interop
+    // ==========================================================
+
+    "esModuleInterop": true,
+    // Enable ES module interop
+    // Allows: import fs from 'fs' (instead of import * as fs)
+
+    "skipLibCheck": true,
+    // Skip .d.ts type checking, significantly speeds up compilation
+
+    "allowJs": true,
+    // Allow compiling JavaScript files
+
+    "resolveJsonModule": true,
+    // Allow importing JSON files
+
+    "moduleDetection": "force",
+    // Force all files to be modules, avoid global pollution
+
+    "isolatedModules": true,
+    // Ensure each file can be transpiled independently (esbuild/swc compatible)
+
+    "verbatimModuleSyntax": true,
+    // Strictly distinguish type imports from value imports
+    // import type { Type } vs import { Value }
+
+    // ==========================================================
+    // Strictness
+    // ==========================================================
+
+    "strict": true,
+    // Enable all strict type checking options
+
+    "noUncheckedIndexedAccess": true,
+    // Index access returns T | undefined, prevents out of bounds
+
+    "noImplicitOverride": true,
+    // Override keyword required when overriding parent class methods
+
+    "exactOptionalPropertyTypes": false,
+    // Exact optional property types - disabled by default as it increases complexity with third-party packages
+    // { foo?: string } foo cannot be explicitly set to undefined
+
+    // ==========================================================
+    // Code Quality
+    // ==========================================================
+
+    "noUnusedLocals": true,
+    // Detect unused local variables
+
+    "noUnusedParameters": true,
+    // Detect unused function parameters (use _ prefix to ignore)
+
+    "noFallthroughCasesInSwitch": true,
+    // Prevent switch case fallthrough
+
+    "noImplicitReturns": true,
+    // All function branches must explicitly return
+
+    // ==========================================================
+    // Cross-platform
+    // ==========================================================
+
+    "forceConsistentCasingInFileNames": true,
+    // Enforce consistent file name casing
+
+    // ==========================================================
+    // Performance
+    // ==========================================================
+
+    "incremental": true,
+    // Enable incremental compilation for faster subsequent type checks
+
+    "tsBuildInfoFile": "./node_modules/.cache/tsconfig.tsbuildinfo"
+    // Incremental compilation info location
+  }
+}

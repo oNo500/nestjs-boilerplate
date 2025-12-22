@@ -1,0 +1,15 @@
+{
+  "extends": "@workspace/typescript-config/tsconfig.nestjs.json",
+  "compilerOptions": {
+    "types": ["vitest/globals", "node"],
+    "noEmit": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["src/*"]
+    }
+  },
+  "include": ["src/**/*","src/__tests__/**/*"],
+  "exclude": ["node_modules", "dist", "build"]
+}

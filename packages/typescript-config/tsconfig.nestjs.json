@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "display": "NestJS (SWC)",
+
+  // ============================================================
+  // TypeScript NestJS Configuration - SWC Compilation Mode
+  // ============================================================
+  // Use cases:
+  //   - NestJS backend services (using SWC compiler)
+  //   - TSC for type checking only
+  //
+  // Key features:
+  //   - noEmit: true - no output files, SWC handles compilation
+  //   - Decorator and metadata reflection support
+  //   - Bundler module resolution mode
+  // ============================================================
+
+  "extends": "./tsconfig.base.json",
+
+  "compilerOptions": {
+
+    // ==========================================================
+    // Module System - Bundler/SWC Compatible
+    // ==========================================================
+
+    "module": "esnext",
+    // ES module syntax, transformed by SWC
+
+    "moduleResolution": "bundler",
+    // Bundler mode, compatible with modern build tools
+
+    // ==========================================================
+    // Output - TSC Type Checking Only
+    // ==========================================================
+
+    "noEmit": true,
+    // No output files, SWC handles compilation
+
+    "sourceMap": true,
+    // Generate sourceMap (for SWC reference)
+
+    "removeComments": true,
+    // Remove comments
+
+    // ==========================================================
+    // Decorators - Required for NestJS
+    // ==========================================================
+
+    "experimentalDecorators": true,
+    // Enable experimental decorator syntax
+    // NestJS core functionality relies on decorators
+
+    "emitDecoratorMetadata": true,
+    // Emit decorator metadata
+    // Used for dependency injection and reflection
+
+    // ==========================================================
+    // NestJS Specific
+    // ==========================================================
+
+    "strictPropertyInitialization": false,
+    // Relax property initialization check
+    // NestJS dependency injection initializes properties at runtime
+
+    // ==========================================================
+    // Environment
+    // ==========================================================
+
+    "types": ["node"]
+    // Include Node.js type definitions
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "display": "React Library",
+
+  // ============================================================
+  // TypeScript React Library Configuration
+  // ============================================================
+  // Use cases:
+  //   - React component library development
+  //   - UI component libraries (e.g., packages/ui)
+  //   - Publishable React packages
+  //
+  // Key features:
+  //   - Generates type declaration files (.d.ts)
+  //   - React 17+ JSX transform support
+  //   - Includes DOM types
+  //   - Bundler mode (modern build tool compatible)
+  // ============================================================
+
+  "extends": "./tsconfig.base.json",
+
+  "compilerOptions": {
+
+    // ==========================================================
+    // Module System
+    // ==========================================================
+
+    "module": "preserve",
+    // Preserve original module syntax, let bundler handle it
+    // moduleResolution defaults to Bundler
+
+    // ==========================================================
+    // Output
+    // ==========================================================
+
+    "declaration": true,
+    // Generate .d.ts type declaration files
+    // Required for component libraries, provides type support for consumers
+
+    "sourceMap": true,
+    // Generate .js.map debug mapping files
+
+    // ==========================================================
+    // JSX
+    // ==========================================================
+
+    "jsx": "react-jsx",
+    // React 17+ JSX transform
+    // Auto-imports jsx runtime, no need for import React
+
+    // ==========================================================
+    // Environment
+    // ==========================================================
+
+    "lib": ["ESNext", "DOM", "DOM.Iterable"]
+    // Include browser DOM API types
+  }
+}

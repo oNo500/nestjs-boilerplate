@@ -1,46 +1,86 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
 # Dependencies
-node_modules
-.pnp
-.pnp.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
 
-# Local env files
+# Build outputs
+dist/
+build/
+out/
+.next/
+.nuxt/
+.vuepress/dist/
+*.tsbuildinfo
+
+# Environment variables
 .env
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
 
-# Testing
-coverage
+# Cache directories
+.cache/
+.parcel-cache/
+.npm/
+.yarn/cache/
+.pnpm-store/
 
-# Turbo
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+*.lcov
+
+# nyc test coverage
+.nyc_output
+
+# Logs
+logs
+*.log
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE files
+.idea/
+*.swp
+*.swo
+*~
+
+# Temporary files
+*.tmp
+*.temp
+
+documentation
+
 .turbo
 
-# Vercel
-.vercel
-
-# Build Outputs
-.next/
-out/
-build
-dist
+# ai
+.serena
 
 
-# Debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+# test
+.playwright-mcp
+e2e-report/
+playwright-report/
+test-results/
+playwright/.cache/
 
-# Misc
-.DS_Store
-*.pem
-
-*.tsbuildinfo
 *storybook.log
 storybook-static
 
-
-# Database
-packages/db/migrations
+.obsidian

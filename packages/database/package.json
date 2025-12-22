@@ -1,0 +1,48 @@
+{
+  "name": "@workspace/database",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./schemas": {
+      "import": "./dist/schemas/index.js",
+      "types": "./dist/schemas/index.d.ts"
+    },
+    "./relations": {
+      "import": "./dist/relations.js",
+      "types": "./dist/relations.d.ts"
+    },
+    "./auth": {
+      "import": "./dist/schemas/auth",
+      "types": "./dist/schemas/auth"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:push": "drizzle-kit push",
+    "db:studio": "drizzle-kit studio",
+    "db:seed": "tsx scripts/seed.ts"
+  },
+  "dependencies": {
+    "drizzle-orm": "0.44.7",
+    "pg": "8.16.3"
+  },
+  "devDependencies": {
+    "@types/pg": "8.15.6",
+    "@workspace/typescript-config": "workspace:*",
+    "bcrypt": "^6.0.0",
+    "@types/bcrypt": "^6.0.0",
+    "dotenv": "^17.2.3",
+    "drizzle-kit": "0.31.6",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "display": "Vite",
+
+  // ============================================================
+  // TypeScript Vite + React Configuration
+  // ============================================================
+  // Use cases:
+  //   - Vite + React projects
+  //   - Vite + Vue projects (remove jsx config)
+  //   - Other Vite frontend projects
+  //
+  // Key features:
+  //   - TypeScript for type checking only
+  //   - Vite handles compilation and bundling
+  //   - React 17+ JSX transform support
+  //   - Includes DOM types
+  // ============================================================
+
+  "extends": "./tsconfig.base.json",
+
+  "compilerOptions": {
+
+    // ==========================================================
+    // Module System
+    // ==========================================================
+
+    "module": "preserve",
+    // Preserve original module syntax, let Vite handle it
+    // moduleResolution defaults to Bundler
+
+    // ==========================================================
+    // Output
+    // ==========================================================
+
+    "noEmit": true,
+    // No compiled output files
+    // TypeScript for type checking only
+    // Actual compilation handled by Vite
+
+    // ==========================================================
+    // JSX
+    // ==========================================================
+
+    "jsx": "react-jsx",
+    // React 17+ JSX transform
+    // Auto-imports jsx runtime, no need for import React
+
+    // ==========================================================
+    // Environment
+    // ==========================================================
+
+    "lib": ["ESNext", "DOM", "DOM.Iterable"]
+    // Include browser DOM API types
+  }
+}
