@@ -1,14 +1,7 @@
 {
-  "extends": "@workspace/typescript-config/tsconfig.library.json",
-  "compilerOptions": {
-    "rootDir": "src",
-    "outDir": "dist",
-    "noEmit": false,
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
-    "declaration": true,
-    "declarationMap": true,
-    "isolatedDeclarations": false
-  },
-  "include": ["src/**/*"]
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.schemas.json" },
+    { "path": "./tsconfig.scripts.json" }
+  ]
 }

@@ -2,7 +2,11 @@
   "name": "boilerplate",
   "type": "module",
   "scripts": {
-    "dev": "turbo run dev"
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "lint:fix": "turbo run lint:fix",
+    "check-types": "turbo run check-types"
   },
   "devDependencies": {
     "@types/node": "^24.10.2",

@@ -6,10 +6,7 @@
   "scripts": {
     "generate": "svgr --out-dir src/icons -- src/svg",
     "build": "pnpm generate && tsdown",
-    "dev": "tsdown --watch",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
-    "check-types": "tsc --noEmit"
+    "dev": "tsdown --watch"
   },
   "exports": {
     ".": "./src/index.ts"

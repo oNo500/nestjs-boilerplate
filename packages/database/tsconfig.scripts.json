@@ -1,0 +1,11 @@
+{
+  "extends": "@workspace/typescript-config/tsconfig.vite.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "declaration": true,
+    "declarationMap": true,
+  },
+  "include": ["scripts/seed.ts","*.config.ts","*.config.mts"]
+}

@@ -34,7 +34,6 @@ export const sessionsTable = pgTable(
     // admin
     impersonatedBy: text('impersonated_by'),
 
-
     // Device info (Better Auth compatible)
     ipAddress: text('ip_address'),
     userAgent: text('user_agent'),

@@ -176,7 +176,7 @@ describe('article E2E Tests', () => {
     })
   })
 
-  describe('Complete business flow test', () => {
+  describe('complete business flow test', () => {
     it('should complete full flow: create -> publish -> archive -> delete', async () => {
       // 1. Create article
       const createResponse = await createRequest(app)

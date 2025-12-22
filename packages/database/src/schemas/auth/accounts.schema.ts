@@ -11,13 +11,13 @@ import { usersTable } from './users.schema.js'
 /**
  * Authentication provider types
  */
-export type AuthProvider =
-  | 'email'
-  | 'google'
-  | 'github'
-  | 'phone'
-  | 'saml'
-  | 'oidc'
+export type AuthProvider
+  = | 'email'
+    | 'google'
+    | 'github'
+    | 'phone'
+    | 'saml'
+    | 'oidc'
 
 /**
  * Auth Accounts table definition

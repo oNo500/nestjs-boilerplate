@@ -25,6 +25,9 @@
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "check-types": "tsc --noEmit",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
@@ -37,7 +40,9 @@
   },
   "devDependencies": {
     "@types/pg": "8.15.6",
+    "@workspace/eslint-config": "workspace:*",
     "@workspace/typescript-config": "workspace:*",
+    "eslint": "^9.39.2",
     "bcrypt": "^6.0.0",
     "@types/bcrypt": "^6.0.0",
     "dotenv": "^17.2.3",

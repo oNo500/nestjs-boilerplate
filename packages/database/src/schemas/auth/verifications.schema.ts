@@ -39,18 +39,18 @@ export const verificationsTable = pgTable(
       .$onUpdate(() => new Date()),
   },
   (table) => [
-   index('verifications_identifier_idx').on(table.identifier)
+    index('verifications_identifier_idx').on(table.identifier),
   ],
 )
 
 /**
  * AuthVerificationToken database type (inferred from table)
  */
-export type VerificationTokenDatabase =
-  typeof verificationsTable.$inferSelect
+export type VerificationTokenDatabase
+  = typeof verificationsTable.$inferSelect
 
 /**
  * Insert AuthVerificationToken type (inferred from table)
  */
-export type InsertVerificationTokenDatabase =
-  typeof verificationsTable.$inferInsert
+export type InsertVerificationTokenDatabase
+  = typeof verificationsTable.$inferInsert
