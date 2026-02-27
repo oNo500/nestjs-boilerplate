@@ -1,0 +1,43 @@
+{
+  "api": {
+    "requestFailed": "Request failed",
+    "serverError": "Server error, please try again later",
+    "networkError": "Network error, please retry",
+    "sessionExpired": "Session expired, please log in again"
+  },
+  "actions": {
+    "confirm": "OK",
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "delete": "Delete",
+    "view": "View",
+    "save": "Save",
+    "create": "Create",
+    "search": "Search",
+    "reset": "Reset",
+    "submit": "Submit",
+    "retry": "Retry"
+  },
+  "status": {
+    "loading": "Loading",
+    "loadFailed": "Load Failed",
+    "loadFailedDesc": "Failed to load, please try again later"
+  },
+  "nav": {
+    "home": "Home",
+    "adminTitle": "Admin",
+    "personalCenter": "Profile",
+    "logout": "Logout"
+  },
+  "error": {
+    "403": "Sorry, you don't have permission to access this page",
+    "404": "Sorry, the page you visited does not exist",
+    "500": "Sorry, an error occurred on the server",
+    "backHome": "Back to Home",
+    "emptyTitle": "Empty State",
+    "emptyDesc": "No data",
+    "pageErrorTitle": "Page Error",
+    "pageErrorDesc": "Sorry, something went wrong on this page",
+    "refresh": "Refresh Page"
+  }
+}

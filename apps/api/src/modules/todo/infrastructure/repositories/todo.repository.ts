@@ -11,7 +11,7 @@ import type { Todo, InsertTodo } from '@workspace/database'
 /**
  * Todo Repository Drizzle implementation
  *
- * Implements TodoRepository interface using Drizzle ORM
+ * Implements the TodoRepository interface using Drizzle ORM
  */
 @Injectable()
 export class TodoRepositoryImpl implements TodoRepository {

@@ -1,39 +1,45 @@
 import { Type } from 'class-transformer'
-import { IsOptional, IsInt, Min, Max } from 'class-validator'
+import { IsOptional } from 'class-validator'
+
+import {
+  IsIntField,
+  MaxField,
+  MinField,
+} from '@/shared-kernel/infrastructure/decorators/validators'
 
 /**
- * Offset pagination DTO
+ * Offset pagination query DTO
  *
  * Performance characteristics:
- * - Query performance degrades with page number (~30ms at offset=100k)
- * - Data insertion may cause duplicates/omissions
- * - Use cases: Small datasets (<1,000 rows), page number navigation
+ * - Query performance degrades with page number (offset=100k ~30ms)
+ * - Inserts can cause duplicate or missing items
+ * - Best for: small datasets (&lt;1,000 rows), page number navigation
  *
- * Recommendations:
- * - Dataset < 1,000 rows: OK to use
- * - Dataset > 10,000 rows: Use cursor pagination instead
- * - Page number navigation needed: OK to use
- * - Real-time data/high write frequency: Not recommended
+ * Usage guidance:
+ * - Dataset < 1,000 rows: acceptable
+ * - Dataset > 10,000 rows: prefer cursor pagination
+ * - Need page number navigation: acceptable
+ * - Real-time data / high write frequency: not recommended
  */
 export class OffsetPaginationDto {
   /**
-   * Page number (starts from 1)
+   * Page number (1-based)
    * @example 1
    */
   @IsOptional()
   @Type(() => Number)
-  @IsInt()
-  @Min(1)
+  @IsIntField()
+  @MinField(1)
   page?: number = 1
 
   /**
-   * Items per page
+   * Number of items per page
    * @example 20
    */
   @IsOptional()
   @Type(() => Number)
-  @IsInt()
-  @Min(1)
-  @Max(100)
-  page_size?: number = 20
+  @IsIntField()
+  @MinField(1)
+  @MaxField(100)
+  pageSize?: number = 20
 }

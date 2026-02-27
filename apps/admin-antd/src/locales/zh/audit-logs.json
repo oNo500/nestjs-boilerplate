@@ -1,0 +1,17 @@
+{
+  "fields": {
+    "createdAt": "操作时间",
+    "actorEmail": "操作人",
+    "action": "操作",
+    "resourceType": "资源类型",
+    "resourceId": "资源 ID",
+    "ipAddress": "IP 地址"
+  },
+  "detail": {
+    "label": "详细信息：",
+    "empty": "无"
+  },
+  "page": {
+    "title": "系统日志"
+  }
+}

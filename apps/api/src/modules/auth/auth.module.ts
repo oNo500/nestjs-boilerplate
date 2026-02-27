@@ -15,7 +15,6 @@ import { UserRoleRepositoryImpl } from '@/modules/auth/infrastructure/repositori
 import { VerificationTokenRepositoryImpl } from '@/modules/auth/infrastructure/repositories/verification-token.repository'
 import { BcryptPasswordHasher } from '@/modules/auth/infrastructure/services/bcrypt-password-hasher'
 import { JwtStrategy } from '@/modules/auth/infrastructure/strategies/jwt.strategy'
-import { AuthV2Controller } from '@/modules/auth/presentation/controllers/auth-v2.controller'
 import { AuthController } from '@/modules/auth/presentation/controllers/auth.controller'
 import { USER_REPOSITORY } from '@/shared-kernel/application/ports/user.repository.port'
 import { UserRepositoryImpl } from '@/shared-kernel/infrastructure/repositories/user.repository'
@@ -23,13 +22,9 @@ import { UserRepositoryImpl } from '@/shared-kernel/infrastructure/repositories/
 import type { Env } from '@/app/config/env.schema'
 
 /**
- * Auth Module
+ * Auth module
  *
- * Provides authentication functionality using 3+2+1 architecture:
- * - auth_identities: Multiple authentication methods (email/OAuth/phone)
- * - auth_sessions: Session management (Refresh Token)
- * - user_roles: Multi-role support
- * - auth_verification_tokens: Temporary verification tokens
+ * Provides authentication functionality
  */
 @Module({
   imports: [
@@ -45,10 +40,7 @@ import type { Env } from '@/app/config/env.schema'
       inject: [ConfigService],
     }),
   ],
-  controllers: [
-    AuthController, // v1
-    AuthV2Controller, // v2
-  ],
+  controllers: [AuthController],
   providers: [
     AuthService,
     JwtStrategy,

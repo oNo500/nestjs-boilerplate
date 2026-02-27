@@ -1,22 +1,22 @@
-/**
- * Todo Response DTO
- */
+import { ApiProperty } from '@nestjs/swagger'
+
+import { ListResponseDto } from '@/shared-kernel/infrastructure/dtos/list-response.dto'
+
 export class TodoResponseDto {
-  /** Todo ID */
   id: string
 
-  /** Title */
   title: string
 
-  /** Description */
   description: string | null
 
-  /** Completed status */
   isCompleted: boolean
 
-  /** Created at */
   createdAt: Date
 
-  /** Updated at */
   updatedAt: Date
+}
+
+export class TodoListResponseDto extends ListResponseDto<TodoResponseDto> {
+  @ApiProperty({ type: () => TodoResponseDto, isArray: true })
+  declare data: TodoResponseDto[]
 }

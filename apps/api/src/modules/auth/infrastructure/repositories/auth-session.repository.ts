@@ -11,8 +11,8 @@ import type { DrizzleDb } from '@/shared-kernel/infrastructure/db/db.port'
 /**
  * Drizzle AuthSession Repository implementation
  *
- * Manages user session (Refresh Token) persistence
- * Compatible with better-auth schema
+ * Manages persistence of user sessions (refresh tokens).
+ * Adapts the better-auth schema.
  */
 @Injectable()
 export class AuthSessionRepositoryImpl implements AuthSessionRepository {

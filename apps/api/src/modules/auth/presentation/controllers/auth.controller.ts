@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Request, UseGuards } from '@nestjs/common'
+import { Body, Controller, Get, HttpCode, Post, Request, UseGuards } from '@nestjs/common'
 import { ApiTags, ApiOperation, ApiBearerAuth, ApiResponse } from '@nestjs/swagger'
 
 import { AuthService } from '@/modules/auth/application/services/auth.service'
@@ -11,28 +11,18 @@ import { SessionResponseDto } from '@/modules/auth/presentation/dtos/session-res
 import { SessionsListResponseDto } from '@/modules/auth/presentation/dtos/sessions-list-response.dto'
 import { JwtAuthGuard } from '@/modules/auth/presentation/guards/jwt-auth.guard'
 
-/**
- * Auth Controller v1
- *
- * Handles authentication HTTP requests
- */
 @ApiTags('auth')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  /**
-   * User registration
-   */
   @Post('register')
-  @ApiOperation({ summary: 'User registration' })
+  @HttpCode(201)
+  @ApiOperation({ summary: 'Register a new user' })
   async register(@Body() dto: RegisterDto): Promise<RegisterResponseDto> {
     return await this.authService.register(dto.email, dto.password, dto.name)
   }
 
-  /**
-   * User login
-   */
   @Post('login')
   @ApiOperation({ summary: 'User login' })
   async login(@Body() dto: LoginDto): Promise<LoginResponseDto> {
@@ -40,24 +30,20 @@ export class AuthController {
   }
 
   /**
-   * Refresh access token
-   *
-   * Note: Don't add JwtAuthGuard here, as refreshToken is used when accessToken expires.
-   * Also: refresh rotates refreshToken (old one is revoked).
+   * No JwtAuthGuard: when the access token has expired, the refresh token is used to obtain a new one,
+   * so Bearer authentication cannot pass at that point.
+   * Refresh rotates the refresh token (the old one is revoked).
    */
   @Post('refresh-token')
   @ApiOperation({
     summary: 'Refresh access token',
-    description: 'Use Refresh Token to get new Access Token (rotates Refresh Token)',
+    description: 'Use a refresh token to obtain a new access token (the refresh token is rotated simultaneously)',
   })
   @ApiResponse({ status: 200, type: RefreshTokenResponseDto })
   async refreshToken(@Body() dto: RefreshTokenDto): Promise<RefreshTokenResponseDto> {
     return await this.authService.refreshToken(dto.refreshToken)
   }
 
-  /**
-   * Get current session info (requires authentication)
-   */
   @Get('session')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
@@ -70,13 +56,10 @@ export class AuthController {
     return this.authService.getSession(req.user.sessionId, req.user.id, req.user.email, role)
   }
 
-  /**
-   * List sessions (requires authentication)
-   */
   @Get('sessions')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
-  @ApiOperation({ summary: 'List sessions' })
+  @ApiOperation({ summary: 'List active sessions' })
   @ApiResponse({ status: 200, type: SessionsListResponseDto })
   async listSessions(
     @Request() req: Express.Request & { user: { id: string, sessionId: string } },
@@ -84,29 +67,22 @@ export class AuthController {
     return this.authService.listSessions(req.user.id, req.user.sessionId)
   }
 
-  /**
-   * User logout (single device)
-   * Revoke specified Refresh Token session
-   */
   @Post('logout')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
-  @ApiOperation({ summary: 'User logout (single device)' })
+  @ApiOperation({ summary: 'Logout (single device)' })
   async logout(@Body() dto: LogoutDto): Promise<LogoutResponseDto> {
     const success = await this.authService.logout(dto.refreshToken)
     return {
       success,
-      message: success ? 'Logout successful' : 'Logout failed, session not found or expired',
+      message: success ? 'Logged out successfully' : 'Logout failed: session not found or already expired',
     }
   }
 
-  /**
-   * Revoke specific session
-   */
   @Post('revoke-session')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
-  @ApiOperation({ summary: 'Revoke specific session' })
+  @ApiOperation({ summary: 'Revoke a specific session' })
   @ApiResponse({ status: 200, type: RevokeSessionResponseDto })
   async revokeSession(
     @Body() dto: RevokeSessionDto,
@@ -115,9 +91,6 @@ export class AuthController {
     return this.authService.revokeSession(dto.sessionId, req.user.id, req.user.sessionId)
   }
 
-  /**
-   * Revoke all sessions (logout all devices)
-   */
   @Post('revoke-sessions')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
@@ -129,7 +102,7 @@ export class AuthController {
     const revokedCount = await this.authService.revokeAllSessions(req.user.id)
     return {
       revokedCount,
-      message: `Successfully revoked all sessions, total: ${revokedCount}`,
+      message: `All sessions revoked successfully. Total: ${revokedCount}`,
     }
   }
 }

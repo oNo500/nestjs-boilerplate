@@ -1,17 +1,17 @@
 /**
  * User preferences
  *
- * Shared value object for user personalization
- * Stored in profiles.preferences JSONB field
+ * A value object shared across modules that defines user personalization settings.
+ * Stored in the profiles.preferences JSONB column.
  */
 export interface UserPreferences {
-  /** Theme: light/dark/system */
+  /** Theme: light / dark / follow system */
   theme?: 'light' | 'dark' | 'system'
   /** Language preference */
   lang?: string
   /** Timezone */
   timezone?: string
-  /** Notifications enabled */
+  /** Whether notifications are enabled */
   notifications?: boolean
 }
 

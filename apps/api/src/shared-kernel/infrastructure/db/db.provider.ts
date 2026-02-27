@@ -5,10 +5,10 @@ import { Pool } from 'pg'
 import type { DrizzleModuleOptions } from './db.port'
 
 /**
- * Create Drizzle database instance
+ * Creates a Drizzle database instance.
  *
- * Uses node-postgres connection pool for connection management
- * Provides relational query support using v1 relations syntax
+ * Uses the node-postgres connection pool for connection management.
+ * Uses the Drizzle relations syntax to support relational queries.
  */
 export function createDrizzleInstance(options: DrizzleModuleOptions) {
   const pool = new Pool({

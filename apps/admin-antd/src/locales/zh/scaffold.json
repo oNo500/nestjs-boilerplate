@@ -1,0 +1,79 @@
+{
+  "fields": {
+    "title": "标题",
+    "content": "正文",
+    "author": "作者",
+    "category": "分类",
+    "status": "状态",
+    "viewCount": "浏览量",
+    "isPinned": "置顶",
+    "publishedAt": "发布时间",
+    "createdAt": "创建时间",
+    "updatedAt": "更新时间",
+    "id": "ID"
+  },
+  "status": {
+    "draft": "草稿",
+    "published": "已发布",
+    "archived": "已归档"
+  },
+  "category": {
+    "tech": "技术",
+    "design": "设计",
+    "product": "产品",
+    "other": "其他"
+  },
+  "form": {
+    "createTitle": "新增文章",
+    "editTitle": "编辑文章",
+    "titlePlaceholder": "请输入文章标题",
+    "contentPlaceholder": "请输入文章正文",
+    "authorPlaceholder": "请输入作者名称",
+    "categoryPlaceholder": "请选择分类"
+  },
+  "validation": {
+    "titleRequired": "请输入标题",
+    "titleMax": "标题最多100个字符",
+    "contentRequired": "请输入正文",
+    "authorRequired": "请输入作者",
+    "categoryRequired": "请选择分类"
+  },
+  "actions": {
+    "createArticle": "新增文章",
+    "confirmDelete": "确认删除",
+    "confirmDeleteDesc": "确定要删除\"{{title}}\"吗？"
+  },
+  "sections": {
+    "basicInfo": "基本信息",
+    "timeInfo": "时间信息"
+  },
+  "fullForm": {
+    "optional": "（选填）",
+    "submitSuccess": "提交成功",
+    "titleLabel": "标题",
+    "titlePlaceholder": "给目标起个名字",
+    "dateLabel": "起止日期",
+    "dateStartPlaceholder": "开始日期",
+    "dateEndPlaceholder": "结束日期",
+    "goalLabel": "目标描述",
+    "goalPlaceholder": "请输入你的阶段性工作目标",
+    "standardLabel": "衡量标准",
+    "standardPlaceholder": "请输入衡量标准",
+    "clientLabel": "客户",
+    "clientTooltip": "目标的服务对象",
+    "clientPlaceholder": "请描述你服务的客户，内部客户直接 @姓名／工号",
+    "invitesLabel": "邀评人",
+    "invitesPlaceholder": "请直接 @姓名／工号，最多可邀请 5 人",
+    "weightLabel": "权重",
+    "weightPlaceholder": "请输入",
+    "publicTypeLabel": "目标公开",
+    "publicTypeHelp": "客户、邀评人默认被分享",
+    "publicTypePublic": "公开",
+    "publicTypePartial": "部分公开",
+    "publicTypePrivate": "不公开",
+    "publicUsersLabel": "公开人员",
+    "colleague1": "同事甲",
+    "colleague2": "同事乙",
+    "colleague3": "同事丙"
+  }
+}

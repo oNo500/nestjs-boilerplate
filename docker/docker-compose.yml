@@ -8,11 +8,21 @@ services:
     environment:
       - POSTGRESQL_USERNAME=postgres
       - POSTGRESQL_PASSWORD=postgres
-      - POSTGRESQL_DATABASE=nestjs
+      - POSTGRESQL_DATABASE=postgres
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/bitnami/postgresql
 
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
 volumes:
   postgres_data:
+  redis_data:

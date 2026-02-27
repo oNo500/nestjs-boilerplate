@@ -1,0 +1,22 @@
+{
+  "fields": {
+    "id": "ID",
+    "name": "Username",
+    "email": "Email",
+    "currentRole": "Current Role",
+    "roleAction": "Role Action"
+  },
+  "role": {
+    "user": "User",
+    "admin": "Administrator"
+  },
+  "actions": {
+    "confirmTitle": "Confirm Role Change",
+    "confirmDesc": "Change role to \"{{role}}\"?",
+    "save": "Save",
+    "updateSuccess": "Role updated successfully"
+  },
+  "page": {
+    "title": "Roles"
+  }
+}

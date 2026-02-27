@@ -6,14 +6,14 @@ import {
   uniqueIndex,
 } from 'drizzle-orm/pg-core'
 
-import { usersTable } from './users.schema.js'
+import { usersTable } from './users.schema'
 
 /**
  * Auth Sessions table definition
  *
  * Unified session management, compatible with Better Auth:
  * - Session token storage
- * - Device information tracking
+ * - Device info tracking
  * - Session revocation support
  * - Multi-device login management
  */
@@ -23,12 +23,12 @@ export const sessionsTable = pgTable(
     // Primary key (text, generated using nanoid)
     id: text('id').primaryKey(),
 
-    // User reference (foreign key)
+    // Associated user (foreign key)
     userId: text('user_id')
       .notNull()
       .references(() => usersTable.id, { onDelete: 'cascade' }),
 
-    // Better Auth required fields
+    // Required fields by Better Auth
     token: text('token').notNull(),
     expiresAt: timestamp('expires_at', { withTimezone: true }).notNull(),
     // admin
@@ -38,7 +38,7 @@ export const sessionsTable = pgTable(
     ipAddress: text('ip_address'),
     userAgent: text('user_agent'),
 
-    // Extended field: revoked status -> deletion or expired marking handles this, no extra field needed
+    // Extended field: whether revoked -> deleting directly or marking as expired is the revocation, no need for an extra field
     // isRevoked: boolean('is_revoked').notNull().default(false),
 
     // Timestamps
@@ -55,17 +55,17 @@ export const sessionsTable = pgTable(
     index('sessions_user_id_idx').on(table.userId),
     // Unique index: query by token
     uniqueIndex('sessions_token_idx').on(table.token),
-    // Index: expiration time (for cleanup)
+    // Index: expiry time (for cleanup)
     index('sessions_expires_at_idx').on(table.expiresAt),
   ],
 )
 
 /**
- * AuthSession database type (inferred from table)
+ * AuthSession database type (inferred from table definition)
  */
 export type SessionDatabase = typeof sessionsTable.$inferSelect
 
 /**
- * Insert AuthSession type (inferred from table)
+ * Insert AuthSession type (inferred from table definition)
  */
 export type InsertSessionDatabase = typeof sessionsTable.$inferInsert

@@ -1,22 +1,24 @@
 {
-  "$schema": "https://turborepo.com/schema.json",
+  "$schema": "https://turborepo.dev/schema.json",
   "ui": "tui",
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": [".next/**", "!.next/cache/**"]
+      "outputs": ["dist/**"],
+      "env": ["VITE_API_URL"]
     },
     "check-types": {
       "dependsOn": ["^check-types"]
     },
     "lint": {
-      "dependsOn": ["^lint"]
+      "dependsOn": ["^build"]
     },
     "lint:fix": {
-      "dependsOn": ["^lint:fix"],
+      "dependsOn": ["^build"],
       "cache": false
     },
     "dev": {
+      "dependsOn": ["^build"],
       "persistent": true,
       "cache": false
     }

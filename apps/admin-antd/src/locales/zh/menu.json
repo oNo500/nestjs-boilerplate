@@ -1,0 +1,60 @@
+{
+  "dashboard": {
+    "_": "仪表盘",
+    "analysis": "分析页",
+    "monitor": "监控页",
+    "workplace": "工作台"
+  },
+  "form": {
+    "_": "表单页",
+    "basic": "基础表单",
+    "step": "分步表单",
+    "advanced": "高级表单"
+  },
+  "list": {
+    "_": "列表页",
+    "search": {
+      "_": "搜索列表",
+      "articles": "文章",
+      "projects": "项目",
+      "applications": "应用"
+    },
+    "table": "标准表格",
+    "basic": "标准列表",
+    "tableList": "查询表格"
+  },
+  "profile": {
+    "_": "详情页",
+    "basic": "基础详情页",
+    "advanced": "高级详情页"
+  },
+  "account": {
+    "_": "个人页",
+    "center": "个人中心",
+    "settings": "个人设置"
+  },
+  "result": {
+    "_": "结果页",
+    "success": "成功",
+    "fail": "失败"
+  },
+  "system": {
+    "_": "系统管理",
+    "users": "用户管理",
+    "roles": "权限管理",
+    "auditLogs": "系统日志"
+  },
+  "foundation": {
+    "_": "Foundation",
+    "components": "组件",
+    "icons": "图标"
+  },
+  "exception": {
+    "_": "异常页",
+    "e403": "403 禁止访问",
+    "e404": "404 页面不存在",
+    "e500": "500 服务器错误",
+    "empty": "空状态"
+  },
+  "docs": "Docs"
+}

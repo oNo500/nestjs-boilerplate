@@ -1,12 +1,12 @@
 /**
- * W3C Trace Context utilities
+ * W3C Trace Context utility functions
  *
- * Spec: https://www.w3.org/TR/trace-context/
+ * Specification: https://www.w3.org/TR/trace-context/
  *
  * traceparent header format:
  * 00-4bf92f3577b34da6a3ce929d0e0e4736-00f067aa0ba902b7-01
  * │  │                                │                │
- * │  └─ trace-id (32 hex chars)       │                └─ trace-flags
+ * │  └─ trace-id (32 hex chars)        │                └─ trace-flags
  * │                                   └─ parent-id (16 hex chars)
  * └─ version
  */
@@ -19,10 +19,10 @@ export interface TraceContext {
 }
 
 /**
- * Parse W3C Trace Context traceparent header
+ * Parses the W3C Trace Context traceparent header.
  *
- * @param traceparent - traceparent header value
- * @returns Parsed TraceContext object, or null if invalid
+ * @param traceparent - The traceparent header value
+ * @returns The parsed TraceContext object, or null if parsing fails
  *
  * @example
  * const context = parseTraceparent('00-4bf92f3577b34da6-00f067aa0ba902b7-01');
@@ -56,7 +56,7 @@ export function parseTraceparent(traceparent: string): TraceContext | null {
     return null
   }
 
-  // Validate hexadecimal
+  // Validate that all parts are valid hexadecimal
   const hexRegex = /^[0-9a-f]+$/i
   if (
     !hexRegex.test(version)
@@ -76,15 +76,15 @@ export function parseTraceparent(traceparent: string): TraceContext | null {
 }
 
 /**
- * Generate new traceparent header for downstream calls
+ * Generates a new traceparent header (for downstream calls).
  *
- * @param traceId - Trace ID (preserved)
- * @param parentId - Optional Parent ID (generates new Span ID if not provided)
- * @returns New traceparent header value
+ * @param traceId - The trace ID (unchanged)
+ * @param parentId - Optional parent ID; a new span ID is generated when omitted
+ * @returns The new traceparent header value
  *
  * @example
  * const traceparent = generateTraceparent('4bf92f3577b34da6a3ce929d0e0e4736');
- * // '00-4bf92f3577b34da6a3ce929d0e0e4736-{newSpanId}-01'
+ * // '00-4bf92f3577b34da6a3ce929d0e0e4736-{newly generated spanId}-01'
  */
 export function generateTraceparent(
   traceId: string,
@@ -95,9 +95,9 @@ export function generateTraceparent(
 }
 
 /**
- * Generate new Span ID (16 hex chars)
+ * Generates a new span ID (16 hex characters).
  *
- * @returns 16-character hexadecimal string
+ * @returns A 16-character hexadecimal string
  */
 export function generateSpanId(): string {
   return Array.from({ length: 16 }, () =>
@@ -106,9 +106,9 @@ export function generateSpanId(): string {
 }
 
 /**
- * Generate new Trace ID (32 hex chars)
+ * Generates a new trace ID (32 hex characters).
  *
- * @returns 32-character hexadecimal string
+ * @returns A 32-character hexadecimal string
  */
 export function generateTraceId(): string {
   return Array.from({ length: 32 }, () =>
@@ -117,10 +117,10 @@ export function generateTraceId(): string {
 }
 
 /**
- * Validate traceparent header
+ * Validates whether a traceparent header is valid.
  *
- * @param traceparent - traceparent header value
- * @returns Whether the header is valid
+ * @param traceparent - The traceparent header value
+ * @returns Whether the value is valid
  */
 export function isValidTraceparent(traceparent: string): boolean {
   return parseTraceparent(traceparent) !== null

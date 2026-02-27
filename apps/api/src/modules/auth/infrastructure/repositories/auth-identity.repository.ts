@@ -12,8 +12,8 @@ import type { DrizzleDb } from '@/shared-kernel/infrastructure/db/db.port'
 /**
  * Drizzle AuthIdentity Repository implementation
  *
- * Manages persistence of multi-method authentication identities
- * Compatible with better-auth accounts table
+ * Manages persistence of multi-provider auth identities.
+ * Adapts the better-auth accounts table.
  */
 @Injectable()
 export class AuthIdentityRepositoryImpl implements AuthIdentityRepository {

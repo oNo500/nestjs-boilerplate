@@ -6,7 +6,7 @@ import {
   uniqueIndex,
 } from 'drizzle-orm/pg-core'
 
-import { usersTable } from './users.schema.js'
+import { usersTable } from './users.schema'
 
 /**
  * Authentication provider types
@@ -23,16 +23,16 @@ export type AuthProvider
  * Auth Accounts table definition
  *
  * Unified authentication account management, compatible with Better Auth:
- * - email: Local email/password authentication
+ * - email: local email/password authentication
  * - google/github: OAuth third-party login
- * - phone: Phone number authentication
- * - saml/oidc: Enterprise SSO
+ * - phone: phone number authentication
+ * - saml/oidc: enterprise SSO
  *
- * Design features:
- * - A user can have multiple auth accounts
+ * Design characteristics:
+ * - A user can have multiple authentication accounts
  * - providerId + accountId combination is unique
- * - Supports OAuth tokens storage (for proxying third-party API calls)
- * - password is only set for local auth, NULL for OAuth
+ * - Supports OAuth token storage (for proxying calls to third-party APIs)
+ * - password only has a value for local auth; NULL for OAuth
  */
 export const accountsTable = pgTable(
   'accounts',
@@ -40,16 +40,16 @@ export const accountsTable = pgTable(
     // Primary key (text, generated using nanoid)
     id: text('id').primaryKey(),
 
-    // User reference (foreign key)
+    // Associated user (foreign key)
     userId: text('user_id')
       .notNull()
       .references(() => usersTable.id, { onDelete: 'cascade' }),
 
-    // Better Auth required fields
+    // Required fields by Better Auth
     accountId: text('account_id').notNull(), // OAuth OpenID or internal ID
     providerId: text('provider_id').notNull(), // email, google, github, phone, saml, oidc
 
-    // OAuth tokens (optional, for proxying third-party API calls)
+    // OAuth tokens (optional, for proxying calls to third-party APIs)
     accessToken: text('access_token'),
     refreshToken: text('refresh_token'),
     idToken: text('id_token'),
@@ -61,7 +61,7 @@ export const accountsTable = pgTable(
     }),
     scope: text('scope'),
 
-    // Local auth credential: password hash (NULL for OAuth)
+    // Local auth credentials: password hash (NULL for OAuth)
     password: text('password'),
 
     // Timestamps
@@ -74,7 +74,7 @@ export const accountsTable = pgTable(
       .$onUpdate(() => new Date()),
   },
   (table) => [
-    // Unique index: account cannot be duplicated per provider
+    // Unique index: accounts cannot be duplicated under the same provider
     uniqueIndex('accounts_provider_account_idx').on(
       table.providerId,
       table.accountId,
@@ -85,11 +85,11 @@ export const accountsTable = pgTable(
 )
 
 /**
- * AuthAccount database type (inferred from table)
+ * AuthAccount database type (inferred from table definition)
  */
 export type AccountDatabase = typeof accountsTable.$inferSelect
 
 /**
- * Insert AuthAccount type (inferred from table)
+ * Insert AuthAccount type (inferred from table definition)
  */
 export type InsertAccountDatabase = typeof accountsTable.$inferInsert

@@ -1,0 +1,22 @@
+{
+  "fields": {
+    "id": "ID",
+    "name": "用户名",
+    "email": "邮箱",
+    "currentRole": "当前角色",
+    "roleAction": "角色操作"
+  },
+  "role": {
+    "user": "普通用户",
+    "admin": "管理员"
+  },
+  "actions": {
+    "confirmTitle": "确认修改角色",
+    "confirmDesc": "将角色修改为「{{role}}」？",
+    "save": "保存",
+    "updateSuccess": "角色已更新"
+  },
+  "page": {
+    "title": "权限管理"
+  }
+}

@@ -4,21 +4,20 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "generate": "svgr --out-dir src/icons -- src/svg",
-    "build": "pnpm generate && tsdown",
-    "dev": "tsdown --watch"
+    "generate": "svgr --no-prettier --out-dir src/icons -- src/svg",
+    "build": "tsdown"
   },
   "exports": {
     ".": "./src/index.ts"
   },
   "dependencies": {
-    "react": "^19.2.3"
+    "react": "^19.2.4"
   },
   "devDependencies": {
     "@svgr/cli": "^8.1.0",
-    "@types/react": "^19.2.7",
-    "@workspace/typescript-config": "workspace:*",
+    "@types/react": "^19.2.14",
     "@workspace/eslint-config": "workspace:*",
+    "prettier": "^3.8.1",
     "tsdown": "^0.15.12",
     "typescript": "^5.9.3"
   }

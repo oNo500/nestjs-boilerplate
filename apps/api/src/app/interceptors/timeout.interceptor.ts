@@ -12,7 +12,10 @@ import type {
 import type { Observable } from 'rxjs'
 
 /**
- * Timeout interceptor - sets request timeout (default: 30s)
+ * Timeout interceptor
+ *
+ * Sets a timeout for all requests to prevent indefinite waiting.
+ * Default timeout: 30 seconds
  */
 @Injectable()
 export class TimeoutInterceptor implements NestInterceptor {

@@ -15,9 +15,9 @@ import type { DrizzleDb } from '@/shared-kernel/infrastructure/db/db.port'
 /**
  * Drizzle VerificationToken Repository implementation
  *
- * Manages temporary verification token persistence
- * Compatible with better-auth verifications table
- * Feature: Only one valid token per identifier
+ * Manages persistence of temporary verification tokens.
+ * Adapts the better-auth verifications table.
+ * Characteristic: only one valid token per identifier.
  */
 @Injectable()
 export class VerificationTokenRepositoryImpl
@@ -32,10 +32,10 @@ implements VerificationTokenRepository {
     value: string
     expiresAt: Date
   }): Promise<VerificationToken> {
-    // Delete old token for same identifier first
+    // Delete any existing token for the same identifier first
     await this.deleteByIdentifier(data.identifier)
 
-    // Create new token
+    // Create the new token
     const result = await this.db
       .insert(verificationsTable)
       .values({

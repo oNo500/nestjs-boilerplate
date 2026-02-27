@@ -6,17 +6,17 @@ import { TodoRepositoryImpl } from '@/modules/todo/infrastructure/repositories/t
 import { TodoController } from '@/modules/todo/presentation/controllers/todo.controller'
 
 /**
- * Todo Module
+ * Todo module
  *
- * Provides complete implementation of todo functionality
+ * Provides the complete implementation of Todo functionality
  */
 @Module({
   controllers: [TodoController],
   providers: [
-    TodoService, // Business logic service
+    TodoService, // business logic service
     {
       provide: TODO_REPOSITORY, // Repository interface token
-      useClass: TodoRepositoryImpl, // Uses Drizzle implementation
+      useClass: TodoRepositoryImpl, // Drizzle implementation
     },
   ],
 })

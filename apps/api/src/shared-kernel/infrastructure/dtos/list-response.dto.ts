@@ -1,11 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger'
 
 /**
- * Cursor pagination response base class
- *
- * Spec references:
- * - Stripe API Pagination: https://docs.stripe.com/api/pagination
- * - Google AIP-158: https://google.aip.dev/158
+ * Base class for non-paginated list responses
  */
 export class ListResponseDto<T> {
   @ApiProperty({
@@ -13,49 +9,23 @@ export class ListResponseDto<T> {
     example: 'list',
     enum: ['list'],
   })
-  object: 'list'
+  readonly object = 'list' as const
 
   @ApiProperty({
-    description: 'Data array',
+    description: 'Actual data array',
     isArray: true,
   })
   data: T[]
-
-  @ApiProperty({
-    description: 'Whether more data exists',
-    example: true,
-  })
-  has_more: boolean
-
-  @ApiProperty({
-    description: 'Next page cursor (Base64 encoded)',
-    example: 'eyJpZCI6InVzcl8wMjAifQ==',
-    required: false,
-  })
-  next_cursor?: string
 }
 
 /**
- * Offset pagination response base class
+ * Base class for offset-paginated list responses
  *
- * Spec references:
+ * Spec:
  * - Google AIP-158 + Stripe API hybrid style
  * - Flat structure, computed fields removed
  */
-export class OffsetListResponseDto<T> {
-  @ApiProperty({
-    description: 'Object type identifier',
-    example: 'list',
-    enum: ['list'],
-  })
-  object: 'list'
-
-  @ApiProperty({
-    description: 'Data array',
-    isArray: true,
-  })
-  data: T[]
-
+export class OffsetListResponseDto<T> extends ListResponseDto<T> {
   @ApiProperty({
     description: 'Current page number (1-based)',
     example: 1,
@@ -63,20 +33,35 @@ export class OffsetListResponseDto<T> {
   page: number
 
   @ApiProperty({
-    description: 'Items per page',
+    description: 'Number of items per page',
     example: 20,
   })
-  page_size: number
+  pageSize: number
 
   @ApiProperty({
-    description: 'Total items',
+    description: 'Total number of items',
     example: 100,
   })
   total: number
 
   @ApiProperty({
-    description: 'Whether more data exists',
+    description: 'Whether there are more items',
     example: true,
   })
-  has_more: boolean
+  hasMore: boolean
+}
+
+/**
+ * Base class for cursor-paginated list responses
+ */
+export class CursorListResponseDto<T> extends ListResponseDto<T> {
+  @ApiProperty({
+    description: 'Next page cursor token (Base64-encoded); null when no more data',
+    example: 'eyJpZCI6InVzcl8wMjAifQ==',
+    nullable: true,
+  })
+  nextCursor: string | null
+
+  @ApiProperty({ description: 'Whether there are more items', example: true })
+  hasMore: boolean
 }

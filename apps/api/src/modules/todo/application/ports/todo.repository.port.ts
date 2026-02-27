@@ -3,8 +3,8 @@ import type { Todo, InsertTodo } from '@workspace/database'
 /**
  * Todo Repository interface
  *
- * Abstract interface for Todo data access
- * Follows Dependency Inversion Principle: interface defined in application layer, implemented in infrastructure layer
+ * Defines the abstract interface for Todo data access
+ * Follows the Dependency Inversion Principle: the application layer defines the interface, the infrastructure layer implements it
  */
 export interface TodoRepository {
   /**
@@ -13,17 +13,17 @@ export interface TodoRepository {
   findAll(): Promise<Todo[]>
 
   /**
-   * Find todo by ID
+   * Find a todo by ID
    */
   findById(id: string): Promise<Todo | null>
 
   /**
-   * Create new todo
+   * Create a new todo
    */
   create(data: Omit<InsertTodo, 'id' | 'createdAt' | 'updatedAt'>): Promise<Todo>
 
   /**
-   * Update todo
+   * Update a todo
    */
   update(
     id: string,
@@ -31,7 +31,7 @@ export interface TodoRepository {
   ): Promise<Todo | null>
 
   /**
-   * Delete todo
+   * Delete a todo
    */
   delete(id: string): Promise<boolean>
 }

@@ -16,6 +16,8 @@ import { USER_ROLE_REPOSITORY } from '@/modules/auth/application/ports/user-role
 import { AuthIdentity } from '@/modules/auth/domain/aggregates/auth-identity.aggregate'
 import { AuthSession } from '@/modules/auth/domain/entities/auth-session.entity'
 import { USER_REPOSITORY } from '@/shared-kernel/application/ports/user.repository.port'
+import { AUDIT_LOGGER } from '@/shared-kernel/infrastructure/audit/audit-logger.port'
+import { ErrorCode } from '@/shared-kernel/infrastructure/enums/error-code'
 
 import type { Env } from '@/app/config/env.schema'
 import type { AuthIdentityRepository } from '@/modules/auth/application/ports/auth-identity.repository.port'
@@ -25,23 +27,15 @@ import type { UserRoleRepository } from '@/modules/auth/application/ports/user-r
 import type { JwtPayload } from '@/modules/auth/infrastructure/strategies/jwt.strategy'
 import type { UserRepository } from '@/shared-kernel/application/ports/user.repository.port'
 import type { RoleType } from '@/shared-kernel/domain/value-objects/role.vo'
+import type { AuditLogger } from '@/shared-kernel/infrastructure/audit/audit-logger.port'
 
-/**
- * Device information interface
- */
 interface DeviceContext {
   ipAddress?: string
   userAgent?: string
 }
 
 /**
- * Auth Service
- *
- * Handles authentication business logic
- * Compatible with better-auth schema:
- * - accounts: Multiple authentication methods
- * - sessions: Session management
- * - users.role: Single role
+ * Adapts better-auth schema: accounts (multiple auth methods) / sessions (session management) / users.role (single role)
  */
 @Injectable()
 export class AuthService {
@@ -58,43 +52,38 @@ export class AuthService {
     private readonly userRepo: UserRepository,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService<Env, true>,
+    @Inject(AUDIT_LOGGER) private readonly auditLogger: AuditLogger,
   ) {}
 
-  /**
-   * User login (email/password)
-   */
   async login(email: string, password: string, deviceContext?: DeviceContext) {
-    // 1. Find authentication identity by email
-    const identity = await this.authIdentityRepo.findByProviderAndIdentifier(
-      'email',
-      email,
-    )
+    const identity = await this.authIdentityRepo.findByProviderAndIdentifier('email', email)
     if (!identity) {
-      throw new UnauthorizedException('Invalid email or password')
+      throw new UnauthorizedException({ code: ErrorCode.INVALID_CREDENTIALS, message: 'Invalid email or password' })
     }
 
-    // 2. Verify password
     if (!identity.password) {
-      throw new UnauthorizedException('Invalid email or password')
+      throw new UnauthorizedException({ code: ErrorCode.INVALID_CREDENTIALS, message: 'Invalid email or password' })
     }
     const isValid = await this.passwordHasher.verify(password, identity.password)
     if (!isValid) {
-      throw new UnauthorizedException('Invalid email or password')
+      throw new UnauthorizedException({ code: ErrorCode.INVALID_CREDENTIALS, message: 'Invalid email or password' })
     }
 
-    // 3. Save authentication identity (update updatedAt)
     await this.authIdentityRepo.save(identity)
 
-    // 4. Get user role
     const role = await this.userRoleRepo.getRole(identity.userId)
+    const result = await this.generateTokens(identity.userId, email, role, deviceContext)
 
-    // 5. Generate tokens
-    return this.generateTokens(identity.userId, email, role, deviceContext)
+    // Login has no JWT, cannot be captured automatically by the interceptor; must be logged manually
+    void this.auditLogger.log({
+      action: 'auth.login',
+      actorId: identity.userId,
+      actorEmail: email,
+    })
+
+    return result
   }
 
-  /**
-   * User registration (email/password)
-   */
   async register(
     email: string,
     password: string,
@@ -102,64 +91,39 @@ export class AuthService {
     deviceContext?: DeviceContext,
     initialRole: RoleType = 'USER',
   ) {
-    // 1. Check if email already exists
     const exists = await this.authIdentityRepo.existsByIdentifier(email)
     if (exists) {
-      throw new ConflictException('Email already registered')
+      throw new ConflictException({ code: ErrorCode.EMAIL_EXISTS, message: 'This email is already registered' })
     }
 
-    // 2. Create user
     const userId = randomUUID()
-    await this.userRepo.create({
-      id: userId,
-      name,
-      email,
-      role: initialRole,
-    })
+    await this.userRepo.create({ id: userId, name, email, role: initialRole })
 
-    // 3. Create authentication identity
     const identityId = randomUUID()
     const passwordHash = await this.passwordHasher.hash(password)
-    const identity = AuthIdentity.createEmailIdentity(
-      identityId,
-      userId,
-      email,
-      passwordHash,
-    )
+    const identity = AuthIdentity.createEmailIdentity(identityId, userId, email, passwordHash)
     await this.authIdentityRepo.save(identity)
 
-    // 4. Generate tokens
     return this.generateTokens(userId, email, initialRole, deviceContext)
   }
 
-  /**
-   * Refresh token
-   */
   async refreshToken(refreshToken: string, deviceContext?: DeviceContext) {
-    // 1. Find session
     const session = await this.authSessionRepo.findByToken(refreshToken)
     if (!session?.isValid) {
-      throw new UnauthorizedException('Invalid refresh token')
+      throw new UnauthorizedException({ code: ErrorCode.TOKEN_INVALID, message: 'Invalid refresh token' })
     }
 
-    // 2. Delete old session
     await this.authSessionRepo.delete(session.id)
 
-    // 3. Get user authentication info
     const identities = await this.authIdentityRepo.findByUserId(session.userId)
     const emailIdentity = identities.find((i) => i.provider === 'email')
     const email = emailIdentity?.identifier ?? ''
 
-    // 4. Get user role
     const role = await this.userRoleRepo.getRole(session.userId)
 
-    // 5. Generate new tokens
     return this.generateTokens(session.userId, email, role, deviceContext)
   }
 
-  /**
-   * Logout (delete current session)
-   */
   async logout(refreshToken: string): Promise<boolean> {
     const session = await this.authSessionRepo.findByToken(refreshToken)
     if (!session) {
@@ -168,44 +132,26 @@ export class AuthService {
     return this.authSessionRepo.delete(session.id)
   }
 
-  /**
-   * Revoke all sessions (logout all devices)
-   */
   async revokeAllSessions(userId: string): Promise<number> {
     return this.authSessionRepo.deleteAllByUserId(userId)
   }
 
-  /**
-   * Revoke specific session
-   */
   async revokeSession(
     sessionId: string,
     userId: string,
     currentSessionId: string,
   ): Promise<{ success: boolean, message: string }> {
-    // Cannot revoke current session
     if (sessionId === currentSessionId) {
-      return {
-        success: false,
-        message: 'Cannot revoke current session, use logout instead',
-      }
+      return { success: false, message: 'Cannot revoke the current session; use logout instead' }
     }
 
-    // Find session
     const session = await this.authSessionRepo.findById(sessionId)
     if (session?.userId !== userId) {
-      return {
-        success: false,
-        message: 'Session not found or unauthorized',
-      }
+      return { success: false, message: 'Session not found or insufficient permissions' }
     }
 
-    // Delete session
     const deleted = await this.authSessionRepo.delete(sessionId)
-    return {
-      success: deleted,
-      message: deleted ? 'Session revoked' : 'Revoke failed',
-    }
+    return { success: deleted, message: deleted ? 'Session revoked' : 'Revocation failed' }
   }
 
   /**
@@ -215,21 +161,14 @@ export class AuthService {
     return this.revokeAllSessions(userId)
   }
 
-  /**
-   * Get current session info
-   */
   async getSession(sessionId: string, userId: string, email: string, role: string | null) {
     const session = await this.authSessionRepo.findById(sessionId)
     if (session?.userId !== userId) {
-      throw new UnauthorizedException('Session not found or expired')
+      throw new UnauthorizedException({ code: ErrorCode.TOKEN_INVALID, message: 'Session not found or has expired' })
     }
 
     return {
-      user: {
-        id: userId,
-        email,
-        role,
-      },
+      user: { id: userId, email, role },
       session: {
         id: session.id,
         expiresAt: session.expiresAt,
@@ -239,9 +178,6 @@ export class AuthService {
     }
   }
 
-  /**
-   * List active sessions for user
-   */
   async listSessions(userId: string, currentSessionId: string) {
     const sessions = await this.authSessionRepo.findActiveByUserId(userId)
     return {
@@ -256,62 +192,44 @@ export class AuthService {
     }
   }
 
-  /**
-   * Change password
-   */
   async changePassword(
     userId: string,
     currentPassword: string,
     newPassword: string,
   ): Promise<void> {
-    // 1. Find email authentication identity
-    const identity = await this.authIdentityRepo.findByUserIdAndProvider(
-      userId,
-      'email',
-    )
+    const identity = await this.authIdentityRepo.findByUserIdAndProvider(userId, 'email')
     if (!identity) {
-      throw new UnauthorizedException('Email authentication not found')
+      throw new UnauthorizedException({ code: ErrorCode.UNAUTHORIZED, message: 'No email authentication method found' })
     }
 
-    // 2. Verify current password
     if (!identity.password) {
-      throw new UnauthorizedException('Invalid current password')
+      throw new UnauthorizedException({ code: ErrorCode.INVALID_CREDENTIALS, message: 'Current password is incorrect' })
     }
-    const isValid = await this.passwordHasher.verify(
-      currentPassword,
-      identity.password,
-    )
+    const isValid = await this.passwordHasher.verify(currentPassword, identity.password)
     if (!isValid) {
-      throw new UnauthorizedException('Invalid current password')
+      throw new UnauthorizedException({ code: ErrorCode.INVALID_CREDENTIALS, message: 'Current password is incorrect' })
     }
 
-    // 3. Change password
     const newPasswordHash = await this.passwordHasher.hash(newPassword)
     identity.changePassword(newPasswordHash)
     await this.authIdentityRepo.save(identity)
 
-    // 4. Delete all sessions (enhanced security)
+    // Delete all sessions after password change (enhanced security)
     await this.authSessionRepo.deleteAllByUserId(userId)
   }
 
-  /**
-   * Generate Access Token and Refresh Token
-   */
   private async generateTokens(
     userId: string,
     email: string,
     role: RoleType | null,
     deviceContext?: DeviceContext,
   ) {
-    // Generate Refresh Token
     const refreshToken = randomUUID()
 
-    // Calculate expiration time (default 7 days)
     const refreshExpiresIn
       = this.configService.get('JWT_REFRESH_EXPIRES_IN', { infer: true }) ?? '7d'
     const expiresAt = this.parseExpiration(refreshExpiresIn)
 
-    // Create session (create first to get sessionId)
     const sessionId = randomUUID()
     const session = AuthSession.create(
       sessionId,
@@ -323,11 +241,10 @@ export class AuthService {
     )
     await this.authSessionRepo.save(session)
 
-    // Generate Access Token (includes sessionId)
     const payload: JwtPayload = {
       sub: userId,
       email,
-      roles: role ? [role] : [], // Maintain compatibility, wrap single role in array
+      roles: role ? [role] : [], // Wrap single role in an array to maintain JWT format compatibility
       sessionId,
     }
     const accessToken = this.jwtService.sign(payload)
@@ -335,24 +252,16 @@ export class AuthService {
     return {
       accessToken,
       refreshToken,
-      user: {
-        id: userId,
-        email,
-        role,
-      },
+      user: { id: userId, email, role },
     }
   }
 
-  /**
-   * Parse expiration time string
-   */
   private parseExpiration(expiresIn: string): Date {
     const now = new Date()
     const match = /^(\d+)([smhd])$/.exec(expiresIn)
 
     if (!match) {
-      // Default 7 days
-      return new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000)
+      return new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000) // Default: 7 days
     }
 
     const value = Number.parseInt(match[1]!, 10)

@@ -1,46 +1,67 @@
-# NestJS + React Full-Stack Boilerplate
+# NestJS Full-Stack Boilerplate
 
-[![Status](https://img.shields.io/badge/status-active-success.svg)]()
-[![GitHub Issues](https://img.shields.io/github/issues/oNo500/nestjs-boilerplate.svg)](https://github.com/oNo500/nestjs-boilerplate/issues)
-[![GitHub Pull Requests](https://img.shields.io/github/issues-pr/oNo500/nestjs-boilerplate.svg)](https://github.com/oNo500/nestjs-boilerplate/pulls)
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](/LICENSE)
+A production-ready full-stack monorepo boilerplate powered by NestJS, React, Drizzle ORM, and Turborepo.
 
----
+The backend follows a modular layered architecture combining DIP, scenario-based services, and on-demand DDD — simple CRUD stays lean, complex business logic gets a proper domain model.
 
-A production-ready full-stack **Monorepo Boilerplate** powered by **NestJS**, **React 19**, **Drizzle ORM**, and **Turborepo** — everything you need to build modern web applications efficiently.
+## Project Structure
 
-## 📦 Project Structure
-
-```bash
+```
 ├── apps/
-│   ├── api/                 # NestJS backend (DDD architecture)
-│   └── web/                 # Next.js 16 frontend
+│   ├── api/            # NestJS backend
+│   └── admin-antd/     # Admin panel (React + Ant Design Pro)
 ├── packages/
-│   ├── database/            # Drizzle ORM schemas & migrations
-│   ├── eslint-config/       # Shared ESLint configuration
-│   ├── icons/               # SVG icon library with React components
-│   ├── typescript-config/   # Shared TypeScript configurations
-│   └── ui/                  # Shared React component library (shadcn/ui)
-├── pnpm-workspace.yaml      # Monorepo workspace configuration
-├── turbo.json               # Turborepo configuration
-└── README.md
+│   ├── database/       # Drizzle schema, migrations, seed scripts
+│   ├── eslint-config/  # Shared ESLint configuration
+│   └── icons/          # SVG icon components (auto-generated via SVGR)
+├── docker/             # Docker Compose for local infrastructure
+├── pnpm-workspace.yaml
+└── turbo.json
 ```
 
----
+### API modules
 
-## 🚀 Features
+```
+src/
+├── modules/
+│   ├── auth/             # Registration, login, session management, refresh tokens
+│   ├── profile/          # User profile
+│   ├── user-management/  # Admin user CRUD
+│   ├── article/          # Article lifecycle with domain events (draft → published → archived)
+│   ├── order/            # Idempotency, optimistic locking, async jobs, bulk operations
+│   ├── audit-log/        # Append-only action log
+│   ├── todo/             # Minimal CRUD reference
+│   └── dashboard/        # Aggregated statistics
+├── shared-kernel/        # Shared infrastructure (pagination, guards, base classes)
+└── app/                  # Cross-cutting concerns (filters, interceptors, config)
+```
 
-- 📦 **Full-Stack Monorepo**: Managed with Turborepo and pnpm workspaces for unified configuration and blazing-fast builds.
-- 🛡️ **Enterprise-Grade Backend**: NestJS 11 with DDD architecture, Drizzle ORM, JWT/RBAC authentication, Swagger docs, and Pino structured logging.
-- ✨ **Modern Frontend Stack**: Next.js 16, React 19, TailwindCSS 4, and TanStack Query.
-- 🎨 **Component-Driven UI Development**: Shared UI library built with shadcn/ui and Storybook.
-- 🔧 **Robust Developer Tooling**: ESLint, Prettier, Vitest, Playwright, and automated code checks.
+## Tech Stack
 
----
+**API**
+- NestJS 11, TypeScript
+- PostgreSQL, Drizzle ORM
+- Redis, Keyv
+- JWT, Bcrypt
+- Pino, nestjs-cls, Zod
 
-## 📖 Getting Started
+**Admin panel**
+- React 19, TypeScript, Vite
+- Ant Design, Ant Design Pro
+- Zustand, TanStack Query
+- openapi-typescript
 
-### Install Dependencies
+**Monorepo**: pnpm + Turborepo
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js 20+
+- pnpm
+- Docker
+
+### 1. Clone and install
 
 ```bash
 git clone https://github.com/oNo500/nestjs-boilerplate.git
@@ -48,57 +69,48 @@ cd nestjs-boilerplate
 pnpm install
 ```
 
-### Configure Environment Variables
+### 2. Configure environment
 
 ```bash
-# Backend API
 cp apps/api/.env.example apps/api/.env
-
-# Frontend Web
-cp apps/web/.env.example apps/web/.env
-
-# Database
+cp apps/admin-antd/.env.example apps/admin-antd/.env
 cp packages/database/.env.example packages/database/.env
 ```
 
-Update the `.env` files with your local configuration, including `DATABASE_URL`, email service credentials, and other necessary values.
+Edit the `.env` files with your local configuration:
 
-### Start Database Services
+- `apps/api/.env` — set `DATABASE_URL`, `JWT_SECRET`, `REDIS_URL`
+- `packages/database/.env` — set `DATABASE_URL` (used by Drizzle Kit for migrations)
 
-```bash
-docker-compose -f docker/docker-compose.yml up -d
-```
-
-### Run Database Migrations and Seed Data
+### 3. Initialize and start
 
 ```bash
-# Run database migrations
-cd packages/database
-pnpm db:generate && pnpm db:migrate
-
-# (Optional) Seed initial data
-pnpm db:seed
+docker compose -f docker/docker-compose.yml up -d          # start PostgreSQL + Redis
+pnpm --filter @workspace/database db:push                  # run migrations
+pnpm --filter @workspace/database db:seed                  # (optional) seed data
+pnpm dev
 ```
 
-> Note: After changing the schema, run `pnpm db:generate`, then `pnpm db:migrate`.
+### Local URLs
 
-### Start the Development Servers
+| URL | Description |
+|---|---|
+| `http://localhost:3000/docs` | Scalar API documentation |
+| `http://localhost:3000/swagger` | Swagger UI |
+| `http://localhost:3000/health` | Health check |
+| `http://localhost:5173` | Admin panel |
+
+## Common Commands
 
 ```bash
-pnpm start
+pnpm --filter api test                                # Run API unit tests
+pnpm --filter @workspace/database db:generate        # Generate migrations after schema changes
+pnpm --filter @workspace/database db:push            # Apply migrations (development)
+pnpm --filter @workspace/database db:migrate         # Apply migrations (production)
+pnpm --filter @workspace/database db:studio          # Open Drizzle Studio
+pnpm --filter admin-antd api:gen                     # Regenerate OpenAPI types (requires API running)
 ```
 
----
+## Deployment
 
-## 📌 Roadmap
-
-- [ ] Integrate **Single Sign-On (SSO)** module
-- [x] ~~Add **Vitest** for unit testing and write test cases~~
-- [ ] Document **deployment guides**, including Docker and CI/CD automation
-- [ ] Expand and refine **project documentation**
-
----
-
-## 📄 License
-
-This project is open-sourced under the **MIT License**. See the [LICENSE](./LICENSE) file for details.
+Auto-deployed to GCP Cloud Run via GitHub Actions. See [docs/deployment.md](./docs/deployment.md) for details.

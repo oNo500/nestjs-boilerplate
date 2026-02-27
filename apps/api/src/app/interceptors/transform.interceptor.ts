@@ -14,9 +14,33 @@ import type { Observable } from 'rxjs'
 
 /**
  * Response transform interceptor (conditional envelope)
- * - Single resource → return directly, no envelope
- * - Collection with object: 'list' → return directly
- * - @UseEnvelope() decorator → keep original data
+ *
+ * Design reference:
+ * - Google API Design Guide: return single resources directly, use a lightweight envelope for collections
+ * - https://cloud.google.com/apis/design/design_patterns
+ *
+ * Behavior rules:
+ * 1. Single resource (object) → return directly, no envelope
+ * 2. Collection resource (already has object: 'list') → return directly
+ * 3. With @UseEnvelope() decorator → keep original data
+ * 4. All other cases → return directly
+ *
+ * @example
+ * // Single resource - return directly
+ * @Get(':id')
+ * async getUser() {
+ *   return { id: 'usr_123', email: '...' };
+ *   // Response: { "id": "usr_123", "email": "..." }
+ * }
+ *
+ * @example
+ * // Collection resource - use decorator
+ * @Get()
+ * @UseEnvelope()
+ * async getUsers() {
+ *   return { object: 'list', data: [...], hasMore: true };
+ *   // Response: { "object": "list", "data": [...], "hasMore": true }
+ * }
  */
 @Injectable()
 export class TransformInterceptor implements NestInterceptor {
@@ -47,9 +71,6 @@ export class TransformInterceptor implements NestInterceptor {
     )
   }
 
-  /**
-   * Check if response is a list response
-   */
   private isListResponse(data: unknown): boolean {
     return (
       typeof data === 'object'

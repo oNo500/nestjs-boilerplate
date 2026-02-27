@@ -7,17 +7,23 @@ import type { DrizzleDb } from '@/shared-kernel/infrastructure/db/db.port'
 import type { HealthIndicatorResult } from '@nestjs/terminus'
 
 /**
- * Drizzle database health indicator - verifies connection via SELECT 1
+ * Drizzle database health indicator
+ *
+ * Verifies the database connection by executing a simple SELECT 1 query
  */
 @Injectable()
 export class DrizzleHealthIndicator {
   constructor(@Inject(DB_TOKEN) private readonly database: DrizzleDb) {}
 
   /**
-   * Check database connection health
+   * Check the database connection health
+   *
+   * @param key - Health check identifier
+   * @returns health check result
    */
   async isHealthy(key: string): Promise<HealthIndicatorResult> {
     try {
+      // Execute a simple SELECT 1 to test the database connection
       await this.database.execute(sql`SELECT 1`)
 
       return {

@@ -1,15 +1,15 @@
 /**
- * Verification Token Repository token
+ * Verification Token Repository injection token
  */
 export const VERIFICATION_TOKEN_REPOSITORY = Symbol('VERIFICATION_TOKEN_REPOSITORY')
 
 /**
- * Verification Token data structure
+ * Verification token data structure
  *
- * Compatible with better-auth verifications table:
- * - identifier: email/phone number
+ * Adapts better-auth verifications table:
+ * - identifier: email / phone number
  * - value: token value
- * - No type field, distinguished by identifier
+ * - no type field; identifier is used to distinguish purpose
  */
 export interface VerificationToken {
   id: string
@@ -27,13 +27,13 @@ export interface VerificationToken {
  * - Email verification
  * - Phone verification
  *
- * Design features:
+ * Design characteristics:
  * - Only one valid token per identifier
- * - Auto-delete after verification (self-destruct)
+ * - Deleted immediately after verification (single-use)
  */
 export interface VerificationTokenRepository {
   /**
-   * Create verification token (overwrites existing token for same identifier)
+   * Create a verification token (overwrites any existing token for the same identifier)
    */
   create(data: {
     identifier: string
@@ -52,7 +52,7 @@ export interface VerificationTokenRepository {
   findByIdentifier(identifier: string): Promise<VerificationToken | null>
 
   /**
-   * Delete token (called after successful verification)
+   * Delete a token (called after successful verification)
    */
   delete(id: string): Promise<boolean>
 
@@ -67,7 +67,7 @@ export interface VerificationTokenRepository {
   deleteExpired(): Promise<number>
 
   /**
-   * Check if token is valid (exists and not expired)
+   * Check whether a token is valid (exists and not expired)
    */
   isValid(value: string): Promise<boolean>
 }

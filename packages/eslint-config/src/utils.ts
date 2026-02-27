@@ -3,29 +3,29 @@
  */
 
 // ============================================================================
-// Environment Detection
+// Environment detection
 // ============================================================================
 
 /**
- * Detect if running in Git Hooks or lint-staged
+ * Detects whether running inside Git Hooks or lint-staged
  */
 function isInGitHooksOrLintStaged(): boolean {
-  return !!(
-    process.env['GIT_PARAMS']
-    ?? process.env['VSCODE_GIT_COMMAND']
-    ?? process.env['npm_lifecycle_script']?.startsWith('lint-staged')
-  )
+  const envVars = [
+    process.env['GIT_PARAMS'],
+    process.env['VSCODE_GIT_COMMAND'],
+  ]
+  return envVars.some(Boolean) || process.env['npm_lifecycle_script']?.startsWith('lint-staged') === true
 }
 
 /**
- * Detect if running in editor environment
+ * Detects whether running in an editor environment
  *
- * Returns false when in:
+ * Returns false when:
  * - CI environment
  * - Git Hooks
  * - lint-staged
  *
- * Returns true when in:
+ * Returns true when:
  * - VSCode
  * - JetBrains IDE
  * - Vim / Neovim
@@ -35,23 +35,24 @@ export function isInEditorEnv(): boolean {
     return false
   if (isInGitHooksOrLintStaged())
     return false
-  return !!(
-    process.env['VSCODE_PID']
-    ?? process.env['VSCODE_CWD']
-    ?? process.env['JETBRAINS_IDE']
-    ?? process.env['VIM']
-    ?? process.env['NVIM']
-  )
+  const envVars = [
+    process.env['VSCODE_PID'],
+    process.env['VSCODE_CWD'],
+    process.env['JETBRAINS_IDE'],
+    process.env['VIM'],
+    process.env['NVIM'],
+  ]
+  return envVars.some(Boolean)
 }
 
 // ============================================================================
-// File Matching Patterns (Globs)
+// File matching patterns (Globs)
 // ============================================================================
 
 /**
- * ESLint file matching pattern constants
+ * ESLint file glob pattern constants
  *
- * Unified glob patterns ensuring consistent file matching across all configs
+ * Unified glob patterns to ensure consistent file matching across all configurations
  */
 
 /** All JS/TS source files (full ESM/CJS coverage) */

@@ -1,0 +1,24 @@
+# EditorConfig - 编辑器基础配置
+# https://editorconfig.org
+
+root = true
+
+[*]
+# 字符编码
+charset = utf-8
+
+# 换行符类型
+end_of_line = lf
+
+# 文件末尾插入空行
+insert_final_newline = true
+
+# 删除行尾空白字符
+trim_trailing_whitespace = true
+
+# 缩进配置
+indent_style = space
+indent_size = 2
+
+# 最大行长度（参考值）
+max_line_length = 100

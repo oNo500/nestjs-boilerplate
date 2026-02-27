@@ -1,11 +1,11 @@
 /**
- * Authentication provider type
+ * Auth provider type
  *
  * Supported authentication methods:
- * - email: Email/password authentication
+ * - email: email/password authentication
  * - google: Google OAuth
  * - github: GitHub OAuth
- * - phone: Phone authentication
+ * - phone: phone number authentication
  */
 export const AuthProvider = {
   EMAIL: 'email',

@@ -1,57 +1,53 @@
 import type { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface'
 
 /**
- * CORS configuration
+ * CORS cross-origin configuration
+ *
+ * Controls which origins are allowed to access the API
  */
-export const corsConfig: CorsOptions = {
-  // Allowed origins (production should specify exact domains)
-  origin:
-    process.env.NODE_ENV === 'production'
-      ? process.env.ALLOWED_ORIGINS?.split(',') ?? []
-      : true, // Allow all origins in dev
-  // Allowed HTTP methods
-  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-  // Allowed request headers
-  allowedHeaders: [
-    'Content-Type',
-    'Authorization',
-    'Accept',
-    'X-Correlation-Id',
-    'Traceparent',
-    'Tracestate',
-    'API-Version',
-  ],
-  // Exposed response headers (RFC standard tracing)
-  exposedHeaders: [
-    'X-Request-Id',
-    'X-Correlation-Id',
-    'Trace-Id',
-    'Link',
-    'Location',
-    'ETag',
-    'Retry-After',
-    'X-RateLimit-Limit',
-    'X-RateLimit-Remaining',
-    'X-RateLimit-Reset',
-    'Deprecation',
-    'Sunset',
-    'Warning',
-  ],
-  // Allow credentials (cookies)
-  credentials: true,
-  // Preflight cache time (seconds)
-  maxAge: 3600,
+export function createCorsConfig(allowedOrigins?: string[]): CorsOptions {
+  return {
+    origin: allowedOrigins ?? true,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: [
+      'Content-Type',
+      'Authorization',
+      'Accept',
+      'X-Correlation-Id',
+      'Traceparent',
+      'Tracestate',
+    ],
+    exposedHeaders: [
+      'X-Request-Id',
+      'X-Correlation-Id',
+      'Trace-Id',
+      'Link',
+      'Location',
+      'ETag',
+      'Retry-After',
+      'X-RateLimit-Limit',
+      'X-RateLimit-Remaining',
+      'X-RateLimit-Reset',
+    ],
+    credentials: true,
+    maxAge: 3600,
+  }
 }
 
 /**
- * Rate limiting config to prevent API abuse
+ * Rate limiting configuration
+ *
+ * Prevents API abuse and DDoS attacks
  */
 export const throttlerConfig = {
-  // Time window (ms)
+  // Time window (milliseconds)
   ttl: 60_000, // 60 seconds
-  // Max requests per window
+  // Maximum number of requests within the time window
   limit: 10, // 10 requests per minute
+  // Whether to ignore User-Agent
   ignoreUserAgents: [],
+  // Whether to skip successful requests
   skipSuccessfulRequests: false,
+  // Whether to skip failed requests
   skipFailedRequests: false,
 }

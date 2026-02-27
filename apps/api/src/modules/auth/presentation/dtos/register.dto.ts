@@ -1,50 +1,47 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { IsEmail, IsNotEmpty, IsString, MinLength, MaxLength, Matches } from 'class-validator'
+
+import {
+  IsEmailField,
+  IsNotEmptyField,
+  IsStringField,
+  MatchesField,
+  MaxLengthField,
+  MinLengthField,
+} from '@/shared-kernel/infrastructure/decorators/validators'
 
 /**
- * Register request DTO
- *
- * Compatible with better-auth schema
+ * Adapts better-auth schema
  */
 export class RegisterDto {
-  /**
-   * Email address
-   * @example user@example.com
-   */
   @ApiProperty({ example: 'user@example.com' })
-  @IsEmail({}, { message: 'Invalid email format' })
+  @IsEmailField({ message: 'Invalid email format' })
   email: string
 
   /**
-   * Username (3-30 characters, letters, numbers, underscore and hyphen only)
-   * @example john_doe
+   * 3-30 characters; only letters, digits, underscores, and hyphens allowed
    */
   @ApiProperty({ example: 'john_doe' })
-  @IsString()
-  @IsNotEmpty({ message: 'Username cannot be empty' })
-  @MinLength(3, { message: 'Username must be at least 3 characters' })
-  @MaxLength(30, { message: 'Username must be at most 30 characters' })
-  @Matches(/^[a-zA-Z0-9_-]+$/, {
-    message: 'Username can only contain letters, numbers, underscore and hyphen',
+  @IsStringField()
+  @IsNotEmptyField({ message: 'Username must not be empty' })
+  @MinLengthField(3, { message: 'Username must be at least 3 characters long' })
+  @MaxLengthField(30, { message: 'Username must not exceed 30 characters' })
+  @MatchesField(/^[a-zA-Z0-9_-]+$/, {
+    message: 'Username may only contain letters, digits, underscores, and hyphens',
   })
   name: string
 
   /**
-   * Password (at least 8 characters, must contain letters and numbers)
-   * @example Pass123456
+   * At least 8 characters; must contain both letters and digits
    */
   @ApiProperty({ example: 'Pass123456' })
-  @IsString()
-  @IsNotEmpty({ message: 'Password cannot be empty' })
-  @MinLength(8, { message: 'Password must be at least 8 characters' })
-  @MaxLength(100, { message: 'Password must be at most 100 characters' })
-  @Matches(/^(?=.*[a-zA-Z])(?=.*\d)/, {
-    message: 'Password must contain at least one letter and one number',
+  @IsStringField()
+  @IsNotEmptyField({ message: 'Password must not be empty' })
+  @MinLengthField(8, { message: 'Password must be at least 8 characters long' })
+  @MaxLengthField(100, { message: 'Password must not exceed 100 characters' })
+  @MatchesField(/^(?=.*[a-zA-Z])(?=.*\d)/, {
+    message: 'Password must contain at least one letter and one digit',
   })
   password: string
 }
 
-/**
- * Register response DTO (reuses login response)
- */
 export { LoginResponseDto as RegisterResponseDto, UserInfo } from './login.dto'

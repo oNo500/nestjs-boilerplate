@@ -1,4 +1,5 @@
 import { Controller, Get, ServiceUnavailableException } from '@nestjs/common'
+import { ConfigService } from '@nestjs/config'
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger'
 import {
   HealthCheck,
@@ -9,24 +10,28 @@ import {
 import { SkipThrottle } from '@nestjs/throttler'
 
 import { DrizzleHealthIndicator } from '@/app/health/drizzle.health'
+import { RedisHealthIndicator } from '@/app/health/redis.health'
+
+import type { Env } from '@/app/config/env.schema'
+
+type HealthEntry = { status: 'up' | 'down', message: string }
 
 /**
- * Health check controller for Kubernetes probes and load balancers
+ * Health check controller
  */
 @Controller('health')
 @ApiTags('health')
-@SkipThrottle() // Skip rate limiting for health endpoints
+@SkipThrottle() // Health check endpoints are not rate-limited
 export class HealthController {
   constructor(
     private readonly health: HealthCheckService,
     private readonly drizzle: DrizzleHealthIndicator,
+    private readonly redis: RedisHealthIndicator,
     private readonly memory: MemoryHealthIndicator,
     private readonly disk: DiskHealthIndicator,
+    private readonly config: ConfigService<Env, true>,
   ) {}
 
-  /**
-   * Full health check - database, memory, and disk
-   */
   @Get()
   @HealthCheck()
   @ApiOperation({
@@ -35,51 +40,81 @@ export class HealthController {
   })
   @ApiResponse({
     status: 200,
-    description: 'All components healthy',
+    description: 'All components are healthy',
     schema: {
       example: {
+        environment: 'production',
         database: { status: 'up', message: 'Database is available' },
-        memory_heap: { status: 'up' },
-        memory_rss: { status: 'up' },
-        storage: { status: 'up' },
+        redis: { status: 'up', message: 'Redis is available' },
+        memory_heap: { status: 'up', message: 'Heap memory usage is within threshold' },
+        memory_rss: { status: 'up', message: 'RSS memory usage is within threshold' },
+        storage: { status: 'up', message: 'Disk usage is within threshold' },
       },
     },
   })
   @ApiResponse({
     status: 503,
-    description: 'One or more components unhealthy',
+    description: 'One or more components are unhealthy',
     schema: {
       example: {
         type: 'https://api.example.com/errors/service-unavailable',
         title: 'Service Unavailable',
         status: 503,
-        detail: 'database: Connection refused',
         instance: '/health',
         request_id: 'req_abc123',
         timestamp: '2024-11-03T10:30:00Z',
+        errors: [
+          {
+            code: 'DATABASE_UNAVAILABLE',
+            message: 'database: Connection refused',
+          },
+        ],
       },
     },
   })
   async check() {
     try {
       const result = await this.health.check([
-        // Database health
+        // Database health check
         () => this.drizzle.isHealthy('database'),
 
-        // Heap memory (max 150MB)
+        // Redis health check
+        () => this.redis.isHealthy('redis'),
+
+        // Memory health check (heap must not exceed 150 MB)
         () => this.memory.checkHeap('memory_heap', 150 * 1024 * 1024),
 
-        // RSS memory (max 300MB)
+        // Memory health check (RSS must not exceed 300 MB)
         () => this.memory.checkRSS('memory_rss', 300 * 1024 * 1024),
 
-        // Disk usage (max 90%)
+        // Disk health check (disk usage must not exceed 90%)
         () =>
           this.disk.checkStorage('storage', {
             path: '/',
             thresholdPercent: 0.9,
           }),
       ])
-      return result.details
+      const defaultMessages: Record<string, string> = {
+        memory_heap: 'Heap memory usage is within threshold',
+        memory_rss: 'RSS memory usage is within threshold',
+        storage: 'Disk usage is within threshold',
+      }
+
+      const details: Record<string, HealthEntry> = {}
+      for (const [key, value] of Object.entries(result.details)) {
+        const status = value.status as 'up' | 'down'
+        const message = typeof value.message === 'string'
+          ? value.message
+          : (defaultMessages[key] ?? 'OK')
+        details[key] = { status, message }
+      }
+
+      const environment: Env['NODE_ENV'] = this.config.get('NODE_ENV')
+
+      return {
+        environment,
+        ...details,
+      }
     } catch (error) {
       if (error instanceof ServiceUnavailableException) {
         const response = error.getResponse() as Record<string, unknown>
@@ -91,64 +126,7 @@ export class HealthController {
   }
 
   /**
-   * Readiness probe - checks if app is ready to receive traffic
-   */
-  @Get('ready')
-  @HealthCheck()
-  @ApiOperation({
-    summary: 'Readiness check',
-    description: 'Checks if app is ready to receive traffic (database only)',
-  })
-  @ApiResponse({ status: 200, description: 'App is ready' })
-  @ApiResponse({ status: 503, description: 'App is not ready' })
-  async ready() {
-    try {
-      const result = await this.health.check([
-        // Only check critical dependencies
-        () => this.drizzle.isHealthy('database'),
-      ])
-      return result.details
-    } catch (error) {
-      if (error instanceof ServiceUnavailableException) {
-        const response = error.getResponse() as Record<string, unknown>
-        const detail = this.formatHealthCheckErrors(response.error)
-        throw new ServiceUnavailableException(detail)
-      }
-      throw error
-    }
-  }
-
-  /**
-   * Liveness probe - checks if app is still running
-   * Kubernetes restarts the pod if this fails
-   */
-  @Get('live')
-  @HealthCheck()
-  @ApiOperation({
-    summary: 'Liveness check',
-    description: 'Checks if app is alive (lightweight check)',
-  })
-  @ApiResponse({ status: 200, description: 'App is alive' })
-  @ApiResponse({ status: 503, description: 'App is unhealthy' })
-  async live() {
-    try {
-      const result = await this.health.check([
-        // Only check memory to avoid external dependency restarts
-        () => this.memory.checkHeap('memory_heap', 200 * 1024 * 1024),
-      ])
-      return result.details
-    } catch (error) {
-      if (error instanceof ServiceUnavailableException) {
-        const response = error.getResponse() as Record<string, unknown>
-        const detail = this.formatHealthCheckErrors(response.error)
-        throw new ServiceUnavailableException(detail)
-      }
-      throw error
-    }
-  }
-
-  /**
-   * Format health check errors into detail string
+   * Format health check errors into a detail string
    */
   private formatHealthCheckErrors(errors: unknown): string {
     if (typeof errors !== 'object' || errors === null) {

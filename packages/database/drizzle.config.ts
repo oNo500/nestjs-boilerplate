@@ -1,9 +1,7 @@
-import 'dotenv/config'
 import { defineConfig } from 'drizzle-kit'
 
 export default defineConfig({
-  // Use compiled files as drizzle-kit loads with CommonJS
-  schema: ['./dist/schemas/**/*.schema.js'],
+  schema: ['./src/schemas'],
   out: './drizzle',
   dialect: 'postgresql',
   dbCredentials: {

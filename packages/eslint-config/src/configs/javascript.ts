@@ -1,22 +1,15 @@
+/**
+ * JavaScript ESLint base configuration with recommended rules and ES2026+ global variable support
+ */
 import js from '@eslint/js'
 import { defineConfig } from 'eslint/config'
 import globals from 'globals'
 
 import { GLOB_SRC } from '../utils'
 
-import type { OptionsFiles, OptionsOverrides } from '../types'
+import type { JavaScriptOptions } from '../types'
 import type { Linter } from 'eslint'
 
-export type JavaScriptOptions = OptionsFiles & OptionsOverrides
-
-/**
- * JavaScript base configuration
- *
- * @param options - Config options
- * @param options.files - File patterns
- * @param options.overrides - Rule overrides
- * @returns ESLint config array
- */
 export function javascript(options: JavaScriptOptions = {}): Linter.Config[] {
   const { files = [GLOB_SRC], overrides = {} } = options
 
@@ -27,7 +20,7 @@ export function javascript(options: JavaScriptOptions = {}): Linter.Config[] {
     languageOptions: {
       ecmaVersion: 'latest',
       globals: {
-        ...globals.es2021,
+        ...globals.es2026,
       },
       parserOptions: {
         ecmaFeatures: {

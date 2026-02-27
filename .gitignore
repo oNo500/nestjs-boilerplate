@@ -61,16 +61,18 @@ Thumbs.db
 *.swo
 *~
 
+# VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
 # Temporary files
 *.tmp
 *.temp
 
-documentation
-
 .turbo
-
-# ai
-.serena
 
 
 # test
@@ -82,5 +84,3 @@ playwright/.cache/
 
 *storybook.log
 storybook-static
-
-.obsidian

@@ -8,16 +8,16 @@ import type { INestApplication } from '@nestjs/common'
 import type { OpenAPIObject, SwaggerCustomOptions } from '@nestjs/swagger'
 
 /**
- * Swagger base config
+ * Swagger base configuration
  */
 export const swaggerConfig = {
-  title: 'NestJS API',
-  description: 'NestJS modular layered architecture API',
+  title: 'NestJs API',
+  description: 'NestJS modular layered architecture example project API documentation',
   version: '1.0',
 }
 
 /**
- * Swagger UI custom options
+ * Swagger UI custom configuration options
  */
 export const swaggerCustomOptions: SwaggerCustomOptions = {
   swaggerOptions: {
@@ -26,17 +26,12 @@ export const swaggerCustomOptions: SwaggerCustomOptions = {
 }
 
 /**
- * API version header config
- */
-export const apiVersionConfig = {
-  type: 'apiKey' as const,
-  name: 'API-Version',
-  in: 'header' as const,
-  description: 'Optional API version header (e.g., 2024-11-01)',
-}
-
-/**
- * Add default error responses to all endpoints (RFC 9457 Problem Details)
+ * Add a generic default error response to all endpoints
+ *
+ * Uses the OpenAPI default response feature to automatically add the standard
+ * Problem Details error response format (RFC 9457) to all undefined status codes.
+ *
+ * @param document - OpenAPI document object
  */
 function addDefaultErrorResponses(document: OpenAPIObject): void {
   if (!document.paths) return
@@ -46,7 +41,7 @@ function addDefaultErrorResponses(document: OpenAPIObject): void {
     if (!pathItem) continue
 
     for (const method in pathItem) {
-      // Skip non-HTTP method properties
+      // Skip non-HTTP method properties (e.g. parameters, servers)
       if (!['get', 'post', 'put', 'patch', 'delete', 'options', 'head'].includes(method)) {
         continue
       }
@@ -56,10 +51,10 @@ function addDefaultErrorResponses(document: OpenAPIObject): void {
         continue
       }
 
-      // Skip if default response already defined
+      // Skip if a default response is already defined
       if (operation.responses && !operation.responses.default) {
         operation.responses.default = {
-          description: 'Error response (400/401/403/404/422/429/500 etc.)',
+          description: 'Error response (includes 400/401/403/404/422/429/500, etc.)',
           content: {
             'application/problem+json': {
               schema: {
@@ -74,11 +69,13 @@ function addDefaultErrorResponses(document: OpenAPIObject): void {
 }
 
 /**
- * Setup API documentation
- * - /docs - Scalar API docs (default)
+ * Set up API documentation
+ *
+ * - /docs - Scalar API Reference (default)
  * - /swagger - Swagger UI (fallback)
  */
 export async function setupSwagger(app: INestApplication): Promise<void> {
+  // Load CLI Plugin metadata
   await SwaggerModule.loadPluginMetadata(metadata)
 
   const config = new DocumentBuilder()
@@ -102,6 +99,7 @@ export async function setupSwagger(app: INestApplication): Promise<void> {
       `${controllerKey}_${methodKey}`,
   })
 
+  // Add generic default error response to all endpoints
   addDefaultErrorResponses(document)
 
   SwaggerModule.setup('swagger', app, document, {

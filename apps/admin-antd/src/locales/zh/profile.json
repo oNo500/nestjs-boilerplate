@@ -1,0 +1,38 @@
+{
+  "fields": {
+    "displayName": "显示名称",
+    "avatarUrl": "头像 URL",
+    "bio": "个人简介",
+    "currentPassword": "当前密码",
+    "newPassword": "新密码",
+    "confirmPassword": "确认新密码"
+  },
+  "form": {
+    "basicInfoTitle": "基本信息",
+    "saveChanges": "保存修改",
+    "displayNamePlaceholder": "请输入显示名称",
+    "avatarUrlPlaceholder": "请输入头像图片地址",
+    "bioPlaceholder": "请输入个人简介",
+    "currentPasswordPlaceholder": "请输入当前密码",
+    "newPasswordPlaceholder": "请输入新密码（至少8个字符）",
+    "confirmPasswordPlaceholder": "请再次输入新密码"
+  },
+  "validation": {
+    "displayNameMax": "显示名称最多50个字符",
+    "avatarUrlInvalid": "请输入有效的 URL 地址",
+    "bioMax": "个人简介最多200个字符",
+    "currentPasswordRequired": "请输入当前密码",
+    "newPasswordRequired": "请输入新密码",
+    "newPasswordMin": "密码至少8个字符",
+    "confirmPasswordRequired": "请确认新密码",
+    "passwordMismatch": "两次输入的密码不一致"
+  },
+  "messages": {
+    "updateSuccess": "个人资料已更新"
+  },
+  "changePassword": {
+    "title": "修改密码",
+    "trigger": "修改密码",
+    "successMessage": "密码已修改，请重新登录"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "fields": {
+    "createdAt": "Time",
+    "actorEmail": "Operator",
+    "action": "Action",
+    "resourceType": "Resource Type",
+    "resourceId": "Resource ID",
+    "ipAddress": "IP Address"
+  },
+  "detail": {
+    "label": "Details:",
+    "empty": "None"
+  },
+  "page": {
+    "title": "Audit Logs"
+  }
+}

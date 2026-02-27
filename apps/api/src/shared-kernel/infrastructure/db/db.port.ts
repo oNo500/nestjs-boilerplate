@@ -2,10 +2,10 @@ import type { InjectionToken, ModuleMetadata } from '@nestjs/common'
 import type * as schema from '@workspace/database'
 import type { NodePgDatabase } from 'drizzle-orm/node-postgres'
 
-// DIP: Abstract token for Drizzle instance
+// DIP: abstract token for the Drizzle instance
 export const DB_TOKEN = Symbol('DB_TOKEN')
 
-// Strongly-typed Drizzle instance - using v1 schema types
+// Strongly-typed Drizzle instance
 export type DrizzleDb = NodePgDatabase<typeof schema>
 
 // Schema type export

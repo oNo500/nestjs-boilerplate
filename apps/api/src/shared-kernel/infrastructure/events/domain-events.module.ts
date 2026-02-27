@@ -5,7 +5,7 @@ import { DomainEventPublisher } from './domain-event-publisher'
 /**
  * Domain events module
  *
- * Global module providing DomainEventPublisher to all modules
+ * Global module that provides DomainEventPublisher to all modules.
  */
 @Global()
 @Module({

@@ -5,30 +5,29 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
  *
  * Spec: https://www.rfc-editor.org/rfc/rfc9457.html
  *
- * Core fields (RFC 9457):
- * - type: Problem type URI (should dereference to documentation)
- * - title: Short, human-readable summary
+ * Core fields (RFC 9457 standard):
+ * - type: problem type URI (should be dereferenceable to documentation)
+ * - title: short human-readable summary
  * - status: HTTP status code
- * - detail: Detailed explanation specific to this occurrence
- * - instance: URI reference where problem occurred
+ * - instance: URI reference where the problem occurred
  *
  * Extension fields (application-specific):
- * - request_id: Request tracking ID
- * - correlation_id: Correlation ID (cross-service tracing)
- * - trace_id: Distributed trace ID
- * - timestamp: Error timestamp
- * - errors: Field-level errors (for validation errors)
+ * - request_id: request tracing ID
+ * - correlation_id: correlation ID (cross-service tracing)
+ * - trace_id: distributed tracing ID
+ * - timestamp: time the error occurred
+ * - errors: error details array (required; the single source of truth for all error information)
  */
 export class ProblemDetailsDto {
   @ApiProperty({
-    description: 'Problem type URI (should dereference to human-readable docs)',
+    description: 'Problem type URI, should be dereferenceable to human-readable documentation',
     example: 'https://api.example.com/errors/validation-failed',
   })
   type: string
 
   @ApiProperty({
-    description: 'Short, human-readable summary',
-    example: 'Request validation failed',
+    description: 'Short human-readable summary',
+    example: 'Unprocessable Entity',
   })
   title: string
 
@@ -39,13 +38,7 @@ export class ProblemDetailsDto {
   status: number
 
   @ApiPropertyOptional({
-    description: 'Detailed explanation specific to this occurrence',
-    example: 'Submitted data failed business rule validation',
-  })
-  detail?: string
-
-  @ApiPropertyOptional({
-    description: 'URI reference where problem occurred',
+    description: 'URI reference where the problem occurred',
     example: '/api/users',
   })
   instance?: string
@@ -53,69 +46,75 @@ export class ProblemDetailsDto {
   // ========== Extension fields (application-specific) ==========
 
   @ApiPropertyOptional({
-    description: 'Request tracking ID',
+    description: 'Request tracing ID',
     example: 'req_xyz789',
   })
   request_id?: string
 
   @ApiPropertyOptional({
-    description: 'Correlation ID (business transaction tracking)',
+    description: 'Correlation ID (business transaction tracing)',
     example: 'corr_shop_session_abc123',
   })
   correlation_id?: string
 
   @ApiPropertyOptional({
-    description: 'Distributed trace ID (W3C Trace Context)',
+    description: 'Distributed tracing ID (W3C Trace Context)',
     example: '4bf92f3577b34da6a3ce929d0e0e4736',
   })
   trace_id?: string
 
   @ApiPropertyOptional({
-    description: 'Error timestamp (ISO 8601 format)',
+    description: 'Time the error occurred (ISO 8601 format)',
     example: '2024-11-03T10:30:00Z',
   })
   timestamp?: string
 
-  // ========== Validation error extensions ==========
+  // ========== Error details array (required) ==========
 
-  @ApiPropertyOptional({
-    description: 'Field-level errors (for validation errors)',
+  @ApiProperty({
+    description: 'Error details array (single source of truth for all error info; field present = field-level error, field absent = general error)',
     type: [Object],
     example: [
       {
         field: 'email',
         pointer: '/email',
-        code: 'INVALID_FORMAT',
-        message: 'Invalid email format',
-        expected_format: 'user@domain.com',
+        code: 'INVALID_EMAIL',
+        message: 'email must be a valid email address',
       },
     ],
   })
-  errors?: FieldError[]
+  errors: FieldError[]
 }
 
 /**
- * Field-level error details
+ * Error detail
  *
- * Spec references:
+ * Spec:
  * - JSON Pointer (RFC 6901): https://www.rfc-editor.org/rfc/rfc6901.html
- * - Google AIP-193 Error Model: https://google.aip.dev/193
+ * - Google AIP-193 error model: https://google.aip.dev/193
+ *
+ * Usage rules:
+ * - field present: field-level validation error (e.g. invalid email format)
+ * - field absent: general error (e.g. business rule error, system error)
  */
 export interface FieldError {
   /**
-   * Field name
+   * Field name (optional)
+   * - present: field-level validation error
+   * - absent: general error (business/system)
    */
-  field: string
+  field?: string
 
   /**
-   * JSON Pointer (RFC 6901) to specific field
-   * e.g., /email, /address/city
+   * JSON Pointer (RFC 6901) pointing to the specific field (optional)
+   * Example: /email, /address/city
+   * Only used for field-level errors
    */
-  pointer: string
+  pointer?: string
 
   /**
    * Machine-readable error code (UPPER_SNAKE_CASE)
-   * e.g., INVALID_FORMAT, REQUIRED_FIELD, TOO_SHORT
+   * Example: INVALID_EMAIL, EMAIL_EXISTS, USER_NOT_FOUND
    */
   code: string
 
@@ -126,13 +125,13 @@ export interface FieldError {
 
   /**
    * Constraint details (optional)
-   * e.g., { min: 8, max: 100, provided: 5 }
+   * Example: { min: 8, max: 100, provided: 5 }
    */
   constraints?: Record<string, unknown>
 
   /**
    * Expected format (optional)
-   * e.g., 'user@domain.com', 'YYYY-MM-DD'
+   * Example: 'user@domain.com', 'YYYY-MM-DD'
    */
   expected_format?: string
 }

@@ -1,10 +1,10 @@
 /**
- * AuthSession Entity
+ * AuthSession entity
  *
- * Manages user sessions (Refresh Token):
- * - Token storage (compatible with better-auth)
- * - Device tracking support (ipAddress + userAgent)
- * - Session revocation = delete record
+ * Manages user sessions (refresh tokens):
+ * - Stores the token (adapts better-auth)
+ * - Supports device info tracking (ipAddress + userAgent)
+ * - Session revocation = record deletion
  */
 export class AuthSession {
   readonly #id: string
@@ -34,7 +34,7 @@ export class AuthSession {
   }
 
   /**
-   * Create new session
+   * Create a new session
    */
   static create(
     id: string,
@@ -79,15 +79,15 @@ export class AuthSession {
   }
 
   /**
-   * Check if session is valid (not expired)
-   * Note: In better-auth, session revocation = delete record, so only check expiration here
+   * Whether the session is valid (not expired)
+   * Note: in better-auth, session revocation = record deletion, so only expiry is checked here
    */
   get isValid(): boolean {
     return this.#expiresAt > new Date()
   }
 
   /**
-   * Check if session is expired
+   * Whether the session has expired
    */
   get isExpired(): boolean {
     return this.#expiresAt <= new Date()

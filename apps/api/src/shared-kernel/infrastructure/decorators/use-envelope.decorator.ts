@@ -1,33 +1,33 @@
 import { SetMetadata } from '@nestjs/common'
 
 /**
- * Mark endpoint to use envelope wrapping for responses
+ * Marks an endpoint as requiring envelope-wrapped responses.
  *
- * Spec reference:
- * - Google API Design Guide: Single resources return directly, collections use lightweight envelopes
+ * Design rationale:
+ * - Google API Design Guide: single resources returned directly; collections use a lightweight envelope
  * - https://cloud.google.com/apis/design/design_patterns
  *
  * Use cases:
  * - Collection resources (lists, arrays)
- * - Responses requiring pagination metadata
- * - Responses requiring additional metadata
+ * - Responses that include pagination metadata
+ * - Responses that include additional metadata
  *
  * @example
  * // Single resource - no decorator, return directly
  * @Get(':id')
  * async getUser(@Param('id') id: string) {
- *   return { id, email: '...' };  // Direct return
+ *   return { id, email: '...' };  // return object directly
  * }
  *
  * @example
  * // Collection resource - use decorator
  * @Get()
- * @UseEnvelope()  // ← Mark as needing envelope
+ * @UseEnvelope()  // &lt;- mark as requiring envelope
  * async getUsers() {
  *   return {
  *     object: 'list',
  *     data: [...],
- *     has_more: true
+ *     hasMore: true
  *   };
  * }
  */

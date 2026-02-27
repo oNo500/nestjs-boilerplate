@@ -1,15 +1,17 @@
 /**
- * Sensitive data redaction config
- * Defines field paths to redact in logs (supports wildcards)
+ * Sensitive field redaction configuration
+ *
+ * Defines field paths that should be redacted in log output.
+ * Supports wildcard * for matching nested fields.
  */
 export const redactPaths = [
-  // Sensitive request headers
+  // Sensitive fields in request headers
   'req.headers.authorization',
   'req.headers.cookie',
   'req.headers["x-api-key"]',
   'req.headers["x-auth-token"]',
 
-  // Common sensitive fields (supports nested)
+  // Generic sensitive fields (supports any nesting depth)
   '*.password',
   '*.confirmPassword',
   '*.oldPassword',
@@ -25,19 +27,19 @@ export const redactPaths = [
   '*.cvv',
   '*.ssn',
 
-  // Request body
+  // Sensitive fields in request body
   'req.body.password',
   'req.body.confirmPassword',
   'req.body.token',
   'req.body.secret',
 
-  // Response body
+  // Sensitive fields in response body
   'res.body.token',
   'res.body.accessToken',
   'res.body.refreshToken',
 ]
 
 /**
- * Redaction replacement text
+ * Replacement text for redacted values
  */
 export const redactCensor = '[REDACTED]'

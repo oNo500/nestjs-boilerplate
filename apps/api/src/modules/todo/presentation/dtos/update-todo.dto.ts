@@ -1,35 +1,23 @@
-import { IsBoolean, IsOptional, IsString, MaxLength } from 'class-validator'
+import { IsOptional } from 'class-validator'
 
-/**
- * Update Todo DTO
- *
- * Validates request body for updating a todo
- * All fields are optional, only provided fields will be updated
- */
+import {
+  IsBooleanField,
+  IsStringField,
+  MaxLengthField,
+} from '@/shared-kernel/infrastructure/decorators/validators'
+
 export class UpdateTodoDto {
-  /**
-   * Todo title
-   * @example Complete project documentation
-   */
-  @IsString()
+  @IsStringField()
   @IsOptional()
-  @MaxLength(200)
+  @MaxLengthField(200)
   title?: string
 
-  /**
-   * Todo description
-   * @example Write API docs and architecture guide
-   */
-  @IsString()
+  @IsStringField()
   @IsOptional()
-  @MaxLength(1000)
+  @MaxLengthField(1000)
   description?: string
 
-  /**
-   * Completed status
-   * @example true
-   */
-  @IsBoolean()
+  @IsBooleanField()
   @IsOptional()
   isCompleted?: boolean
 }

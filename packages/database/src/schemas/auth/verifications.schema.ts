@@ -8,9 +8,10 @@ import {
 /**
  * Auth Verification Tokens table definition
  *
- * Design features:
- * - Only one valid token per identifier and type
- * - Typically valid for 15-30 minutes
+ *
+ * Design characteristics:
+ * - Only one valid token per identifier per type
+ * - Validity period is typically 15-30 minutes
  * - Deleted immediately after verification
  */
 export const verificationsTable = pgTable(
@@ -19,12 +20,12 @@ export const verificationsTable = pgTable(
     // Primary key (text, generated using nanoid)
     id: text('id').primaryKey(),
 
-    // Better Auth required fields
-    identifier: text('identifier').notNull(), // Email/phone number
-    value: text('value').notNull(), // Token value (Better Auth requires naming as 'value')
+    // Required fields by Better Auth
+    identifier: text('identifier').notNull(), // email / phone number
+    value: text('value').notNull(), // token value (named "value" as required by Better Auth)
     expiresAt: timestamp('expires_at', { withTimezone: true }).notNull(),
 
-    // Extended field: type differentiation - no need for type as identifier exists
+    // Extended field: type distinction — identifier already exists, no need to add a separate type field
     // type: text('type', {
     //   enum: ['PASSWORD_RESET', 'EMAIL_VERIFY', 'PHONE_VERIFY', 'TWO_FACTOR'],
     // }),
@@ -44,13 +45,13 @@ export const verificationsTable = pgTable(
 )
 
 /**
- * AuthVerificationToken database type (inferred from table)
+ * AuthVerificationToken database type (inferred from table definition)
  */
 export type VerificationTokenDatabase
   = typeof verificationsTable.$inferSelect
 
 /**
- * Insert AuthVerificationToken type (inferred from table)
+ * Insert AuthVerificationToken type (inferred from table definition)
  */
 export type InsertVerificationTokenDatabase
   = typeof verificationsTable.$inferInsert

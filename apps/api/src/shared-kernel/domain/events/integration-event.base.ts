@@ -3,8 +3,8 @@ import { DomainEvent } from './domain-event.base'
 /**
  * Integration event base class
  *
- * For cross-bounded-context (inter-module) communication.
- * Integration events should contain sufficient information to avoid recipient lookups.
+ * Used for cross-bounded-context (inter-module) communication.
+ * Integration events should carry enough information so that consumers do not need to query back.
  *
  * @example
  * ```typescript
@@ -21,12 +21,12 @@ import { DomainEvent } from './domain-event.base'
  */
 export abstract class IntegrationEvent extends DomainEvent {
   /**
-   * Event version (for event evolution)
+   * Event version (used for event schema evolution)
    */
   public readonly version: number = 1
 
   /**
-   * Bounded context/module name that published the event
+   * Name of the bounded context / module that published this event
    */
   public readonly source: string
 

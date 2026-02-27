@@ -11,14 +11,39 @@ import type { Response, Request } from 'express'
 import type { Observable } from 'rxjs'
 
 /**
- * Link header interceptor (RFC 8288 Web Linking)
- * Adds pagination links: first, prev, self, next, last
+ * Link header interceptor
+ *
+ * Spec: RFC 8288 (Web Linking)
+ * https://www.rfc-editor.org/rfc/rfc8288.html
+ *
+ * Features:
+ * - Automatically adds Link headers to paginated responses
+ * - Supports first, prev, self, next, last relation types
+ * - Compliant with RFC 8288 format
+ *
+ * RFC 8288 format:
+ * Link: &lt;https://example.com/page/2>; rel="next",
+ *       &lt;https://example.com/page/1>; rel="prev"
+ *
+ * Use cases:
+ * - Cursor-based pagination
+ * - Offset-based pagination
+ * - Pagination navigation for any collection resource
+ *
+ * @example
+ * // Response example
+ * HTTP/1.1 200 OK
+ * Link: <https://api.example.com/users?cursor=next_xyz>; rel="next",
+ *       <https://api.example.com/users?cursor=prev_abc>; rel="prev",
+ *       <https://api.example.com/users>; rel="self"
+ * X-Total-Count: 156
  */
 @Injectable()
 export class LinkHeaderInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<unknown> {
     return next.handle().pipe(
       tap((data: unknown) => {
+        // Only process collection responses
         if (!this.isListResponse(data)) {
           return
         }
@@ -27,15 +52,17 @@ export class LinkHeaderInterceptor implements NestInterceptor {
         const response = httpContext.getResponse<Response>()
         const request = httpContext.getRequest<Request>()
 
+        // Build Link header
         const links = this.buildLinks(request, data)
         if (links.length > 0) {
           response.setHeader('Link', links.join(', '))
         }
 
-        // Add total count header for offset pagination
+        // Add total count header (offset pagination flat format)
         if (this.isOffsetListResponse(data)) {
           response.setHeader('X-Total-Count', String(data.total))
-          const totalPages = Math.ceil(data.total / data.page_size)
+          // Calculate total pages
+          const totalPages = Math.ceil(data.total / data.pageSize)
           response.setHeader('X-Page-Count', String(totalPages))
         }
       }),
@@ -43,7 +70,11 @@ export class LinkHeaderInterceptor implements NestInterceptor {
   }
 
   /**
-   * Check if response is a list response
+   * Check whether the response is a collection response
+   *
+   * A collection response should contain:
+   * - object: 'list'
+   * - data: array
    */
   private isListResponse(data: unknown): data is Record<string, unknown> {
     return (
@@ -57,23 +88,27 @@ export class LinkHeaderInterceptor implements NestInterceptor {
   }
 
   /**
-   * Check if response is offset paginated
+   * Check whether the response is an offset pagination response (flat format)
    */
   private isOffsetListResponse(
     data: unknown,
-  ): data is { total: number, page: number, page_size: number, has_more: boolean } {
+  ): data is { total: number, page: number, pageSize: number, hasMore: boolean } {
     return (
       typeof data === 'object'
       && data !== null
       && 'total' in data
       && 'page' in data
-      && 'page_size' in data
+      && 'pageSize' in data
       && typeof (data as Record<string, unknown>).total === 'number'
     )
   }
 
   /**
-   * Build RFC 8288 Link header array
+   * Build the RFC 8288 Link header array
+   *
+   * @param request - Express request object
+   * @param data - Response data
+   * @returns array of Link header strings
    */
   private buildLinks(
     request: Request,
@@ -83,66 +118,73 @@ export class LinkHeaderInterceptor implements NestInterceptor {
     const links: string[] = []
 
     // Cursor pagination
-    if ('next_cursor' in data) {
+    if ('nextCursor' in data) {
+      // Next page
       if (
-        'has_more' in data
-        && data.has_more
-        && 'next_cursor' in data
-        && data.next_cursor
-        && typeof data.next_cursor === 'string'
+        'hasMore' in data
+        && data.hasMore
+        && 'nextCursor' in data
+        && data.nextCursor
+        && typeof data.nextCursor === 'string'
       ) {
         const nextUrl = this.buildUrl(baseUrl, request.query, {
-          cursor: data.next_cursor,
+          cursor: data.nextCursor,
         })
         links.push(`<${nextUrl}>; rel="next"`)
       }
 
+      // Current page
       const selfUrl = this.buildUrl(baseUrl, request.query)
       links.push(`<${selfUrl}>; rel="self"`)
 
       return links
     }
 
-    // Offset pagination
+    // Offset pagination (flat format)
     if (this.isOffsetListResponse(data)) {
       const page = data.page
-      const page_size = data.page_size
+      const pageSize = data.pageSize
       const total = data.total
-      const totalPages = Math.ceil(total / page_size)
+      const totalPages = Math.ceil(total / pageSize)
       const hasPrevious = page > 1
-      const hasNext = data.has_more
+      const hasNext = data.hasMore
 
+      // First page
       if (page > 1) {
         const firstUrl = this.buildUrl(baseUrl, request.query, {
           page: 1,
-          page_size,
+          pageSize,
         })
         links.push(`<${firstUrl}>; rel="first"`)
       }
 
+      // Previous page
       if (hasPrevious) {
         const previousUrl = this.buildUrl(baseUrl, request.query, {
           page: page - 1,
-          page_size,
+          pageSize,
         })
         links.push(`<${previousUrl}>; rel="prev"`)
       }
 
+      // Current page
       const selfUrl = this.buildUrl(baseUrl, request.query)
       links.push(`<${selfUrl}>; rel="self"`)
 
+      // Next page
       if (hasNext) {
         const nextUrl = this.buildUrl(baseUrl, request.query, {
           page: page + 1,
-          page_size,
+          pageSize,
         })
         links.push(`<${nextUrl}>; rel="next"`)
       }
 
+      // Last page
       if (page < totalPages) {
         const lastUrl = this.buildUrl(baseUrl, request.query, {
           page: totalPages,
-          page_size,
+          pageSize,
         })
         links.push(`<${lastUrl}>; rel="last"`)
       }
@@ -152,7 +194,12 @@ export class LinkHeaderInterceptor implements NestInterceptor {
   }
 
   /**
-   * Build URL with query parameters
+   * Build a URL
+   *
+   * @param baseUrl - Base URL
+   * @param query - Current query parameters
+   * @param overrides - Query parameters to override
+   * @returns full URL string
    */
   private buildUrl(
     baseUrl: string,
@@ -161,12 +208,14 @@ export class LinkHeaderInterceptor implements NestInterceptor {
   ): string {
     const parameters = new URLSearchParams()
 
+    // Add existing query parameters
     for (const [key, value] of Object.entries(query)) {
       if (key !== 'cursor' && key !== 'page') {
         parameters.set(key, String(value))
       }
     }
 
+    // Override specified parameters
     for (const [key, value] of Object.entries(overrides)) {
       parameters.set(key, String(value))
     }

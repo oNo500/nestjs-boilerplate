@@ -1,21 +1,21 @@
 import type { AuthSession } from '@/modules/auth/domain/entities/auth-session.entity'
 
 /**
- * Auth Session Repository token
+ * Auth Session Repository injection token
  */
 export const AUTH_SESSION_REPOSITORY = Symbol('AUTH_SESSION_REPOSITORY')
 
 /**
  * Auth Session Repository interface
  *
- * Session management:
- * - Refresh Token storage and validation
- * - Device tracking (ipAddress + userAgent)
- * - Session revocation = delete record (compatible with better-auth)
+ * Unified session management:
+ * - Refresh token storage and validation
+ * - Device info tracking (ipAddress + userAgent)
+ * - Session revocation = record deletion (adapts better-auth)
  */
 export interface AuthSessionRepository {
   /**
-   * Save session
+   * Save a session
    */
   save(session: AuthSession): Promise<void>
 
@@ -30,17 +30,17 @@ export interface AuthSessionRepository {
   findByToken(token: string): Promise<AuthSession | null>
 
   /**
-   * Find all active sessions by user ID (not expired)
+   * Find all active (non-expired) sessions for a user
    */
   findActiveByUserId(userId: string): Promise<AuthSession[]>
 
   /**
-   * Find all sessions by user ID
+   * Find all sessions for a user
    */
   findAllByUserId(userId: string): Promise<AuthSession[]>
 
   /**
-   * Delete session (revoke = delete)
+   * Delete a session (revoke = delete)
    */
   delete(id: string): Promise<boolean>
 

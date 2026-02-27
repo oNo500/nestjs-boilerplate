@@ -1,31 +1,16 @@
-import type { BaseDomainEvent } from './base-domain-event'
+import type { DomainEvent } from './events/domain-event.base'
 
-/**
- * Base aggregate root
- *
- * Provides domain event collection and publishing functionality
- */
 export abstract class BaseAggregateRoot {
-  #domainEvents: BaseDomainEvent[] = []
+  #domainEvents: DomainEvent[] = []
 
-  /**
-   * Get all pending domain events
-   */
-  getDomainEvents(): BaseDomainEvent[] {
+  getDomainEvents(): DomainEvent[] {
     return [...this.#domainEvents]
   }
 
-  /**
-   * Add domain event to pending queue
-   */
-  protected addDomainEvent(event: BaseDomainEvent): void {
+  protected addDomainEvent(event: DomainEvent): void {
     this.#domainEvents.push(event)
   }
 
-  /**
-   * Clear domain event queue
-   * Typically called after events are published
-   */
   clearDomainEvents(): void {
     this.#domainEvents = []
   }

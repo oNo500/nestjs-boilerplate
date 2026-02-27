@@ -6,8 +6,13 @@ import type { Request } from 'express'
 import type { ClsModuleOptions, ClsService } from 'nestjs-cls'
 
 /**
- * CLS (Continuation-Local Storage) config for request context management
- * Handles: Request ID, Correlation ID, W3C Trace Context, API versioning
+ * Create CLS (Continuation-Local Storage) configuration
+ *
+ * Used for request context management, including:
+ * - Request ID generation
+ * - Correlation ID tracking
+ * - W3C Trace Context parsing
+ * - API version management
  */
 export function createClsConfig(): ClsModuleOptions {
   return {
@@ -16,7 +21,7 @@ export function createClsConfig(): ClsModuleOptions {
       mount: true,
       generateId: true,
       idGenerator: (request: Request) => {
-        // Use client X-Request-Id or generate new UUID
+        // Use the client-provided X-Request-Id if present, otherwise generate a new UUID
         return (request.headers['x-request-id'] as string) || randomUUID()
       },
       setup: setupClsContext,
@@ -25,21 +30,23 @@ export function createClsConfig(): ClsModuleOptions {
 }
 
 /**
- * Extract and store tracing info from request headers
+ * Set up the CLS context
+ *
+ * Extracts and stores various tracing information from request headers
  */
 function setupClsContext(cls: ClsService, request: Request) {
-  // Basic request info
+  // Store basic request information
   cls.set('userAgent', request.headers['user-agent'])
   cls.set('ip', request.ip)
   cls.set('method', request.method)
   cls.set('url', request.url)
 
-  // Correlation ID for business tracing
+  // Parse and store Correlation ID (business tracing)
   const correlationId
     = (request.headers['x-correlation-id'] as string) || randomUUID()
   cls.set('correlationId', correlationId)
 
-  // W3C Trace Context for distributed tracing
+  // Parse W3C Trace Context (distributed tracing)
   const traceparent = request.headers.traceparent as string
   if (traceparent) {
     const traceContext = parseTraceparent(traceparent)
@@ -50,17 +57,9 @@ function setupClsContext(cls: ClsService, request: Request) {
     }
   }
 
-  // Optional tracestate
+  // Store Tracestate (optional distributed tracing state)
   const tracestate = request.headers.tracestate as string
   if (tracestate) {
     cls.set('tracestate', tracestate)
-  }
-
-  // API version
-  const apiVersion
-    = (request.headers['api-version'] as string)
-      || (request.headers['x-api-version'] as string)
-  if (apiVersion) {
-    cls.set('apiVersion', apiVersion)
   }
 }

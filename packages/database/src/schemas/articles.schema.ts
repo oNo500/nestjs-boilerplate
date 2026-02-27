@@ -1,4 +1,4 @@
-import { index, jsonb, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core'
+import { boolean, index, integer, jsonb, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core'
 
 /**
  * Articles table definition
@@ -28,6 +28,20 @@ export const articlesTable = pgTable(
     // Tags (JSONB array)
     tags: jsonb('tags').$type<string[]>().notNull().default([]),
 
+    // Category (enum)
+    category: text('category', { enum: ['tech', 'design', 'product', 'other'] })
+      .notNull()
+      .default('other'),
+
+    // Author name (text, not a foreign key)
+    author: text('author').notNull().default(''),
+
+    // View count (read-only, maintained by the system)
+    viewCount: integer('view_count').notNull().default(0),
+
+    // Whether pinned
+    isPinned: boolean('is_pinned').notNull().default(false),
+
     // Timestamps
     createdAt: timestamp('created_at', { withTimezone: true })
       .notNull()
@@ -48,11 +62,11 @@ export const articlesTable = pgTable(
 )
 
 /**
- * Article database type (inferred from table)
+ * Article database type (inferred from table definition)
  */
 export type ArticleDatabase = typeof articlesTable.$inferSelect
 
 /**
- * Insert Article type (inferred from table)
+ * Insert Article type (inferred from table definition)
  */
 export type InsertArticleDatabase = typeof articlesTable.$inferInsert

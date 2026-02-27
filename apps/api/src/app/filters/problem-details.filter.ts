@@ -3,8 +3,10 @@ import {
   HttpException,
   Logger,
 } from '@nestjs/common'
+import { ConfigService } from '@nestjs/config'
 import { ClsService } from 'nestjs-cls'
 
+import type { Env } from '@/app/config/env.schema'
 import type { ProblemDetailsDto, FieldError } from '@/shared-kernel/infrastructure/dtos/problem-details.dto'
 import type { ValidationErrorItem } from '@/shared-kernel/infrastructure/types/validation-error'
 import type {
@@ -14,16 +16,31 @@ import type { Request, Response } from 'express'
 
 /**
  * RFC 9457 Problem Details exception filter
- * Converts HTTP exceptions to standard Problem Details format
+ *
+ * Spec: https://www.rfc-editor.org/rfc/rfc9457.html
+ *
+ * Features:
+ * - Converts all HTTP exceptions to the standard Problem Details format
+ * - Automatically extracts class-validator validation errors
+ * - Includes request tracing info (Request ID, Correlation ID, Trace ID)
+ *
+ * Use cases:
+ * - All HTTP exceptions (400, 401, 403, 404, 409, 422, 429, etc.)
+ * - Validation errors (exceptions thrown by ValidationPipe)
+ * - Business exceptions (manually thrown HttpException)
  */
 @Catch(HttpException)
 export class ProblemDetailsFilter implements ExceptionFilter {
   private readonly logger = new Logger(ProblemDetailsFilter.name)
 
-  constructor(private readonly cls: ClsService) {}
+  constructor(
+    private readonly cls: ClsService,
+    private readonly configService: ConfigService<Env, true>,
+  ) {}
 
   /**
-   * Silent paths in dev (no logging)
+   * Paths to suppress logging in development
+   * e.g. Service Worker requests from frontend MSW
    */
   readonly #silentPaths = ['/mockServiceWorker.js']
 
@@ -34,37 +51,30 @@ export class ProblemDetailsFilter implements ExceptionFilter {
     const status = exception.getStatus()
     const exceptionResponse = exception.getResponse()
 
-    // Silent handling for specific paths
+    // Silently handle specific paths (skip logging, return 404 directly)
     if (status === 404 && this.#silentPaths.includes(request.url)) {
       response.status(404).end()
       return
     }
 
+    // Build Problem Details response
     const problemDetails: ProblemDetailsDto = {
       type: this.getTypeUri(status),
       title: this.getTitle(status, exception),
       status,
-      detail: this.getDetail(
-        exceptionResponse as string | Record<string, unknown>,
-        exception,
-      ),
       instance: request.url,
       request_id: this.cls.getId(),
       correlation_id: this.cls.get('correlationId'),
       trace_id: this.cls.get('traceId'),
       timestamp: new Date().toISOString(),
-    }
-
-    // Add field-level errors for validation failures
-    if (status === 400 || status === 422) {
-      const errors = this.extractValidationErrors(
+      errors: this.extractErrors(
         exceptionResponse as string | Record<string, unknown>,
-      )
-      if (errors) {
-        problemDetails.errors = errors
-      }
+        exception,
+        status,
+      ),
     }
 
+    // Log the request
     const logMessage = `${request.method} ${request.url} ${status}`
     if (status >= 500) {
       this.logger.error(logMessage, exception.stack)
@@ -72,23 +82,27 @@ export class ProblemDetailsFilter implements ExceptionFilter {
       this.logger.warn(logMessage)
     }
 
+    // Set response headers (RFC 9457 recommended media type)
     response.setHeader('Content-Type', 'application/problem+json')
+    // Prevent browsers from caching error responses
     response.setHeader('Cache-Control', 'no-store')
 
     response.status(status).json(problemDetails)
   }
 
   /**
-   * Generate problem type URI (RFC 9457 §3.1.1)
+   * Generate the problem type URI
+   *
+   * RFC 9457 §3.1.1: the type field should be a URI, ideally dereferenceable to human-readable documentation
    */
   private getTypeUri(status: number): string {
-    const baseUrl = process.env.API_BASE_URL ?? 'https://api.example.com'
+    const baseUrl = this.configService.get('API_BASE_URL', { infer: true })
     const errorType = this.getErrorType(status)
     return `${baseUrl}/errors/${errorType}`
   }
 
   /**
-   * Get error type identifier (kebab-case)
+   * Get the error type identifier (kebab-case)
    */
   private getErrorType(status: number): string {
     const typeMap: Record<number, string> = {
@@ -109,7 +123,9 @@ export class ProblemDetailsFilter implements ExceptionFilter {
   }
 
   /**
-   * Get error title (RFC 9457 §3.1.2)
+   * Get the error title (short summary)
+   *
+   * RFC 9457 §3.1.2: title should be a short, human-readable summary
    */
   private getTitle(status: number, exception: HttpException): string {
     const titleMap: Record<number, string> = {
@@ -118,8 +134,8 @@ export class ProblemDetailsFilter implements ExceptionFilter {
       403: 'Forbidden',
       404: 'Not Found',
       409: 'Conflict',
-      422: 'Validation Failed',
-      429: 'Rate Limit Exceeded',
+      422: 'Unprocessable Entity',
+      429: 'Too Many Requests',
       500: 'Internal Server Error',
       502: 'Bad Gateway',
       503: 'Service Unavailable',
@@ -130,52 +146,55 @@ export class ProblemDetailsFilter implements ExceptionFilter {
   }
 
   /**
-   * Get detailed description (RFC 9457 §3.1.4)
+   * Extract error details array
+   *
+   * Strategy:
+   * 1. Validation errors (400/422) → attempt to extract field-level errors
+   * 2. Business errors (code explicitly passed) → read code directly
+   * 3. Fallback: fixed code values like VALIDATION_ERROR / BAD_REQUEST
    */
-  private getDetail(
+  private extractErrors(
     exceptionResponse: string | Record<string, unknown>,
     exception: HttpException,
-  ): string {
-    if (typeof exceptionResponse === 'string') {
-      return exceptionResponse
-    }
-
-    if (typeof exceptionResponse === 'object' && 'message' in exceptionResponse) {
-      const message = exceptionResponse.message
-      if (Array.isArray(message)) {
-        return this.formatValidationErrors(message)
-      }
-      if (typeof message === 'string') {
-        return message
+    status: number,
+  ): FieldError[] {
+    // 1. Attempt to extract validation errors (class-validator)
+    if (status === 400 || status === 422) {
+      const validationErrors = this.extractValidationErrors(exceptionResponse)
+      if (validationErrors && validationErrors.length > 0) {
+        return validationErrors
       }
     }
 
-    return exception.message
+    // 2. Business code explicitly passes a code
+    if (typeof exceptionResponse === 'object' && 'code' in exceptionResponse) {
+      const code = exceptionResponse.code as string
+      const msg = exceptionResponse.message
+      const message = typeof msg === 'string' ? msg : exception.message
+      return [{ code, message }]
+    }
+
+    // 3. Fallback: exceptions without an explicit code
+    const message = typeof exceptionResponse === 'string'
+      ? exceptionResponse
+      : exception.message
+    const fallbackCodeMap: Record<number, string> = {
+      401: 'UNAUTHORIZED',
+      403: 'FORBIDDEN',
+      404: 'RESOURCE_NOT_FOUND',
+      409: 'RESOURCE_CONFLICT',
+      429: 'RATE_LIMIT_EXCEEDED',
+    }
+    const fallbackCode = status >= 500
+      ? 'INTERNAL_SERVER_ERROR'
+      : (fallbackCodeMap[status] ?? 'BAD_REQUEST')
+    return [{ code: fallbackCode, message }]
   }
 
   /**
-   * Format validation errors into detail string
-   */
-  private formatValidationErrors(messages: unknown[]): string {
-    const details: string[] = []
-
-    for (const item of messages) {
-      if (typeof item === 'string') {
-        details.push(item)
-      } else if (this.isValidationErrorItem(item)) {
-        const field = item.property
-        const constraints = item.constraints ?? {}
-        for (const message of Object.values(constraints)) {
-          details.push(`${field}: ${message}`)
-        }
-      }
-    }
-
-    return details.length > 0 ? details.join('; ') : 'Validation failed'
-  }
-
-  /**
-   * Extract validation error details from class-validator
+   * Extract validation error details
+   *
+   * Converts class-validator error messages into a structured array of field-level errors
    */
   private extractValidationErrors(
     exceptionResponse: string | Record<string, unknown>,
@@ -187,27 +206,34 @@ export class ProblemDetailsFilter implements ExceptionFilter {
     ) {
       const errors: FieldError[] = []
 
+      // Iterate over each validation error (may be a string or ValidationError object)
       for (const item of exceptionResponse.message) {
         if (typeof item === 'string') {
+          // Legacy format: array of strings (e.g. ["email must be an email"])
           const parts = item.split(' ')
           const field = parts[0] ?? 'unknown'
 
           errors.push({
             field,
             pointer: `/${field}`,
-            code: this.inferErrorCode(item),
+            code: 'VALIDATION_ERROR',
             message: item,
           })
         } else if (this.isValidationErrorItem(item)) {
+          // New format: array of ValidationError objects
+          // { property: 'email', constraints: { isEmail: '...' }, contexts: { isEmail: { code: 'INVALID_EMAIL' } } }
           const field = item.property
           const constraints = item.constraints ?? {}
+          const contexts = item.contexts ?? {}
 
-          for (const message of Object.values(constraints)) {
+          // Generate one field error per constraint
+          for (const [constraintName, message] of Object.entries(constraints)) {
+            const contextCode = contexts[constraintName]?.code
             errors.push({
               field,
               pointer: `/${field}`,
-              code: this.inferErrorCode(message),
-              message: message,
+              code: contextCode ?? 'VALIDATION_ERROR',
+              message,
             })
           }
         }
@@ -220,7 +246,7 @@ export class ProblemDetailsFilter implements ExceptionFilter {
   }
 
   /**
-   * Type guard for ValidationErrorItem
+   * Type guard: checks whether the value is a ValidationErrorItem
    */
   private isValidationErrorItem(item: unknown): item is ValidationErrorItem {
     return (
@@ -229,42 +255,5 @@ export class ProblemDetailsFilter implements ExceptionFilter {
       && 'property' in item
       && typeof (item as ValidationErrorItem).property === 'string'
     )
-  }
-
-  /**
-   * Infer error code from message
-   */
-  private inferErrorCode(message: string): string {
-    const lowerMessage = message.toLowerCase()
-
-    if (
-      lowerMessage.includes('must be')
-      || lowerMessage.includes('should be')
-    ) {
-      if (lowerMessage.includes('email')) return 'INVALID_EMAIL'
-      if (lowerMessage.includes('url')) return 'INVALID_URL'
-      if (lowerMessage.includes('uuid')) return 'INVALID_UUID'
-      return 'INVALID_FORMAT'
-    }
-
-    if (
-      lowerMessage.includes('required')
-      || lowerMessage.includes('should not be empty')
-    ) {
-      return 'REQUIRED_FIELD'
-    }
-
-    if (
-      lowerMessage.includes('too short')
-      || lowerMessage.includes('too long')
-    ) {
-      return 'INVALID_LENGTH'
-    }
-
-    if (lowerMessage.includes('min') || lowerMessage.includes('max')) {
-      return 'OUT_OF_RANGE'
-    }
-
-    return 'VALIDATION_ERROR'
   }
 }

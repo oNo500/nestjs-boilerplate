@@ -1,6 +1,7 @@
 /**
- * Shared-Kernel Guards exports
+ * Shared-kernel guards barrel export
  *
- * Cross-module shared guards
+ * Exports guards shared across modules.
  */
 export { JwtAuthGuard } from './jwt-auth.guard'
+export { RolesGuard } from './roles.guard'

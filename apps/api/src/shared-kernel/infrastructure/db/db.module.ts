@@ -11,16 +11,16 @@ import type { DynamicModule } from '@nestjs/common'
 /**
  * Drizzle database module
  *
- * Uses Dynamic Module pattern, similar to @nestjs/typeorm
- * - forRoot(): Uses default ConfigService configuration
- * - forRootAsync(): Uses custom factory function configuration
+ * Uses the Dynamic Module pattern, similar to @nestjs/typeorm
+ * - forRoot(): configure with the default ConfigService
+ * - forRootAsync(): configure with a custom factory function
  */
 @Global()
 @Module({})
 export class DrizzleModule {
   /**
-   * Create global database connection using default ConfigService
-   * Should be called once in AppModule
+   * Create the global database connection using the default ConfigService.
+   * Should be called once in AppModule.
    */
   static forRoot(): DynamicModule {
     return {
@@ -54,8 +54,8 @@ export class DrizzleModule {
   }
 
   /**
-   * Create global database connection using custom factory function
-   * Suitable for scenarios requiring more flexible configuration
+   * Create the global database connection using a custom factory function.
+   * Use this when more flexible configuration is needed.
    *
    * @example
    * DrizzleModule.forRootAsync({

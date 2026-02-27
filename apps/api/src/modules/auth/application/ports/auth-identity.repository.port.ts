@@ -2,21 +2,21 @@ import type { AuthIdentity } from '@/modules/auth/domain/aggregates/auth-identit
 import type { AuthProvider } from '@/modules/auth/domain/value-objects/auth-provider'
 
 /**
- * Auth Identity Repository token
+ * Auth Identity Repository injection token
  */
 export const AUTH_IDENTITY_REPOSITORY = Symbol('AUTH_IDENTITY_REPOSITORY')
 
 /**
  * Auth Identity Repository interface
  *
- * Manages authentication identities (compatible with better-auth accounts table):
- * - email: Email/password authentication
+ * Unified auth identity management (adapts better-auth accounts table):
+ * - email: email/password authentication
  * - google/github: OAuth authentication
- * - phone: Phone authentication
+ * - phone: phone number authentication
  */
 export interface AuthIdentityRepository {
   /**
-   * Save authentication identity (create or update)
+   * Save an auth identity (create or update)
    */
   save(identity: AuthIdentity): Promise<void>
 
@@ -26,7 +26,7 @@ export interface AuthIdentityRepository {
   findById(id: string): Promise<AuthIdentity | null>
 
   /**
-   * Find all authentication methods by user ID
+   * Find all auth identities for a user
    */
   findByUserId(userId: string): Promise<AuthIdentity[]>
 
@@ -39,8 +39,8 @@ export interface AuthIdentityRepository {
   ): Promise<AuthIdentity | null>
 
   /**
-   * Find by provider and account ID (for login)
-   * accountId: email/OAuth account ID/phone number
+   * Find by provider and account identifier (used for login)
+   * accountId: email / OAuth account ID / phone number
    */
   findByProviderAndIdentifier(
     provider: AuthProvider,
@@ -48,22 +48,22 @@ export interface AuthIdentityRepository {
   ): Promise<AuthIdentity | null>
 
   /**
-   * Find by account ID (regardless of provider)
+   * Find by account identifier regardless of provider
    */
   findByIdentifier(accountId: string): Promise<AuthIdentity | null>
 
   /**
-   * Check if account ID exists
+   * Check whether an account identifier already exists
    */
   existsByIdentifier(accountId: string): Promise<boolean>
 
   /**
-   * Delete authentication identity
+   * Delete an auth identity
    */
   delete(id: string): Promise<boolean>
 
   /**
-   * Delete all authentication identities for a user
+   * Delete all auth identities for a user
    */
   deleteByUserId(userId: string): Promise<number>
 }

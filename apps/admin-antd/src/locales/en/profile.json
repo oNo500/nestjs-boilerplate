@@ -1,0 +1,38 @@
+{
+  "fields": {
+    "displayName": "Display Name",
+    "avatarUrl": "Avatar URL",
+    "bio": "Bio",
+    "currentPassword": "Current Password",
+    "newPassword": "New Password",
+    "confirmPassword": "Confirm New Password"
+  },
+  "form": {
+    "basicInfoTitle": "Basic Info",
+    "saveChanges": "Save Changes",
+    "displayNamePlaceholder": "Please enter display name",
+    "avatarUrlPlaceholder": "Please enter avatar URL",
+    "bioPlaceholder": "Please enter your bio",
+    "currentPasswordPlaceholder": "Please enter current password",
+    "newPasswordPlaceholder": "Please enter new password (at least 8 characters)",
+    "confirmPasswordPlaceholder": "Please enter new password again"
+  },
+  "validation": {
+    "displayNameMax": "Display name must be at most 50 characters",
+    "avatarUrlInvalid": "Please enter a valid URL",
+    "bioMax": "Bio must be at most 200 characters",
+    "currentPasswordRequired": "Please enter current password",
+    "newPasswordRequired": "Please enter new password",
+    "newPasswordMin": "Password must be at least 8 characters",
+    "confirmPasswordRequired": "Please confirm new password",
+    "passwordMismatch": "The two passwords do not match"
+  },
+  "messages": {
+    "updateSuccess": "Profile updated successfully"
+  },
+  "changePassword": {
+    "title": "Change Password",
+    "trigger": "Change Password",
+    "successMessage": "Password changed successfully, please log in again"
+  }
+}

@@ -9,6 +9,9 @@ import type { IncomingMessage, ServerResponse } from 'node:http'
 
 /**
  * Create nestjs-pino configuration
+ *
+ * @param config - NestJS ConfigService
+ * @returns nestjs-pino module configuration
  */
 export function createLoggerConfig(config: ConfigService<Env, true>): Params {
   const nodeEnv: 'development' | 'production' | 'test' = config.get('NODE_ENV')
@@ -17,23 +20,25 @@ export function createLoggerConfig(config: ConfigService<Env, true>): Params {
 
   return {
     pinoHttp: {
+      // Log level
       level: logLevel,
 
-      // Only log API paths (whitelist)
+      // Only log requests to /api/ paths (allowlist approach)
       autoLogging: {
         ignore: (req) => {
           const url = req.url ?? ''
-          return !url.startsWith('/v1/') && !url.startsWith('/v2/')
+          // Only log requests starting with /api/
+          return !url.startsWith('/api/')
         },
       },
 
-      // Sensitive data redaction
+      // Sensitive field redaction
       redact: {
         paths: redactPaths,
         censor: redactCensor,
       },
 
-      // Serializers
+      // Serializers: control which fields are included in log output
       serializers: {
         req: (req: IncomingMessage & { id?: string, query?: unknown, params?: unknown }) => ({
           id: req.id,
@@ -54,12 +59,13 @@ export function createLoggerConfig(config: ConfigService<Env, true>): Params {
         }),
       },
 
-      // Custom log properties from request headers
+      // Custom log properties: extract tracing info from the request
       customProps: (req: IncomingMessage) => ({
         correlationId: req.headers['x-correlation-id'],
         traceId: extractTraceId(req.headers.traceparent as string | undefined),
       }),
 
+      // Custom log messages
       customSuccessMessage: (req: IncomingMessage, res: ServerResponse) => {
         return `${req.method} ${req.url} ${res.statusCode}`
       },
@@ -68,7 +74,7 @@ export function createLoggerConfig(config: ConfigService<Env, true>): Params {
         return `${req.method} ${req.url} ${res.statusCode} - ${error.message}`
       },
 
-      // Dev: use pino-pretty
+      // Use pino-pretty for human-readable output in development
       ...(isProduction
         ? {}
         : {
@@ -85,17 +91,17 @@ export function createLoggerConfig(config: ConfigService<Env, true>): Params {
           }),
     },
 
-    // Exclude health check routes
+    // Exclude health check routes (high-frequency; avoid log spam)
     exclude: [
-      { method: RequestMethod.GET, path: 'v1/health' },
-      { method: RequestMethod.GET, path: 'v1/health/live' },
-      { method: RequestMethod.GET, path: 'v1/health/ready' },
+      { method: RequestMethod.GET, path: 'health' },
+      { method: RequestMethod.GET, path: 'health/live' },
+      { method: RequestMethod.GET, path: 'health/ready' },
     ],
   }
 }
 
 /**
- * Get log level by environment
+ * Get the log level for the given environment
  */
 function getLogLevel(nodeEnv: 'development' | 'production' | 'test'): string {
   switch (nodeEnv) {
@@ -112,7 +118,10 @@ function getLogLevel(nodeEnv: 'development' | 'production' | 'test'): string {
 }
 
 /**
- * Extract trace-id from W3C traceparent header
+ * Extract trace-id from the W3C Trace Context traceparent header
+ *
+ * traceparent format: version-trace_id-parent_id-trace_flags
+ * Example: 00-0af7651916cd43dd8448eb211c80319c-b7ad6b7169203331-01
  */
 function extractTraceId(traceparent: string | undefined): string | undefined {
   if (!traceparent) {
@@ -120,5 +129,5 @@ function extractTraceId(traceparent: string | undefined): string | undefined {
   }
 
   const parts = traceparent.split('-')
-  return parts[1]
+  return parts[1] // trace-id is the second part
 }

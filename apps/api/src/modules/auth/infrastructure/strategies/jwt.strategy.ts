@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { PassportStrategy } from '@nestjs/passport'
+import { ClsService } from 'nestjs-cls'
 import { ExtractJwt, Strategy } from 'passport-jwt'
 
 import type { Env } from '@/app/config/env.schema'
@@ -17,13 +18,16 @@ export interface JwtPayload {
 }
 
 /**
- * JWT Strategy
+ * JWT strategy
  *
- * Validates JWT Token and extracts user information
+ * Validates a JWT token and extracts user information
  */
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-  constructor(configService: ConfigService<Env, true>) {
+  constructor(
+    configService: ConfigService<Env, true>,
+    private readonly cls: ClsService,
+  ) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
@@ -32,12 +36,15 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   /**
-   * Validate JWT payload
+   * Validate the JWT payload
    *
-   * Passport automatically validates signature and expiration
-   * Just return user information here
+   * Passport automatically verifies the signature and expiration time.
+   * This method returns user information and writes it to CLS for use by listeners.
    */
   validate(payload: JwtPayload) {
+    this.cls.set('userId', payload.sub)
+    this.cls.set('userEmail', payload.email)
+
     return {
       id: payload.sub,
       email: payload.email,

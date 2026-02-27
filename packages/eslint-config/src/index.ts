@@ -1,7 +1,7 @@
 /**
  * @workspace/eslint-config
  *
- * Unified ESLint configuration
+ * Composable ESLint configuration factory
  *
  * @example
  * ```typescript
@@ -10,13 +10,18 @@
  * export default composeConfig({
  *   typescript: { tsconfigRootDir: import.meta.dirname },
  *   react: true,
+ *   tailwind: true,
  *   imports: { typescript: true },
  *   prettier: true,
  * })
  * ```
  */
 
+import { defineConfig } from 'eslint/config'
+import { configs as tsConfigs, parser as tsParser } from 'typescript-eslint'
+
 import { a11y } from './configs/a11y'
+import { tailwind } from './configs/better-tailwindcss'
 import { boundaries } from './configs/boundaries'
 import { depend } from './configs/depend'
 import { ignores } from './configs/ignores'
@@ -33,44 +38,47 @@ import { typescript } from './configs/typescript'
 import { unicorn } from './configs/unicorn'
 import { vitest } from './configs/vitest'
 
-import type { A11yOptions } from './configs/a11y'
-import type { BoundariesOptions } from './configs/boundaries'
-import type { DependOptions } from './configs/depend'
-import type { IgnoresOptions } from './configs/ignores'
-import type { ImportsOptions } from './configs/imports'
-import type { JavaScriptOptions } from './configs/javascript'
-import type { JsdocOptions } from './configs/jsdoc'
-import type { NextjsOptions } from './configs/nextjs'
-import type { PackageJsonOptions } from './configs/package-json'
-import type { PrettierOptions } from './configs/prettier'
-import type { ReactOptions } from './configs/react'
-import type { StorybookOptions } from './configs/storybook'
-import type { StylisticOptions } from './configs/stylistic'
-import type { TypeScriptOptions } from './configs/typescript'
-import type { UnicornOptions } from './configs/unicorn'
-import type { VitestOptions } from './configs/vitest'
+import type {
+  A11yOptions,
+  BoundariesOptions,
+  DependOptions,
+  IgnoresOptions,
+  ImportsOptions,
+  JavaScriptOptions,
+  JsdocOptions,
+  NextjsOptions,
+  PackageJsonOptions,
+  PrettierOptions,
+  ReactOptions,
+  StorybookOptions,
+  StylisticOptions,
+  TailwindOptions,
+  TypeScriptOptions,
+  UnicornOptions,
+  VitestOptions,
+} from './types'
 import type { Linter } from 'eslint'
 
 // ============================================================================
-// Type Definitions
+// Type definitions
 // ============================================================================
 
 /**
- * Configuration options for composeConfig
+ * Options for composeConfig
  *
- * Each option supports:
- * - `true` - Use default options
- * - `object` - Pass custom options
- * - `false` - Disable (for configs enabled by default)
- * - omitted - Not enabled (for non-default configs)
+ * Each config entry accepts:
+ * - `true` - enable with default options
+ * - `object` - enable with custom options
+ * - `false` - explicitly disable (required for configs that are on by default)
+ * - omitted - leave disabled (for configs that are off by default)
  */
 export interface ComposeConfigOptions {
-  // Base configs (enabled by default)
-  /** Ignore files config @default true */
+  // Base configuration (enabled by default)
+  /** Ignore patterns configuration @default true */
   ignores?: boolean | IgnoresOptions
-  /** JavaScript base config @default true */
+  /** JavaScript base configuration @default true */
   javascript?: boolean | JavaScriptOptions
-  /** TypeScript config @default true */
+  /** TypeScript configuration @default true */
   typescript?: boolean | TypeScriptOptions
   /** Code style rules @default true */
   stylistic?: boolean | StylisticOptions
@@ -78,20 +86,24 @@ export interface ComposeConfigOptions {
   unicorn?: boolean | UnicornOptions
   /** Dependency optimization suggestions @default true */
   depend?: boolean | DependOptions
+  /** Rules for config files (*.config.ts) without type-checking @default true */
+  configFiles?: boolean
 
-  // Framework configs
-  /** React config */
+  // Framework configuration
+  /** React configuration */
   react?: boolean | ReactOptions
-  /** Next.js config */
+  /** Next.js configuration */
   nextjs?: boolean | NextjsOptions
+  /** Tailwind CSS configuration */
+  tailwind?: boolean | TailwindOptions
 
-  // Tool configs
-  /** Import sorting and rules */
+  // Tooling configuration
+  /** Import ordering and rules */
   imports?: boolean | ImportsOptions
   /** Prettier formatting */
   prettier?: boolean | PrettierOptions
 
-  // Quality configs
+  // Quality configuration
   /** Accessibility rules */
   a11y?: boolean | A11yOptions
   /** JSDoc documentation rules */
@@ -101,7 +113,7 @@ export interface ComposeConfigOptions {
   /** package.json rules */
   packageJson?: boolean | PackageJsonOptions
 
-  // Testing configs
+  // Testing configuration
   /** Vitest testing rules */
   vitest?: boolean | VitestOptions
   /** Storybook rules */
@@ -109,95 +121,112 @@ export interface ComposeConfigOptions {
 }
 
 // ============================================================================
-// Main Function
+// Core function
 // ============================================================================
 
-const getOpts = <T>(opt: boolean | T | undefined): T => (typeof opt === 'object' ? opt : {}) as T
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type ConfigFn = (opts: any) => Linter.Config[]
 
-/** Compose ESLint configs in the correct order */
+type ConfigEntry = {
+  key: keyof ComposeConfigOptions
+  fn: ConfigFn
+  defaultOn?: boolean
+  /** Values derived from global options to inject; overridden by explicit user config */
+  inject?: (options: ComposeConfigOptions) => Record<string, unknown>
+}
+
+const CONFIG_REGISTRY: ConfigEntry[] = [
+  // Enabled by default
+  { key: 'ignores', fn: ignores, defaultOn: true },
+  { key: 'javascript', fn: javascript, defaultOn: true },
+  {
+    key: 'typescript',
+    fn: typescript,
+    defaultOn: true,
+  },
+  { key: 'stylistic', fn: stylistic, defaultOn: true },
+  { key: 'unicorn', fn: unicorn, defaultOn: true },
+  { key: 'depend', fn: depend, defaultOn: true },
+  // Opt-in (order is fixed; prettier must come last)
+  {
+    key: 'imports',
+    fn: imports,
+    inject: (options) => ({ typescript: options.typescript !== false }),
+  },
+  { key: 'react', fn: react },
+  { key: 'nextjs', fn: nextjs },
+  { key: 'tailwind', fn: tailwind },
+  { key: 'a11y', fn: a11y },
+  { key: 'jsdoc', fn: jsdoc },
+  { key: 'boundaries', fn: boundaries },
+  { key: 'packageJson', fn: packageJson },
+  { key: 'vitest', fn: vitest },
+  { key: 'storybook', fn: storybook },
+  { key: 'prettier', fn: prettier },
+]
+
+/** Composes ESLint configs in the correct internal order */
 export function composeConfig(options: ComposeConfigOptions = {}): Linter.Config[] {
   const configs: Linter.Config[] = []
 
-  // Enabled by default
-  if (options.ignores !== false) {
-    const opts = getOpts(options.ignores)
-    configs.push(...ignores(opts.ignores, opts.gitignore))
+  for (const { key, fn, defaultOn, inject } of CONFIG_REGISTRY) {
+    const opt = options[key]
+    const enabled = defaultOn ? opt !== false : !!opt
+    if (!enabled) continue
+
+    const base = typeof opt === 'object' ? opt : {}
+    const injected = inject ? inject(options) : {}
+    configs.push(...fn({ ...injected, ...base }))
   }
 
-  if (options.javascript !== false) {
-    configs.push(...javascript(getOpts(options.javascript)))
-  }
-
-  if (options.typescript !== false) {
-    configs.push(...typescript(getOpts(options.typescript)))
-  }
-
-  if (options.stylistic !== false) {
-    configs.push(...stylistic(getOpts(options.stylistic)))
-  }
-
-  if (options.unicorn !== false) {
-    configs.push(...unicorn(getOpts(options.unicorn)))
-  }
-
-  if (options.depend !== false) {
-    configs.push(...depend(getOpts(options.depend)))
-  }
-
-  // Must be explicitly enabled
-  if (options.imports) {
-    const enableTypeScript = options.typescript !== false
-    configs.push(
-      ...imports(
-        typeof options.imports === 'object'
-          ? { typescript: enableTypeScript, ...options.imports }
-          : { typescript: enableTypeScript },
-      ),
-    )
-  }
-
-  if (options.react) {
-    configs.push(...react(getOpts(options.react)))
-  }
-
-  if (options.nextjs) {
-    configs.push(...nextjs(getOpts(options.nextjs)))
-  }
-
-  if (options.a11y) {
-    configs.push(...a11y(getOpts(options.a11y)))
-  }
-
-  if (options.jsdoc) {
-    configs.push(...jsdoc(getOpts(options.jsdoc)))
-  }
-
-  if (options.boundaries) {
-    configs.push(...boundaries(getOpts(options.boundaries)))
-  }
-
-  if (options.packageJson) {
-    configs.push(...packageJson(getOpts(options.packageJson)))
-  }
-
-  if (options.vitest) {
-    configs.push(...vitest(getOpts(options.vitest)))
-  }
-
-  if (options.storybook) {
-    configs.push(...storybook(getOpts(options.storybook)))
-  }
-
-  // prettier must be last
-  if (options.prettier) {
-    configs.push(...prettier(getOpts(options.prettier)))
-  }
-
-  return configs
+  return options.configFiles === false
+    ? configs
+    : defineConfig([
+        {
+          ignores: ['*.config.ts', '*.config.mts'],
+          extends: [configs],
+        },
+        {
+          name: 'typescript/config-files',
+          files: ['*.config.ts', '*.config.mts'],
+          extends: [tsConfigs.recommended],
+          languageOptions: {
+            parser: tsParser,
+            parserOptions: {
+              project: false,
+              tsconfigRootDir: (typeof options.typescript === 'object' ? options.typescript.tsconfigRootDir : undefined) ?? process.cwd(),
+            },
+          },
+        },
+      ])
 }
 
 // ============================================================================
-// Constant Exports
+// Type exports
+// ============================================================================
+
+export type {
+  A11yOptions,
+  BoundariesOptions,
+  DependOptions,
+  IgnoresOptions,
+  ImportsOptions,
+  JavaScriptOptions,
+  JsdocOptions,
+  NextjsOptions,
+  PackageJsonOptions,
+  PrettierOptions,
+  ReactOptions,
+  StorybookOptions,
+  StylisticOptions,
+  TailwindOptions,
+  TypeScriptOptions,
+  UnicornOptions,
+  VitestOptions,
+} from './types'
+
+// ============================================================================
+// Constant exports
 // ============================================================================
 
 export { GLOB_SRC, GLOB_JS, GLOB_TS, GLOB_JSX, GLOB_TESTS, GLOB_JSON, GLOB_MARKDOWN } from './utils'

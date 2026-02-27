@@ -3,16 +3,16 @@ import { BaseAggregateRoot } from '@/shared-kernel/domain/base-aggregate-root'
 import type { AuthProvider } from '@/modules/auth/domain/value-objects/auth-provider'
 
 /**
- * AuthIdentity Aggregate Root
+ * AuthIdentity aggregate root
  *
- * Manages user authentication identities, compatible with better-auth accounts table:
- * - email: Email/password authentication (password field)
- * - google/github: OAuth authentication (token field)
- * - phone: Phone authentication
+ * Manages user auth identities; adapts the better-auth accounts table:
+ * - email: email/password authentication (password field)
+ * - google/github: OAuth authentication (token fields)
+ * - phone: phone number authentication
  *
  * Design notes:
- * - One user can have multiple authentication identities
- * - password only used for password-based auth (OAuth is null)
+ * - A user can have multiple auth identities
+ * - password is only used for credential-based auth (null for OAuth)
  */
 export class AuthIdentity extends BaseAggregateRoot {
   readonly #id: string
@@ -58,9 +58,9 @@ export class AuthIdentity extends BaseAggregateRoot {
   }
 
   /**
-   * Create email/password authentication identity
+   * Create an email/password auth identity
    *
-   * @param passwordHash Hashed password (processed by PasswordHasher at Service layer)
+   * @param passwordHash Pre-hashed password (hashing is handled by PasswordHasher in the service layer)
    */
   static createEmailIdentity(
     id: string,
@@ -74,7 +74,7 @@ export class AuthIdentity extends BaseAggregateRoot {
       id,
       userId,
       'email',
-      email.toLowerCase(), // accountId = email
+      email.toLowerCase(), // accountId = email (normalized to lowercase)
       passwordHash,
       null,
       null,
@@ -87,7 +87,7 @@ export class AuthIdentity extends BaseAggregateRoot {
   }
 
   /**
-   * Create OAuth authentication identity
+   * Create an OAuth auth identity
    */
   static createOAuthIdentity(
     id: string,
@@ -119,7 +119,7 @@ export class AuthIdentity extends BaseAggregateRoot {
   }
 
   /**
-   * Create phone authentication identity
+   * Create a phone number auth identity
    */
   static createPhoneIdentity(
     id: string,
@@ -133,7 +133,7 @@ export class AuthIdentity extends BaseAggregateRoot {
       userId,
       'phone',
       phone, // accountId = phone
-      null, // Phone uses verification code
+      null, // Phone authenticates via verification code (no password)
       null,
       null,
       null,
@@ -178,13 +178,13 @@ export class AuthIdentity extends BaseAggregateRoot {
   }
 
   /**
-   * Change password (password-based auth only)
+   * Change the password (email authentication only)
    *
-   * @param newPasswordHash Hashed new password (processed by PasswordHasher at Service layer)
+   * @param newPasswordHash Pre-hashed new password (hashing is handled by PasswordHasher in the service layer)
    */
   changePassword(newPasswordHash: string): void {
     if (this.#providerId !== 'email') {
-      throw new Error('Only email authentication supports password change')
+      throw new Error('Password change is only supported for email authentication')
     }
     this.#password = newPasswordHash
     this.#updatedAt = new Date()
@@ -217,7 +217,7 @@ export class AuthIdentity extends BaseAggregateRoot {
   }
 
   /**
-   * Check if password verification is required
+   * Whether password verification is required
    */
   get requiresPassword(): boolean {
     return this.#providerId === 'email'

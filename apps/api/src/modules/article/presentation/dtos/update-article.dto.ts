@@ -1,0 +1,41 @@
+import { ApiPropertyOptional } from '@nestjs/swagger'
+import { IsOptional } from 'class-validator'
+
+import {
+  IsBooleanField,
+  IsInField,
+  IsStringField,
+  MaxLengthField,
+  MinLengthField,
+} from '@/shared-kernel/infrastructure/decorators/validators'
+
+import type { ArticleCategory } from '@/modules/article/domain/aggregates/article.aggregate'
+
+const ARTICLE_CATEGORIES: ArticleCategory[] = ['tech', 'design', 'product', 'other']
+
+export class UpdateArticleDto {
+  @IsOptional()
+  @IsStringField()
+  @MinLengthField(5, { message: 'Title must be at least 5 characters long' })
+  @MaxLengthField(200, { message: 'Title must not exceed 200 characters' })
+  title?: string
+
+  @IsOptional()
+  @IsStringField()
+  @MinLengthField(1, { message: 'Content must not be empty' })
+  content?: string
+
+  @ApiPropertyOptional({ enum: ARTICLE_CATEGORIES, example: 'tech' })
+  @IsOptional()
+  @IsStringField()
+  @IsInField(ARTICLE_CATEGORIES)
+  category?: ArticleCategory
+
+  @IsOptional()
+  @IsStringField()
+  author?: string
+
+  @IsOptional()
+  @IsBooleanField()
+  isPinned?: boolean
+}

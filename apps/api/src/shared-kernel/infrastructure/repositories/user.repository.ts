@@ -14,8 +14,8 @@ import type { DrizzleDb } from '@/shared-kernel/infrastructure/db/db.port'
 /**
  * Drizzle User Repository implementation
  *
- * Manages user core data persistence
- * Adapted from better-auth schema
+ * Manages persistence of core user data.
+ * Adapts to the better-auth schema.
  */
 @Injectable()
 export class UserRepositoryImpl implements UserRepository {
@@ -32,6 +32,8 @@ export class UserRepositoryImpl implements UserRepository {
         id: data.id,
         name: data.name,
         email: data.email,
+        username: data.email.split('@')[0] ?? data.email, // derive username from email
+        displayUsername: data.name, // use name as display username
         role: data.role ?? null,
         emailVerified: false,
         banned: false,

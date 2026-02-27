@@ -1,2 +1,2 @@
-export * from './schemas/index.js'
-export * from './relations.js'
+export * from './schemas/index'
+export * from './relations'

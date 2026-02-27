@@ -1,0 +1,79 @@
+{
+  "fields": {
+    "title": "Title",
+    "content": "Content",
+    "author": "Author",
+    "category": "Category",
+    "status": "Status",
+    "viewCount": "Views",
+    "isPinned": "Pinned",
+    "publishedAt": "Published At",
+    "createdAt": "Created At",
+    "updatedAt": "Updated At",
+    "id": "ID"
+  },
+  "status": {
+    "draft": "Draft",
+    "published": "Published",
+    "archived": "Archived"
+  },
+  "category": {
+    "tech": "Tech",
+    "design": "Design",
+    "product": "Product",
+    "other": "Other"
+  },
+  "form": {
+    "createTitle": "Create Article",
+    "editTitle": "Edit Article",
+    "titlePlaceholder": "Enter article title",
+    "contentPlaceholder": "Enter article content",
+    "authorPlaceholder": "Enter author name",
+    "categoryPlaceholder": "Select category"
+  },
+  "validation": {
+    "titleRequired": "Please enter a title",
+    "titleMax": "Title must be at most 100 characters",
+    "contentRequired": "Please enter content",
+    "authorRequired": "Please enter author name",
+    "categoryRequired": "Please select a category"
+  },
+  "actions": {
+    "createArticle": "Create Article",
+    "confirmDelete": "Confirm Delete",
+    "confirmDeleteDesc": "Are you sure you want to delete \"{{title}}\"?"
+  },
+  "sections": {
+    "basicInfo": "Basic Info",
+    "timeInfo": "Time Info"
+  },
+  "fullForm": {
+    "optional": "(Optional)",
+    "submitSuccess": "Submitted successfully",
+    "titleLabel": "Title",
+    "titlePlaceholder": "Give your goal a name",
+    "dateLabel": "Date Range",
+    "dateStartPlaceholder": "Start date",
+    "dateEndPlaceholder": "End date",
+    "goalLabel": "Goal Description",
+    "goalPlaceholder": "Enter your phased work goal",
+    "standardLabel": "Success Criteria",
+    "standardPlaceholder": "Enter success criteria",
+    "clientLabel": "Client",
+    "clientTooltip": "Who this goal serves",
+    "clientPlaceholder": "Describe your clients, internal clients @name/ID",
+    "invitesLabel": "Reviewers",
+    "invitesPlaceholder": "@ name/ID, up to 5 reviewers",
+    "weightLabel": "Weight",
+    "weightPlaceholder": "Enter value",
+    "publicTypeLabel": "Visibility",
+    "publicTypeHelp": "Clients and reviewers are shared by default",
+    "publicTypePublic": "Public",
+    "publicTypePartial": "Partial",
+    "publicTypePrivate": "Private",
+    "publicUsersLabel": "Visible To",
+    "colleague1": "Colleague A",
+    "colleague2": "Colleague B",
+    "colleague3": "Colleague C"
+  }
+}

@@ -1,9 +1,10 @@
 {
   "name": "@workspace/eslint-config",
-  "version": "0.0.0",
-  "description": "Shared ESLint config with Prettier, TypeScript, and EditorConfig",
-  "license": "PROPRIETARY",
   "type": "module",
+  "version": "0.1.0",
+  "description": "A shared ESLint config for infra-x projects.",
+  "author": "infra-x",
+  "license": "MIT",
   "exports": {
     ".": "./src/index.ts",
     "./package.json": "./package.json"
@@ -14,52 +15,42 @@
     "src"
   ],
   "scripts": {
-    "check-types": "tsc --noEmit",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
     "test": "vitest",
-    "test:coverage": "vitest --coverage",
-    "test:ui": "vitest --ui"
-  },
-  "dependencies": {
-    "@clack/prompts": "^0.11.0",
-    "@eslint-react/eslint-plugin": "^2.3.13",
-    "@eslint/compat": "1.4.1",
-    "@eslint/core": "0.17.0",
-    "@eslint/js": "^9.39.1",
-    "@next/eslint-plugin-next": "^16.0.8",
-    "@stylistic/eslint-plugin": "^5.6.1",
-    "@vitest/eslint-plugin": "^1.5.2",
-    "defu": "^6.1.4",
-    "eslint-config-next": "16.0.10",
-    "eslint-config-prettier": "^10.1.8",
-    "eslint-import-resolver-typescript": "^4.4.4",
-    "eslint-plugin-boundaries": "^5.3.1",
-    "eslint-plugin-depend": "^1.4.0",
-    "eslint-plugin-import-x": "4.16.1",
-    "eslint-plugin-jsdoc": "^61.5.0",
-    "eslint-plugin-jsx-a11y": "^6.10.2",
-    "eslint-plugin-package-json": "^0.64.0",
-    "eslint-plugin-prettier": "^5.5.4",
-    "eslint-plugin-react-hooks": "^7.0.1",
-    "eslint-plugin-react-refresh": "^0.4.24",
-    "eslint-plugin-unicorn": "^57.0.0",
-    "nypm": "^0.6.2",
-    "pkg-types": "^2.3.0",
-    "typescript-eslint": "^8.49.0"
+    "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
+    "@infra-x/typescript-config": "0.1.6",
     "@types/eslint-plugin-jsx-a11y": "^6.10.1",
-    "@types/node": "^24.10.2",
-    "@vitest/ui": "^4.0.15",
-    "@workspace/typescript-config": "workspace:*",
+    "@types/node": "^25.0.3",
     "eslint": "^9.39.2",
-    "eslint-plugin-storybook": "^10.1.4",
     "globals": "16.5.0",
     "jiti": "2.6.1",
     "prettier": "^3.7.4",
     "typescript": "^5.9.3",
-    "vitest": "^4.0.15"
+    "vitest": "^4.0.18"
+  },
+  "dependencies": {
+    "@eslint-react/eslint-plugin": "^2.13.0",
+    "@eslint/compat": "1.4.1",
+    "@eslint/core": "0.17.0",
+    "@eslint/js": "^9.39.3",
+    "@next/eslint-plugin-next": "^16.1.6",
+    "@stylistic/eslint-plugin": "^5.9.0",
+    "@vitest/eslint-plugin": "^1.6.9",
+    "eslint-import-resolver-typescript": "^4.4.4",
+    "eslint-plugin-better-tailwindcss": "^4.3.1",
+    "eslint-plugin-boundaries": "^5.4.0",
+    "eslint-plugin-depend": "^1.4.0",
+    "eslint-plugin-import-x": "4.16.1",
+    "eslint-plugin-jsdoc": "^61.7.1",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-package-json": "^0.64.0",
+    "eslint-plugin-prettier": "^5.5.5",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "eslint-plugin-react-refresh": "^0.4.26",
+    "eslint-plugin-storybook": "^10.2.12",
+    "eslint-plugin-unicorn": "^57.0.0",
+    "typescript-eslint": "^8.56.1"
   },
   "peerDependencies": {
     "eslint": "^9.39.2",
@@ -68,10 +59,15 @@
     "prettier": "^3.7.4",
     "typescript": "^5.9.3"
   },
-  "engines": {
-    "node": ">=22.18.0"
-  },
-  "publishConfig": {
-    "access": "public"
+  "peerDependenciesMeta": {
+    "jiti": {
+      "optional": true
+    },
+    "prettier": {
+      "optional": true
+    },
+    "typescript": {
+      "optional": true
+    }
   }
 }

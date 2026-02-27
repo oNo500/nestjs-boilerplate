@@ -3,7 +3,7 @@ import { boolean, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core'
 /**
  * Todos table definition
  *
- * Stores todo items
+ * Stores todo item data
  */
 export const todosTable = pgTable('todos', {
   // Primary key
@@ -29,11 +29,11 @@ export const todosTable = pgTable('todos', {
 })
 
 /**
- * Todo type (inferred from table)
+ * Todo type (inferred from table definition)
  */
 export type Todo = typeof todosTable.$inferSelect
 
 /**
- * Insert Todo type (inferred from table)
+ * Insert Todo type (inferred from table definition)
  */
 export type InsertTodo = typeof todosTable.$inferInsert

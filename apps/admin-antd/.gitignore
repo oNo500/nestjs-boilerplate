@@ -1,0 +1,6 @@
+# Vite SSR build output
+dist-ssr
+
+# Orval generated files
+src/api/generated/
+src/api/models/

@@ -1,45 +1,45 @@
 import { jsonb, pgTable, text, timestamp, varchar } from 'drizzle-orm/pg-core'
 
-import { usersTable } from './users.schema.js'
+import { usersTable } from './users.schema'
 
 /**
  * User preferences
  *
- * Shared value object for user personalization
- * Stored in profiles.preferences JSONB field
+ * A value object shared across modules, defining user personalization settings
+ * Stored in the profiles.preferences JSONB field
  */
 export interface UserPreferences {
-  /** Theme: light/dark/system */
+  /** Theme: light / dark / follow system */
   theme?: 'light' | 'dark' | 'system'
   /** Language preference */
   lang?: string
   /** Timezone */
   timezone?: string
-  /** Notifications enabled */
+  /** Whether notifications are enabled */
   notifications?: boolean
 }
 
 /**
- * Profiles table
+ * Profiles table definition
  *
- * User profile data, separated from users table:
- * - 1:1 relation with users table (user_id is both PK and FK)
+ * User profile information, split from the users table:
+ * - Strongly 1:1 associated with the users table (user_id is both PK and FK)
  * - Can be updated independently without affecting core user data
- * - Uses JSONB for preferences to avoid frequent schema changes
+ * - preferences uses JSONB to avoid frequent column additions
  */
 export const profilesTable = pgTable('profiles', {
-  // Primary key + Foreign key (1:1 relation)
+  // Primary key + foreign key (strong 1:1 association)
   userId: text('user_id')
     .primaryKey()
     .references(() => usersTable.id, { onDelete: 'cascade' }),
 
-  // Display name/nickname
+  // Display name / nickname
   displayName: varchar('display_name', { length: 50 }),
 
   // Avatar URL
   avatarUrl: text('avatar_url'),
 
-  // Bio
+  // Biography
   bio: varchar('bio', { length: 500 }),
 
   // User preferences (JSONB)
@@ -56,11 +56,11 @@ export const profilesTable = pgTable('profiles', {
 })
 
 /**
- * Profile database type (inferred from table)
+ * Profile database type (inferred from table definition)
  */
 export type ProfileDatabase = typeof profilesTable.$inferSelect
 
 /**
- * Insert profile type (inferred from table)
+ * Insert Profile type (inferred from table definition)
  */
 export type InsertProfileDatabase = typeof profilesTable.$inferInsert

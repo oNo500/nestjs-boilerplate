@@ -1,0 +1,14 @@
+node_modules
+**/node_modules
+**/.turbo
+**/dist
+**/.env
+**/.env.*
+**/coverage
+**/*.log
+**/*.tsbuildinfo
+.git
+.gitignore
+.claude
+.serena
+.agents

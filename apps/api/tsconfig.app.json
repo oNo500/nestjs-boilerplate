@@ -1,21 +1,9 @@
 {
-  "extends": "@workspace/typescript-config/tsconfig.nestjs.json",
+  "extends": "@infra-x/typescript-config/tsconfig.nestjs.json",
   "compilerOptions": {
     "baseUrl": "./",
-    "paths": {
-      "@/*": ["src/*"]
-    }
+    "paths": { "@/*": ["src/*"] }
   },
-  "include": [
-    "src/**/*",
-    "scripts/seed.ts",
-    "*.config.ts",
-    "*.config.mts"
-  ],
-  "exclude": [
-    "**/*.test.ts",
-    "**/*.spec.ts",
-    "**/__tests__/**/*",
-    "src/metadata.ts"
-  ]
+  "include": ["src/**/*", "scripts/seed.ts"],
+  "exclude": ["**/*.test.ts", "**/*.spec.ts", "**/__tests__/**/*", "src/metadata.ts"]
 }

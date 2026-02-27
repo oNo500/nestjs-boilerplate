@@ -11,7 +11,7 @@ import type { DrizzleDb } from '@/shared-kernel/infrastructure/db/db.port'
 /**
  * Drizzle UserRole Repository implementation
  *
- * Single role management (compatible with better-auth usersTable.role field)
+ * Single-role management (adapts better-auth usersTable.role field)
  */
 @Injectable()
 export class UserRoleRepositoryImpl implements UserRoleRepository {

@@ -15,7 +15,7 @@ export interface OptionsOverrides {
  */
 export interface OptionsStylistic {
   /**
-   * Enable stylistic rules
+   * Whether to enable stylistic rules
    * @default true
    */
   stylistic?: boolean
@@ -26,7 +26,7 @@ export interface OptionsStylistic {
  */
 export interface OptionsFiles {
   /**
-   * Custom file patterns
+   * Custom file glob patterns
    */
   files?: string[]
 }
@@ -35,52 +35,120 @@ export interface OptionsFiles {
  * TypeScript configuration options
  */
 export interface OptionsTypeScript {
-  /**
-   * Root directory path containing tsconfig.json
-   *
-   * **Important: Highly recommend setting this explicitly!**
-   *
-   * If not set, TypeScript ESLint defaults to `process.cwd()`,
-   * which causes:
-   *
-   * 1. **Unstable behavior**: ESLint behavior depends on execution directory
-   * 2. **Inconsistent across environments**: Different results when run from different directories
-   * 3. **IDE integration issues**: Editor and CLI may have different working directories, breaking type checking
-   * 4. **Poor monorepo compatibility**: Hard to locate correct tsconfig.json in monorepos
-   *
-   * **Recommended usage:**
-   * ```typescript
-   * // In ESLint config file
-   * export default [
-   *   ...typescript({
-   *     tsconfigRootDir: import.meta.dirname  // ✅ Recommended: use config file directory
-   *   })
-   * ]
-   * ```
-   *
-   * @example
-   * ```typescript
-   * // ✅ Recommended: Explicitly set to config file directory
-   * typescript({
-   *   tsconfigRootDir: import.meta.dirname
-   * })
-   *
-   * // ❌ Not recommended: Relies on process.cwd() (default behavior)
-   * typescript({
-   *   // tsconfigRootDir not set
-   * })
-   * ```
-   */
   tsconfigRootDir?: string
+  allowDefaultProject?: string[]
+  defaultProject?: string
 }
 
 /**
- * React configuration options
+ * Tailwind CSS configuration options
  */
-export interface OptionsReact {
+export interface OptionsTailwind {
   /**
-   * React version
-   * @default 'detect'
+   * Path to the Tailwind CSS entry file
+   * @default 'src/global.css'
    */
-  version?: string
+  entryPoint?: string
+}
+
+// ============================================================================
+// Config option types
+// ============================================================================
+
+export type A11yOptions = OptionsFiles & OptionsOverrides
+
+export interface BoundariesOptions extends OptionsFiles, OptionsOverrides {
+  elements?: {
+    type: string
+    pattern: string | string[]
+    capture?: string[]
+    mode?: 'file' | 'folder' | 'full'
+  }[]
+  rules?: {
+    from: string | string[]
+    allow?: (string | [string, Record<string, string>])[]
+    disallow?: string[]
+    message?: string
+  }[]
+}
+
+export interface DependOptions extends OptionsOverrides {
+  /**
+   * Preset list
+   *
+   * - `native`: Flags packages replaceable with native JavaScript APIs (e.g. `is-nan` → `Number.isNaN()`)
+   * - `microutilities`: Flags micro-utility packages implementable in a single line
+   * - `preferred`: Recommends lighter-weight, better-maintained alternatives
+   *
+   * @default ['native', 'microutilities', 'preferred']
+   */
+  presets?: ('native' | 'microutilities' | 'preferred')[]
+
+  /**
+   * Additional modules to ban
+   * @default []
+   */
+  modules?: string[]
+
+  /**
+   * Modules to allow even if matched by a preset
+   * @default []
+   */
+  allowed?: string[]
+}
+
+export interface IgnoresOptions {
+  /** Custom ignore patterns; pass false to disable the built-in defaults */
+  ignores?: string[] | false
+  /** Path to .gitignore file, or a boolean to enable/disable auto-detection */
+  gitignore?: string | boolean
+}
+
+export interface ImportsOptions extends OptionsOverrides, OptionsStylistic {
+  /**
+   * Whether to enable TypeScript support
+   * Automatically injected as true by composeConfig when the global typescript option is enabled
+   * @default false (standalone) / follows global typescript option (via composeConfig)
+   */
+  typescript?: boolean
+  /**
+   * Disallow parent-relative imports (paths starting with ../)
+   * @default false
+   */
+  noRelativeParentImports?: boolean
+}
+
+export type JavaScriptOptions = OptionsFiles & OptionsOverrides
+
+export type JsdocOptions = OptionsOverrides
+
+export type NextjsOptions = OptionsOverrides
+
+export interface PackageJsonOptions extends OptionsOverrides {
+  /**
+   * @default true
+   */
+  stylistic?: boolean
+  /**
+   * @default false
+   */
+  enforceForPrivate?: boolean
+}
+
+export type PrettierOptions = OptionsOverrides
+
+export type ReactOptions = OptionsFiles & OptionsOverrides
+
+export type StorybookOptions = OptionsOverrides
+
+export type StylisticOptions = OptionsOverrides
+
+export type TailwindOptions = OptionsFiles & OptionsOverrides & OptionsTailwind
+
+export type TypeScriptOptions = OptionsFiles & OptionsOverrides & OptionsTypeScript
+
+export type UnicornOptions = OptionsFiles & OptionsOverrides
+
+export type VitestOptions = OptionsFiles & OptionsOverrides & {
+  isInEditor?: boolean
 }
