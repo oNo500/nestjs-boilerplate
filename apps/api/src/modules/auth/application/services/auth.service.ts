@@ -11,6 +11,7 @@ import { JwtService } from '@nestjs/jwt'
 
 import { AUTH_IDENTITY_REPOSITORY } from '@/modules/auth/application/ports/auth-identity.repository.port'
 import { AUTH_SESSION_REPOSITORY } from '@/modules/auth/application/ports/auth-session.repository.port'
+import { LOGIN_LOG_REPOSITORY } from '@/modules/auth/application/ports/login-log.repository.port'
 import { PASSWORD_HASHER } from '@/modules/auth/application/ports/password-hasher.port'
 import { USER_ROLE_REPOSITORY } from '@/modules/auth/application/ports/user-role.repository.port'
 import { AuthIdentity } from '@/modules/auth/domain/aggregates/auth-identity.aggregate'
@@ -22,6 +23,7 @@ import { ErrorCode } from '@/shared-kernel/infrastructure/enums/error-code'
 import type { Env } from '@/app/config/env.schema'
 import type { AuthIdentityRepository } from '@/modules/auth/application/ports/auth-identity.repository.port'
 import type { AuthSessionRepository } from '@/modules/auth/application/ports/auth-session.repository.port'
+import type { LoginLogRepository } from '@/modules/auth/application/ports/login-log.repository.port'
 import type { PasswordHasher } from '@/modules/auth/application/ports/password-hasher.port'
 import type { UserRoleRepository } from '@/modules/auth/application/ports/user-role.repository.port'
 import type { JwtPayload } from '@/modules/auth/infrastructure/strategies/jwt.strategy'
@@ -53,19 +55,43 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService<Env, true>,
     @Inject(AUDIT_LOGGER) private readonly auditLogger: AuditLogger,
+    @Inject(LOGIN_LOG_REPOSITORY) private readonly loginLogRepo: LoginLogRepository,
   ) {}
 
   async login(email: string, password: string, deviceContext?: DeviceContext) {
     const identity = await this.authIdentityRepo.findByProviderAndIdentifier('email', email)
     if (!identity) {
+      void this.loginLogRepo.create({
+        email,
+        status: 'failed',
+        ipAddress: deviceContext?.ipAddress,
+        userAgent: deviceContext?.userAgent,
+        failReason: 'user_not_found',
+      })
       throw new UnauthorizedException({ code: ErrorCode.INVALID_CREDENTIALS, message: 'Invalid email or password' })
     }
 
     if (!identity.password) {
+      void this.loginLogRepo.create({
+        userId: identity.userId,
+        email,
+        status: 'failed',
+        ipAddress: deviceContext?.ipAddress,
+        userAgent: deviceContext?.userAgent,
+        failReason: 'no_password_auth',
+      })
       throw new UnauthorizedException({ code: ErrorCode.INVALID_CREDENTIALS, message: 'Invalid email or password' })
     }
     const isValid = await this.passwordHasher.verify(password, identity.password)
     if (!isValid) {
+      void this.loginLogRepo.create({
+        userId: identity.userId,
+        email,
+        status: 'failed',
+        ipAddress: deviceContext?.ipAddress,
+        userAgent: deviceContext?.userAgent,
+        failReason: 'invalid_password',
+      })
       throw new UnauthorizedException({ code: ErrorCode.INVALID_CREDENTIALS, message: 'Invalid email or password' })
     }
 
@@ -79,6 +105,14 @@ export class AuthService {
       action: 'auth.login',
       actorId: identity.userId,
       actorEmail: email,
+    })
+
+    void this.loginLogRepo.create({
+      userId: identity.userId,
+      email,
+      status: 'success',
+      ipAddress: deviceContext?.ipAddress,
+      userAgent: deviceContext?.userAgent,
     })
 
     return result

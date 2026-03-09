@@ -39,12 +39,8 @@ export function ApiBadRequestResponse(description?: string) {
           instance: '/users',
           request_id: 'req_abc123',
           timestamp: '2024-11-03T10:30:00Z',
-          errors: [
-            {
-              code: 'BAD_REQUEST',
-              message: 'The request data is malformed or contains invalid characters',
-            },
-          ],
+          code: 'BAD_REQUEST',
+          detail: 'The request data is malformed or contains invalid characters',
         },
       },
     },
@@ -72,12 +68,8 @@ export function ApiUnauthorizedResponse(description?: string) {
           instance: '/users/me',
           request_id: 'req_abc123',
           timestamp: '2024-11-03T10:30:00Z',
-          errors: [
-            {
-              code: 'UNAUTHORIZED',
-              message: 'Missing valid credentials or the token has expired',
-            },
-          ],
+          code: 'UNAUTHORIZED',
+          detail: 'Missing valid credentials or the token has expired',
         },
       },
     },
@@ -105,12 +97,8 @@ export function ApiForbiddenResponse(description?: string) {
           instance: '/admin/users',
           request_id: 'req_abc123',
           timestamp: '2024-11-03T10:30:00Z',
-          errors: [
-            {
-              code: 'FORBIDDEN',
-              message: 'You do not have permission to access this resource',
-            },
-          ],
+          code: 'FORBIDDEN',
+          detail: 'You do not have permission to access this resource',
         },
       },
     },
@@ -138,12 +126,8 @@ export function ApiNotFoundResponse(description?: string) {
           instance: '/users/usr_nonexistent',
           request_id: 'req_abc123',
           timestamp: '2024-11-03T10:30:00Z',
-          errors: [
-            {
-              code: 'NOT_FOUND',
-              message: 'The requested resource was not found',
-            },
-          ],
+          code: 'RESOURCE_NOT_FOUND',
+          detail: 'The requested resource was not found',
         },
       },
     },
@@ -171,12 +155,8 @@ export function ApiConflictResponse(description?: string) {
           instance: '/users/register',
           request_id: 'req_abc123',
           timestamp: '2024-11-03T10:30:00Z',
-          errors: [
-            {
-              code: 'CONFLICT',
-              message: 'The resource already exists or there is a conflict',
-            },
-          ],
+          code: 'RESOURCE_CONFLICT',
+          detail: 'The resource already exists or there is a conflict',
         },
       },
     },
@@ -206,6 +186,8 @@ export function ApiValidationFailedResponse(description?: string) {
           instance: '/users/register',
           request_id: 'req_abc123',
           timestamp: '2024-11-03T10:30:00Z',
+          code: 'VALIDATION_FAILED',
+          detail: 'Request validation failed',
           errors: [
             {
               field: 'email',
@@ -246,12 +228,8 @@ export function ApiTooManyRequestsResponse(description?: string) {
           instance: '/users/login',
           request_id: 'req_abc123',
           timestamp: '2024-11-03T10:30:00Z',
-          errors: [
-            {
-              code: 'RATE_LIMIT_EXCEEDED',
-              message: 'Your request rate is too high. Please try again later.',
-            },
-          ],
+          code: 'RATE_LIMIT_EXCEEDED',
+          detail: 'Your request rate is too high. Please try again later.',
         },
       },
     },
@@ -280,12 +258,8 @@ export function ApiInternalServerErrorResponse(description?: string) {
           instance: '/users',
           request_id: 'req_abc123',
           timestamp: '2024-11-03T10:30:00Z',
-          errors: [
-            {
-              code: 'INTERNAL_SERVER_ERROR',
-              message: 'The server encountered an unexpected error. Please contact support.',
-            },
-          ],
+          code: 'INTERNAL_SERVER_ERROR',
+          detail: 'The server encountered an unexpected error. Please contact support.',
         },
       },
     },

@@ -13,15 +13,7 @@
     "view": "查看",
     "save": "保存",
     "create": "新增",
-    "search": "搜索",
-    "reset": "重置",
-    "submit": "提交",
     "retry": "重试"
-  },
-  "status": {
-    "loading": "加载中",
-    "loadFailed": "加载失败",
-    "loadFailedDesc": "加载失败，请稍后重试"
   },
   "nav": {
     "home": "首页",

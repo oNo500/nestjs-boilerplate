@@ -58,6 +58,11 @@ export class ProblemDetailsFilter implements ExceptionFilter {
     }
 
     // Build Problem Details response
+    const errorPayload = this.buildErrorPayload(
+      exceptionResponse as string | Record<string, unknown>,
+      exception,
+      status,
+    )
     const problemDetails: ProblemDetailsDto = {
       type: this.getTypeUri(status),
       title: this.getTitle(status, exception),
@@ -67,11 +72,7 @@ export class ProblemDetailsFilter implements ExceptionFilter {
       correlation_id: this.cls.get('correlationId'),
       trace_id: this.cls.get('traceId'),
       timestamp: new Date().toISOString(),
-      errors: this.extractErrors(
-        exceptionResponse as string | Record<string, unknown>,
-        exception,
-        status,
-      ),
+      ...errorPayload,
     }
 
     // Log the request
@@ -146,36 +147,40 @@ export class ProblemDetailsFilter implements ExceptionFilter {
   }
 
   /**
-   * Extract error details array
+   * Build error payload fields
    *
    * Strategy:
-   * 1. Validation errors (400/422) → attempt to extract field-level errors
-   * 2. Business errors (code explicitly passed) → read code directly
-   * 3. Fallback: fixed code values like VALIDATION_ERROR / BAD_REQUEST
+   * 1. Validation errors (400/422 with field-level data) → code/detail at top level + errors[]
+   * 2. Business errors (exceptionResponse has explicit code) → code/detail at top level, no errors[]
+   * 3. Fallback → code/detail at top level from fallback map
    */
-  private extractErrors(
+  private buildErrorPayload(
     exceptionResponse: string | Record<string, unknown>,
     exception: HttpException,
     status: number,
-  ): FieldError[] {
-    // 1. Attempt to extract validation errors (class-validator)
+  ): Pick<ProblemDetailsDto, 'code' | 'detail' | 'errors'> {
+    // 1. Validation errors (class-validator)
     if (status === 400 || status === 422) {
       const validationErrors = this.extractValidationErrors(exceptionResponse)
       if (validationErrors && validationErrors.length > 0) {
-        return validationErrors
+        return {
+          code: 'VALIDATION_FAILED',
+          detail: 'Request validation failed',
+          errors: validationErrors,
+        }
       }
     }
 
-    // 2. Business code explicitly passes a code
+    // 2. Business error with explicit code
     if (typeof exceptionResponse === 'object' && 'code' in exceptionResponse) {
       const code = exceptionResponse.code as string
       const msg = exceptionResponse.message
-      const message = typeof msg === 'string' ? msg : exception.message
-      return [{ code, message }]
+      const detail = typeof msg === 'string' ? msg : exception.message
+      return { code, detail }
     }
 
-    // 3. Fallback: exceptions without an explicit code
-    const message = typeof exceptionResponse === 'string'
+    // 3. Fallback: no explicit code
+    const detail = typeof exceptionResponse === 'string'
       ? exceptionResponse
       : exception.message
     const fallbackCodeMap: Record<number, string> = {
@@ -185,10 +190,10 @@ export class ProblemDetailsFilter implements ExceptionFilter {
       409: 'RESOURCE_CONFLICT',
       429: 'RATE_LIMIT_EXCEEDED',
     }
-    const fallbackCode = status >= 500
+    const code = status >= 500
       ? 'INTERNAL_SERVER_ERROR'
       : (fallbackCodeMap[status] ?? 'BAD_REQUEST')
-    return [{ code: fallbackCode, message }]
+    return { code, detail }
   }
 
   /**

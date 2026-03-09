@@ -9,39 +9,11 @@ import createClient from 'openapi-fetch'
 
 import { env } from '@/config/env'
 import { i18next } from '@/config/i18n'
-import { ApiClientError, createDefaultProblem } from '@/lib/api-error'
+import { ApiClientError } from '@/lib/api-error'
 import { notification } from '@/lib/notification'
 import { getToken, setToken, setRefreshToken, getRefreshToken } from '@/lib/token'
 
-import type { ProblemDetails } from '@/lib/api-error'
 import type { paths } from '@/types/openapi'
-
-/**
- * Check whether a value is an RFC 9457 Problem Details object
- */
-function isProblemDetails(value: unknown): value is ProblemDetails {
-  return (
-    typeof value === 'object'
-    && value !== null
-    && 'type' in value
-    && 'title' in value
-    && 'errors' in value
-    && typeof (value as ProblemDetails).type === 'string'
-    && typeof (value as ProblemDetails).title === 'string'
-    && Array.isArray((value as ProblemDetails).errors)
-  )
-}
-
-/**
- * Extract an error message from a response body value
- */
-function getErrorMessage(value: unknown): string {
-  if (typeof value === 'object' && value !== null && 'message' in value) {
-    const message = (value as { message: unknown }).message
-    return typeof message === 'string' ? message : i18next.t('common:api.requestFailed')
-  }
-  return i18next.t('common:api.requestFailed')
-}
 
 /**
  * Create the openapi-fetch client
@@ -70,30 +42,12 @@ fetchClient.use({
  */
 fetchClient.use({
   onResponse: async ({ response }) => {
-    if (!response.ok) {
-      const contentType = response.headers.get('content-type')
-
-      if (
-        contentType?.includes('application/json')
-        || contentType?.includes('application/problem+json')
-      ) {
-        try {
-          const data: unknown = await response.clone().json()
-          if (isProblemDetails(data)) {
-            throw new ApiClientError(data)
-          }
-          throw new ApiClientError(createDefaultProblem(response.status, getErrorMessage(data)))
-        } catch (error) {
-          if (error instanceof ApiClientError) {
-            throw error
-          }
-          throw new ApiClientError(createDefaultProblem(response.status, i18next.t('common:api.requestFailed')))
-        }
-      }
-
-      throw new ApiClientError(createDefaultProblem(response.status, i18next.t('common:api.requestFailed')))
-    }
-    return response
+    if (response.ok) return response
+    const json: unknown = await response.clone().json().catch(() => null)
+    const problemDetail = json && typeof json === 'object' && 'title' in json && 'status' in json
+      ? json as ConstructorParameters<typeof ApiClientError>[0]
+      : { title: i18next.t('common:api.requestFailed'), status: response.status }
+    throw new ApiClientError(problemDetail)
   },
 })
 

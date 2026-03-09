@@ -2,12 +2,12 @@
   "name": "@workspace/database",
   "version": "1.0.0",
   "type": "module",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "main": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs"
     }
   },
   "files": [
@@ -17,7 +17,7 @@
     "build": "tsdown",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "check-types": "tsc --noEmit",
+    "typecheck": "tsc --noEmit",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
@@ -36,12 +36,12 @@
     "@types/pg": "8.15.6",
     "@workspace/eslint-config": "workspace:*",
     "bcrypt": "^6.0.0",
+    "drizzle-kit": "0.31.6",
     "drizzle-orm": "0.44.7",
+    "eslint": "^10.0.3",
     "pg": "8.16.3",
     "postgres": "^3.4.8",
-    "drizzle-kit": "0.31.6",
-    "eslint": "^9.39.3",
-    "tsdown": "^0.15.12",
+    "tsdown": "^0.21.0",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3"
   }

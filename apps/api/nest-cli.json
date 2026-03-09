@@ -11,20 +11,6 @@
         "swcrcPath": ".swcrc"
       }
     },
-    "typeCheck": true,
-    "plugins": [
-      {
-        "name": "@nestjs/swagger",
-        "options": {
-          "classValidatorShim": true,
-          "introspectComments": true,
-          "esmCompatible": true,
-          "dtoFileNameSuffix": [".dto.ts", ".command.ts", ".query.ts"],
-          "controllerFileNameSuffix": [".controller.ts"],
-          "dtoKeyOfComment": "description",
-          "controllerKeyOfComment": "summary"
-        }
-      }
-    ]
+    "typeCheck": true
   }
 }

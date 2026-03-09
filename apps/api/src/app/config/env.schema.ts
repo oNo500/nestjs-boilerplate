@@ -105,6 +105,14 @@ export const envSchema = z.object({
     .url()
     .default('https://api.example.com'),
 
+  // OAuth configuration (optional; OAuth login is disabled when not set)
+  GOOGLE_CLIENT_ID: z.string().optional(),
+  GOOGLE_CLIENT_SECRET: z.string().optional(),
+  GITHUB_CLIENT_ID: z.string().optional(),
+  GITHUB_CLIENT_SECRET: z.string().optional(),
+  OAUTH_CALLBACK_BASE_URL: z.url().default('http://localhost:3000/api/auth/oauth'),
+  FRONTEND_URL: z.url().default('http://localhost:3001'),
+
   // Rate limiting configuration (tighten in production; no limit if unset in local/CI)
   THROTTLE_TTL: z
     .string()
@@ -143,6 +151,7 @@ export function validateEnv(config: Record<string, unknown>): Env {
 
       throw new Error(
         `Environment variable validation failed:\n${errorMessages}\n\nPlease check your .env file or environment variable configuration`,
+        { cause: error },
       )
     }
     throw error

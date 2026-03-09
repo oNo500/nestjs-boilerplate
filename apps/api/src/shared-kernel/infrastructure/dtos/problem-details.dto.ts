@@ -1,6 +1,55 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
 
 /**
+ * Error detail
+ *
+ * Spec:
+ * - JSON Pointer (RFC 6901): https://www.rfc-editor.org/rfc/rfc6901.html
+ * - Google AIP-193 error model: https://google.aip.dev/193
+ *
+ * Usage rules:
+ * - field present: field-level validation error (e.g. invalid email format)
+ * - field absent: general error (e.g. business rule error, system error)
+ */
+export class FieldError {
+  @ApiPropertyOptional({
+    description: 'Field name (field-level validation error when present)',
+    example: 'email',
+  })
+  field?: string
+
+  @ApiPropertyOptional({
+    description: 'JSON Pointer (RFC 6901) to the specific field',
+    example: '/email',
+  })
+  pointer?: string
+
+  @ApiProperty({
+    description: 'Machine-readable error code (UPPER_SNAKE_CASE)',
+    example: 'INVALID_EMAIL',
+  })
+  code: string
+
+  @ApiProperty({
+    description: 'Human-readable error message',
+    example: 'email must be a valid email address',
+  })
+  message: string
+
+  @ApiPropertyOptional({
+    description: 'Constraint details',
+    example: { min: 8, max: 100, provided: 5 },
+  })
+  constraints?: Record<string, unknown>
+
+  @ApiPropertyOptional({
+    description: 'Expected format',
+    example: 'user@domain.com',
+  })
+  expected_format?: string
+}
+
+/**
  * RFC 9457 Problem Details standard error response
  *
  * Spec: https://www.rfc-editor.org/rfc/rfc9457.html
@@ -16,7 +65,9 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
  * - correlation_id: correlation ID (cross-service tracing)
  * - trace_id: distributed tracing ID
  * - timestamp: time the error occurred
- * - errors: error details array (required; the single source of truth for all error information)
+ * - code: machine-readable error code (business errors)
+ * - detail: human-readable description of this specific occurrence (business errors)
+ * - errors: field-level error details array (validation errors only)
  */
 export class ProblemDetailsDto {
   @ApiProperty({
@@ -69,11 +120,25 @@ export class ProblemDetailsDto {
   })
   timestamp?: string
 
-  // ========== Error details array (required) ==========
+  // ========== Business error fields ==========
 
-  @ApiProperty({
-    description: 'Error details array (single source of truth for all error info; field present = field-level error, field absent = general error)',
-    type: [Object],
+  @ApiPropertyOptional({
+    description: 'Machine-readable error code (business errors only)',
+    example: 'INVALID_CREDENTIALS',
+  })
+  code?: string
+
+  @ApiPropertyOptional({
+    description: 'Human-readable detail for this specific request occurrence',
+    example: 'Invalid email or password',
+  })
+  detail?: string
+
+  // ========== Validation error details (validation errors only) ==========
+
+  @ApiPropertyOptional({
+    description: 'Field-level error details (validation errors only; absent for business/system errors)',
+    type: [FieldError],
     example: [
       {
         field: 'email',
@@ -83,55 +148,5 @@ export class ProblemDetailsDto {
       },
     ],
   })
-  errors: FieldError[]
-}
-
-/**
- * Error detail
- *
- * Spec:
- * - JSON Pointer (RFC 6901): https://www.rfc-editor.org/rfc/rfc6901.html
- * - Google AIP-193 error model: https://google.aip.dev/193
- *
- * Usage rules:
- * - field present: field-level validation error (e.g. invalid email format)
- * - field absent: general error (e.g. business rule error, system error)
- */
-export interface FieldError {
-  /**
-   * Field name (optional)
-   * - present: field-level validation error
-   * - absent: general error (business/system)
-   */
-  field?: string
-
-  /**
-   * JSON Pointer (RFC 6901) pointing to the specific field (optional)
-   * Example: /email, /address/city
-   * Only used for field-level errors
-   */
-  pointer?: string
-
-  /**
-   * Machine-readable error code (UPPER_SNAKE_CASE)
-   * Example: INVALID_EMAIL, EMAIL_EXISTS, USER_NOT_FOUND
-   */
-  code: string
-
-  /**
-   * Human-readable error message
-   */
-  message: string
-
-  /**
-   * Constraint details (optional)
-   * Example: { min: 8, max: 100, provided: 5 }
-   */
-  constraints?: Record<string, unknown>
-
-  /**
-   * Expected format (optional)
-   * Example: 'user@domain.com', 'YYYY-MM-DD'
-   */
-  expected_format?: string
+  errors?: FieldError[]
 }

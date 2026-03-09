@@ -194,7 +194,7 @@ export class ArticleController {
     const page = query.page ?? 1
     const pageSize = query.pageSize ?? 20
 
-    const result = await this.articleService.findPaginated(page, pageSize)
+    const result = await this.articleService.findPaginated(page, pageSize, query.q)
     const totalPages = Math.ceil(result.total / pageSize)
 
     return {

@@ -1,20 +1,13 @@
-import { Module, RequestMethod } from '@nestjs/common'
-import { Test } from '@nestjs/testing'
-import request from 'supertest'
+import { Module } from '@nestjs/common'
 
-import { createValidationPipe } from '@/app/config/validation.config'
-import { AllExceptionsFilter } from '@/app/filters/all-exceptions.filter'
-import { ProblemDetailsFilter } from '@/app/filters/problem-details.filter'
-import { ThrottlerExceptionFilter } from '@/app/filters/throttler-exception.filter'
-import { AppModule } from '@/app.module'
 import { CACHE_PORT } from '@/modules/cache/application/ports/cache.port'
 import { CacheModule } from '@/modules/cache/cache.module'
 
+import { createTestApp } from './helpers/create-app'
+import { createRequest } from './helpers/create-request'
+
 import type { CachePort } from '@/modules/cache/application/ports/cache.port'
 import type { INestApplication } from '@nestjs/common'
-import type { TestingModule } from '@nestjs/testing'
-import type { Test as SuperTestType } from 'supertest'
-import type TestAgent from 'supertest/lib/agent'
 
 /**
  * In-memory cache implementation for E2E tests (replaces Redis)
@@ -24,10 +17,10 @@ class InMemoryCacheService implements CachePort {
 
   get<T>(key: string): Promise<T | undefined> {
     const entry = this.store.get(key)
-    if (!entry) return Promise.resolve<T | undefined>()
+    if (!entry) return Promise.resolve(undefined as T | undefined)
     if (entry.expiresAt && Date.now() > entry.expiresAt) {
       this.store.delete(key)
-      return Promise.resolve<T | undefined>()
+      return Promise.resolve(undefined as T | undefined)
     }
     return Promise.resolve(entry.value as T)
   }
@@ -107,10 +100,6 @@ interface BulkCancelResponse {
 // Helper functions
 // ============================================================
 
-function createRequest(app: INestApplication): TestAgent<SuperTestType> {
-  return request(app.getHttpServer() as never)
-}
-
 /** Create a test order in pending_payment status */
 async function createTestOrder(app: INestApplication, userId = 'test-user'): Promise<OrderResponse> {
   const res = await createRequest(app)
@@ -174,37 +163,16 @@ describe('order E2E Tests', () => {
   const createdOrderIds: string[] = []
 
   beforeAll(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
+    app = await createTestApp({
+      moduleOverrides: [{ original: CacheModule, replacement: InMemoryCacheModule }],
     })
-      .overrideModule(CacheModule)
-      .useModule(InMemoryCacheModule)
-      .compile()
-
-    app = moduleFixture.createNestApplication()
-
-    // Reproduce main.ts: global route prefix
-    app.setGlobalPrefix('api', {
-      exclude: [
-        { path: 'health', method: RequestMethod.ALL },
-        { path: 'health/{*path}', method: RequestMethod.ALL },
-      ],
-    })
-
-    // Reproduce main.ts: global exception filters (dependency injection)
-    app.useGlobalFilters(
-      app.get(ThrottlerExceptionFilter),
-      app.get(ProblemDetailsFilter),
-      app.get(AllExceptionsFilter),
-    )
-
-    // Reproduce main.ts: global validation pipe
-    app.useGlobalPipes(createValidationPipe())
-
-    await app.init()
   })
 
   afterAll(async () => {
+    // Cleanup: delete all orders created during tests
+    for (const id of createdOrderIds) {
+      await createRequest(app).delete(`/api/orders/${id}`)
+    }
     await app.close()
   })
 
@@ -288,8 +256,8 @@ describe('order E2E Tests', () => {
         })
         .expect(422)
 
-      const body = res.body as { errors: { code: string }[] }
-      expect(body.errors[0]?.code).toBe('IDEMPOTENCY_KEY_REUSE_CONFLICT')
+      const body = res.body as { code: string }
+      expect(body.code).toBe('IDEMPOTENCY_KEY_REUSE_CONFLICT')
     })
 
     it('missing Idempotency-Key: returns 400', async () => {
@@ -381,8 +349,8 @@ describe('order E2E Tests', () => {
         .set('If-Match', '"999"')
         .expect(412)
 
-      const body = res.body as { errors: { code: string }[] }
-      expect(body.errors[0]?.code).toBe('ORDER_VERSION_CONFLICT')
+      const body = res.body as { code: string }
+      expect(body.code).toBe('ORDER_VERSION_CONFLICT')
     })
 
     it('missing If-Match -> 412 (PRECONDITION_REQUIRED)', async () => {
@@ -393,8 +361,8 @@ describe('order E2E Tests', () => {
         .patch(`/api/orders/${order.id}/pay`)
         .expect(412)
 
-      const body = res.body as { errors: { code: string }[] }
-      expect(body.errors[0]?.code).toBe('PRECONDITION_REQUIRED')
+      const body = res.body as { code: string }
+      expect(body.code).toBe('PRECONDITION_REQUIRED')
     })
 
     it('invalid If-Match format -> 400', async () => {
@@ -432,8 +400,8 @@ describe('order E2E Tests', () => {
         .set('If-Match', getRes.headers.etag!)
         .expect(409)
 
-      const body = res.body as { errors: { code: string }[] }
-      expect(body.errors[0]?.code).toBe('ORDER_ALREADY_PAID')
+      const body = res.body as { code: string }
+      expect(body.code).toBe('ORDER_ALREADY_PAID')
     })
   })
 

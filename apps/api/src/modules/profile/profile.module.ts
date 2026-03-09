@@ -3,6 +3,7 @@ import { Module } from '@nestjs/common'
 import { PROFILE_REPOSITORY } from '@/modules/profile/application/ports/profile.repository.port'
 import { ProfileService } from '@/modules/profile/application/services/profile.service'
 import { ProfileRepositoryImpl } from '@/modules/profile/infrastructure/repositories/profile.repository'
+import { ProfileController } from '@/modules/profile/presentation/controllers/profile.controller'
 import { PROFILE_PORT } from '@/shared-kernel/application/ports/profile.port'
 
 import type { ProfilePort } from '@/shared-kernel/application/ports/profile.port'
@@ -13,6 +14,7 @@ import type { ProfilePort } from '@/shared-kernel/application/ports/profile.port
  * Provides user profile management functionality.
  */
 @Module({
+  controllers: [ProfileController],
   providers: [
     // Application Service
     ProfileService,

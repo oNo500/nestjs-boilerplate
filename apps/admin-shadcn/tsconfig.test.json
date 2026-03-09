@@ -1,0 +1,12 @@
+{
+  "extends": "@infra-x/typescript-config/tsconfig.vitest.json",
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@workspace/ui/*": ["../../packages/ui/src/*"]
+    }
+  },
+  "include": ["__tests__/**/*", "src/**/*.test.{ts,tsx}"]
+}

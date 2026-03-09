@@ -12,7 +12,7 @@ import {
 import { hasRequiredRole } from '@/shared-kernel/domain/value-objects/role.vo'
 import { ErrorCode } from '@/shared-kernel/infrastructure/enums/error-code'
 
-import type { CreateUserData, UpdateUserData, UserInfo, UserListQuery, UserListResult, UserManagementRepository } from '@/modules/user-management/application/ports/user.repository.port'
+import type { CreateUserData, UpdateUserData, UserInfo, UserListQuery, UserListResult, UserManagementRepository, UserSummary } from '@/modules/user-management/application/ports/user.repository.port'
 import type { RoleType } from '@/shared-kernel/domain/value-objects/role.vo'
 
 /**
@@ -60,6 +60,10 @@ export class UserService {
     if (!deleted) {
       throw new NotFoundException({ code: ErrorCode.USER_NOT_FOUND, message: `User ${id} not found` })
     }
+  }
+
+  async getSummary(): Promise<UserSummary> {
+    return this.userRepository.getSummary()
   }
 
   async assignRole(

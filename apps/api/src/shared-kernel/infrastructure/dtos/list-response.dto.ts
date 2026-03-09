@@ -56,6 +56,7 @@ export class OffsetListResponseDto<T> extends ListResponseDto<T> {
  */
 export class CursorListResponseDto<T> extends ListResponseDto<T> {
   @ApiProperty({
+    type: String,
     description: 'Next page cursor token (Base64-encoded); null when no more data',
     example: 'eyJpZCI6InVzcl8wMjAifQ==',
     nullable: true,

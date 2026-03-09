@@ -17,7 +17,7 @@ export interface CreateUserDto {
   displayName?: string
   email: string
   password: string
-  role?: string
+  role?: 'ADMIN' | 'USER' | 'EDITOR' | 'MODERATOR'
 }
 
 export interface UpdateUserDto {

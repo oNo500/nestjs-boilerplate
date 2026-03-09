@@ -1,0 +1,12 @@
+{
+  "extends": "@infra-x/typescript-config/tsconfig.react-library.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@workspace/ui/*": ["./src/*"]
+    },
+    "isolatedDeclarations": false
+  },
+  "include": ["."],
+  "exclude": ["node_modules", "dist"]
+}

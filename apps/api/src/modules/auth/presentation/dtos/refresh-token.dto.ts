@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { IsNotEmpty, IsString, IsUUID } from 'class-validator'
+import { IsNotEmpty, IsString } from 'class-validator'
 
-import type { UserInfo } from './login.dto'
+import { UserInfo } from './login.dto'
 
 export class RefreshTokenDto {
   @ApiProperty({
@@ -10,15 +10,17 @@ export class RefreshTokenDto {
   })
   @IsString()
   @IsNotEmpty({ message: 'Refresh Token must not be empty' })
-  @IsUUID('4', { message: 'Refresh Token has an invalid format' })
   refreshToken: string
 }
 
 export class RefreshTokenResponseDto {
+  @ApiProperty({ example: 'eyJhbGciOiJIUzI1NiJ9...' })
   accessToken: string
 
+  @ApiProperty({ example: '550e8400-e29b-41d4-a716-446655440000' })
   refreshToken: string
 
+  @ApiProperty({ type: () => UserInfo })
   user: UserInfo
 }
 

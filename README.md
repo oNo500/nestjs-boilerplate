@@ -1,116 +1,125 @@
-# NestJS Full-Stack Boilerplate
+# NestJS Boilerplate
 
-A production-ready full-stack monorepo boilerplate powered by NestJS, React, Drizzle ORM, and Turborepo.
+> Enterprise-grade SaaS admin skeleton with authentication, authorization, audit logging, user management, and architectural patterns (DDD, advanced HTTP features).
 
-The backend follows a modular layered architecture combining DIP, scenario-based services, and on-demand DDD — simple CRUD stays lean, complex business logic gets a proper domain model.
+## Workspace
 
-## Project Structure
+| App / Package | Path | Port | Role | Key Tech |
+|---|---|---|---|---|
+| `api` | `apps/api` | 3000 | NestJS backend API | NestJS, Drizzle ORM, Passport, DDD |
+| `admin-antd` | `apps/admin-antd` | 8081 | Feature reference panel | React, Ant Design Pro, i18n, ProTable |
+| `admin-shadcn` | `apps/admin-shadcn` | 8080 | Tech demo panel | Next.js App Router, shadcn/ui, RSC |
+| `@workspace/database` | `packages/database` | — | Schema definitions & migrations | Drizzle ORM, PostgreSQL |
+| `@workspace/ui` | `packages/ui` | — | Shared UI component library | @base-ui/react |
+| `@workspace/icons` | `packages/icons` | — | Shared icon set | — |
 
-```
-├── apps/
-│   ├── api/            # NestJS backend
-│   └── admin-antd/     # Admin panel (React + Ant Design Pro)
-├── packages/
-│   ├── database/       # Drizzle schema, migrations, seed scripts
-│   ├── eslint-config/  # Shared ESLint configuration
-│   └── icons/          # SVG icon components (auto-generated via SVGR)
-├── docker/             # Docker Compose for local infrastructure
-├── pnpm-workspace.yaml
-└── turbo.json
-```
+## Prerequisites
 
-### API modules
+- **Node.js** v20+
+- **pnpm** v10+
+- **Docker** (for local PostgreSQL + Redis)
 
-```
-src/
-├── modules/
-│   ├── auth/             # Registration, login, session management, refresh tokens
-│   ├── profile/          # User profile
-│   ├── user-management/  # Admin user CRUD
-│   ├── article/          # Article lifecycle with domain events (draft → published → archived)
-│   ├── order/            # Idempotency, optimistic locking, async jobs, bulk operations
-│   ├── audit-log/        # Append-only action log
-│   ├── todo/             # Minimal CRUD reference
-│   └── dashboard/        # Aggregated statistics
-├── shared-kernel/        # Shared infrastructure (pagination, guards, base classes)
-└── app/                  # Cross-cutting concerns (filters, interceptors, config)
-```
-
-## Tech Stack
-
-**API**
-- NestJS 11, TypeScript
-- PostgreSQL, Drizzle ORM
-- Redis, Keyv
-- JWT, Bcrypt
-- Pino, nestjs-cls, Zod
-
-**Admin panel**
-- React 19, TypeScript, Vite
-- Ant Design, Ant Design Pro
-- Zustand, TanStack Query
-- openapi-typescript
-
-**Monorepo**: pnpm + Turborepo
-
-## Getting Started
-
-### Prerequisites
-
-- Node.js 20+
-- pnpm
-- Docker
-
-### 1. Clone and install
+## Quick Start
 
 ```bash
-git clone https://github.com/oNo500/nestjs-boilerplate.git
-cd nestjs-boilerplate
+# 1. Install all dependencies
 pnpm install
-```
 
-### 2. Configure environment
+# 2. Copy environment files and fill in apps/api/.env
+pnpm setup:env
 
-```bash
-cp apps/api/.env.example apps/api/.env
-cp apps/admin-antd/.env.example apps/admin-antd/.env
-cp packages/database/.env.example packages/database/.env
-```
+# 3. Start infrastructure (PostgreSQL on 5432, Redis on 6379)
+docker compose -f docker/docker-compose.yml up -d
 
-Edit the `.env` files with your local configuration:
-
-- `apps/api/.env` — set `DATABASE_URL`, `JWT_SECRET`, `REDIS_URL`
-- `packages/database/.env` — set `DATABASE_URL` (used by Drizzle Kit for migrations)
-
-### 3. Initialize and start
-
-```bash
-docker compose -f docker/docker-compose.yml up -d          # start PostgreSQL + Redis
-pnpm --filter @workspace/database db:push                  # run migrations
-pnpm --filter @workspace/database db:seed                  # (optional) seed data
+# 4. Start all services concurrently
 pnpm dev
 ```
 
-### Local URLs
+## Running Services Individually
 
-| URL | Description |
-|---|---|
-| `http://localhost:3000/docs` | Scalar API documentation |
-| `http://localhost:3000/swagger` | Swagger UI |
-| `http://localhost:3000/health` | Health check |
-| `http://localhost:5173` | Admin panel |
+```bash
+# Backend API (port 3000)
+pnpm --filter api dev
+
+# Feature reference panel — admin-antd (port 8081)
+pnpm --filter admin-antd dev
+
+# Tech demo panel — admin-shadcn (port 8080)
+pnpm --filter admin-shadcn dev
+```
 
 ## Common Commands
 
 ```bash
-pnpm --filter api test                                # Run API unit tests
-pnpm --filter @workspace/database db:generate        # Generate migrations after schema changes
-pnpm --filter @workspace/database db:push            # Apply migrations (development)
-pnpm --filter @workspace/database db:migrate         # Apply migrations (production)
-pnpm --filter @workspace/database db:studio          # Open Drizzle Studio
-pnpm --filter admin-antd api:gen                     # Regenerate OpenAPI types (requires API running)
+turbo build       # Build all packages
+turbo test        # Run all tests
+turbo lint        # Lint all packages
+turbo typecheck   # Type-check all packages
 ```
 
-## Deployment
+## Workflows
 
-Auto-deployed to GCP Cloud Run via GitHub Actions. See [docs/deployment.md](./docs/deployment.md) for details.
+### Update Database Schema
+
+After modifying schema files in `packages/database/src/schemas/`:
+
+```bash
+# 1. Rebuild the database package so downstream packages pick up the new types
+pnpm --filter @workspace/database build
+
+# 2a. Development — push schema directly (no migration file)
+pnpm --filter @workspace/database db:push
+
+# 2b. Production — generate a migration file, then apply it
+pnpm --filter @workspace/database db:generate
+pnpm --filter @workspace/database db:migrate
+
+# (Optional) Inspect the database in a browser UI
+pnpm --filter @workspace/database db:studio
+```
+
+### Regenerate API Types (after backend changes)
+
+The frontend packages use `openapi-typescript` to generate types from the running API. After changing any backend endpoint:
+
+```bash
+# 1. Make sure the API dev server is running (port 3000)
+pnpm --filter api dev
+
+# 2. Regenerate types for each frontend
+pnpm --filter admin-shadcn api:gen
+pnpm --filter admin-antd api:gen
+```
+
+> **Note:** Never hand-write API types in the frontend packages. Always regenerate from the OpenAPI spec.
+
+## Architecture Overview
+
+### `apps/api`
+NestJS backend following Domain-Driven Design. Layers: `domain` → `application` → `infrastructure` → `presentation`. Includes auth (JWT + OAuth), user management, audit logging, file upload, and scheduled tasks.
+
+### `apps/admin-antd`
+Functional reference panel demonstrating real-world features: user management, role management, audit log viewer, i18n (zh/en), and Ant Design Pro's ProTable with server-side pagination.
+
+### `apps/admin-shadcn`
+Tech demo panel focused on modern Next.js patterns: App Router, React Server Components, authentication flow (login/logout/OAuth callback), and a dashboard with data visualization.
+
+### `packages/database`
+Single source of truth for all database schemas. Built with Drizzle ORM. Must be rebuilt (`build`) after any schema change before downstream packages can see updated types.
+
+### `packages/ui`
+Shared headless component library built on `@base-ui/react`. Components are managed via the shadcn CLI — do not edit generated files directly. Does **not** support Radix-style `asChild`; use `render` prop on `DropdownMenuTrigger` instead.
+
+## Docker Infrastructure
+
+```yaml
+# docker/docker-compose.yml
+PostgreSQL:  localhost:5432
+Redis:       localhost:6379
+```
+
+Start with:
+
+```bash
+docker compose -f docker/docker-compose.yml up -d
+```

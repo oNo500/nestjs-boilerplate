@@ -24,5 +24,5 @@ export interface GetAuditLogsParams {
   actorId?: string
   action?: string
   page?: number
-  page_size?: number
+  pageSize?: number
 }

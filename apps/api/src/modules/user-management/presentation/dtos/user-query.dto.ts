@@ -1,3 +1,4 @@
+import { ApiPropertyOptional } from '@nestjs/swagger'
 import { Transform } from 'class-transformer'
 import { IsBoolean, IsOptional, IsString } from 'class-validator'
 
@@ -14,26 +15,17 @@ import { OffsetPaginationDto } from '@/shared-kernel/infrastructure/dtos/offset-
  * - banned filter uses a boolean value
  */
 export class UserQueryDto extends OffsetPaginationDto {
-  /**
-   * Search keyword (matches name or email)
-   * @example "john"
-   */
+  @ApiPropertyOptional({ example: 'john' })
   @IsOptional()
   @IsString()
   search?: string
 
-  /**
-   * Filter by role
-   * @example "admin"
-   */
+  @ApiPropertyOptional({ example: 'admin' })
   @IsOptional()
   @IsString()
   role?: string
 
-  /**
-   * Filter by ban status
-   * @example true
-   */
+  @ApiPropertyOptional({ example: true })
   @IsOptional()
   @IsBoolean()
   @Transform(({ value }: { value: unknown }) => {

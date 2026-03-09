@@ -10,14 +10,19 @@ import type { ImportsOptions } from '../types'
 import type { ESLint, Linter } from 'eslint'
 
 export function imports(options: ImportsOptions = {}): Linter.Config[] {
-  const { overrides = {}, stylistic = true, typescript = false, noRelativeParentImports = false } = options
+  const { overrides = {}, stylistic = true, typescript = false, noRelativeParentImports = false, tsconfigRootDir } = options
 
   const files = [GLOB_SRC]
 
   const settingsForTypescript = typescript
     ? {
         ...importX.configs['flat/recommended'].settings,
-        'import-x/resolver': { typescript: { alwaysTryTypes: true } },
+        'import-x/resolver': {
+          typescript: {
+            alwaysTryTypes: true,
+            ...(tsconfigRootDir && { project: tsconfigRootDir }),
+          },
+        },
       }
     : {}
 

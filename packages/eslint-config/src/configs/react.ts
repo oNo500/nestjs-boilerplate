@@ -15,7 +15,7 @@ import type { Linter } from 'eslint'
  * React rule configuration
  */
 export function react(options: ReactOptions = {}): Linter.Config[] {
-  const { files = [GLOB_JSX], overrides = {} } = options
+  const { files = [GLOB_JSX], overrides = {}, vite = false } = options
 
   return defineConfig({
     name: 'react/rules',
@@ -23,7 +23,7 @@ export function react(options: ReactOptions = {}): Linter.Config[] {
     extends: [
       reactPlugin.configs['recommended-typescript'],
       reactHooksPlugin.configs.flat['recommended-latest'],
-      reactRefresh.configs.recommended,
+      ...(vite ? [reactRefresh.configs.recommended] : []),
     ],
     rules: {
       ...overrides,

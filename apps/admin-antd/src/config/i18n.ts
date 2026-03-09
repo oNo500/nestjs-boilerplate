@@ -4,6 +4,7 @@ import { initReactI18next } from 'react-i18next'
 import enAuditLogs from '@/locales/en/audit-logs.json'
 import enAuth from '@/locales/en/auth.json'
 import enCommon from '@/locales/en/common.json'
+import enLoginLogs from '@/locales/en/login-logs.json'
 import enMenu from '@/locales/en/menu.json'
 import enProfile from '@/locales/en/profile.json'
 import enRoles from '@/locales/en/roles.json'
@@ -12,6 +13,7 @@ import enUsers from '@/locales/en/users.json'
 import zhAuditLogs from '@/locales/zh/audit-logs.json'
 import zhAuth from '@/locales/zh/auth.json'
 import zhCommon from '@/locales/zh/common.json'
+import zhLoginLogs from '@/locales/zh/login-logs.json'
 import zhMenu from '@/locales/zh/menu.json'
 import zhProfile from '@/locales/zh/profile.json'
 import zhRoles from '@/locales/zh/roles.json'
@@ -30,6 +32,7 @@ export const resources = {
     'users': zhUsers,
     'roles': zhRoles,
     'audit-logs': zhAuditLogs,
+    'login-logs': zhLoginLogs,
     'profile': zhProfile,
     'scaffold': zhScaffold,
   },
@@ -40,6 +43,7 @@ export const resources = {
     'users': enUsers,
     'roles': enRoles,
     'audit-logs': enAuditLogs,
+    'login-logs': enLoginLogs,
     'profile': enProfile,
     'scaffold': enScaffold,
   },

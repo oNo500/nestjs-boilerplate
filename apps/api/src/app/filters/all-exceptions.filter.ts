@@ -74,10 +74,8 @@ export class AllExceptionsFilter implements ExceptionFilter {
       correlation_id: correlationId,
       trace_id: traceId,
       timestamp: new Date().toISOString(),
-      errors: [{
-        code: 'INTERNAL_SERVER_ERROR',
-        message,
-      }],
+      code: 'INTERNAL_SERVER_ERROR',
+      detail: message,
     }
 
     // Build trace prefix for log message

@@ -1,7 +1,7 @@
 {
-  "files": [],
-  "references": [
-    { "path": "./tsconfig.schemas.json" },
-    { "path": "./tsconfig.config.json" }
-  ]
+  "extends": "@infra-x/typescript-config/tsconfig.library.json",
+  "compilerOptions": {
+    "isolatedDeclarations": false
+  },
+  "include": ["src/**/*","*.config.mts","*.config.ts","scripts/**/*"]
 }

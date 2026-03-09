@@ -1,4 +1,10 @@
-import { boolean, index, integer, jsonb, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core'
+import { boolean, customType, index, integer, jsonb, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core'
+
+const tsvector = customType<{ data: string }>({
+  dataType() {
+    return 'tsvector'
+  },
+})
 
 /**
  * Articles table definition
@@ -51,6 +57,9 @@ export const articlesTable = pgTable(
       .defaultNow()
       .$onUpdate(() => new Date()),
     publishedAt: timestamp('published_at', { withTimezone: true }),
+
+    // Full-text search vector (maintained on insert/update)
+    searchVector: tsvector('search_vector').notNull().default(''),
   },
 
   (table) => [
@@ -58,6 +67,8 @@ export const articlesTable = pgTable(
     index('articles_slug_idx').on(table.slug),
     // Index: query by status
     index('articles_status_idx').on(table.status),
+    // GIN index for full-text search
+    index('articles_search_vector_idx').using('gin', table.searchVector),
   ],
 )
 

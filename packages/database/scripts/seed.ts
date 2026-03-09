@@ -83,7 +83,7 @@ const TEST_ACCOUNTS = [
 ] as const
 
 async function seed() {
-  const databaseUrl = process.env.DATABASE_URL
+  const databaseUrl = process.env['DATABASE_URL']
   if (!databaseUrl) {
     console.error('❌ DATABASE_URL is not configured')
     process.exit(1)

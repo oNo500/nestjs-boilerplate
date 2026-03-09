@@ -171,8 +171,8 @@ export class ArticleService {
     return await this.articleRepository.findAll()
   }
 
-  async findPaginated(page: number, pageSize: number) {
-    return await this.articleRepository.findPaginated({ page, pageSize })
+  async findPaginated(page: number, pageSize: number, q?: string) {
+    return await this.articleRepository.findPaginated({ page, pageSize, q })
   }
 
   async findCursor(pageSize: number, cursor?: string): Promise<ArticleCursorResult> {

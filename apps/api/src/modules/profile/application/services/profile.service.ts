@@ -1,8 +1,7 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common'
+import { Inject, Injectable } from '@nestjs/common'
 
 import { PROFILE_REPOSITORY } from '@/modules/profile/application/ports/profile.repository.port'
 import { Profile } from '@/modules/profile/domain/aggregates/profile.aggregate'
-import { ErrorCode } from '@/shared-kernel/infrastructure/enums/error-code'
 
 import type { ProfileRepository } from '@/modules/profile/application/ports/profile.repository.port'
 import type { UserPreferences } from '@/shared-kernel/domain/value-objects/user-preferences.vo'
@@ -27,7 +26,7 @@ export class ProfileService {
   async getProfile(userId: string): Promise<Profile> {
     const profile = await this.profileRepository.findByUserId(userId)
     if (!profile) {
-      throw new NotFoundException({ code: ErrorCode.RESOURCE_NOT_FOUND, message: `Profile ${userId} not found` })
+      return this.createProfile(userId)
     }
     return profile
   }

@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core'
 import { EventEmitterModule } from '@nestjs/event-emitter'
+import { ScheduleModule } from '@nestjs/schedule'
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler'
 import { ClsModule } from 'nestjs-cls'
 
@@ -16,15 +17,17 @@ import { RequestContextInterceptor } from '@/app/interceptors/request-context.in
 import { TraceContextInterceptor } from '@/app/interceptors/trace-context.interceptor'
 import { LoggerModule } from '@/app/logger/logger.module'
 import { ETagMiddleware } from '@/app/middleware/etag.middleware'
+import { AnalyticsModule } from '@/modules/analytics/analytics.module'
 import { ArticleModule } from '@/modules/article/article.module'
 import { AuditLogInterceptor } from '@/modules/audit-log/audit-log.interceptor'
 import { AuditLogModule } from '@/modules/audit-log/audit-log.module'
 import { AuthModule } from '@/modules/auth/auth.module'
 import { CacheModule } from '@/modules/cache/cache.module'
-import { DashboardModule } from '@/modules/dashboard/dashboard.module'
 import { OrderModule } from '@/modules/order/order.module'
 import { ProfileModule } from '@/modules/profile/profile.module'
+import { ScheduledTasksModule } from '@/modules/scheduled-tasks/scheduled-tasks.module'
 import { TodoModule } from '@/modules/todo/todo.module'
+import { UploadModule } from '@/modules/upload/upload.module'
 import { UserManagementModule } from '@/modules/user-management/user-management.module'
 import { DrizzleModule } from '@/shared-kernel/infrastructure/db/db.module'
 import { DomainEventsModule } from '@/shared-kernel/infrastructure/events/domain-events.module'
@@ -50,6 +53,8 @@ import type { NestModule, MiddlewareConsumer } from '@nestjs/common'
     }),
     // CLS module: request context management (Request ID, tracing, etc.)
     ClsModule.forRoot(createClsConfig()),
+    // Schedule module: cron jobs and task scheduling
+    ScheduleModule.forRoot(),
     // Logger module: high-performance structured logging (Pino)
     LoggerModule,
     // Event module: domain events and integration events
@@ -84,8 +89,10 @@ import type { NestModule, MiddlewareConsumer } from '@nestjs/common'
     ArticleModule, // Article module (rich model DDD example)
     AuthModule, // Auth module (authentication + DDD example)
     UserManagementModule, // User Management module (user management CRUD)
-    DashboardModule, // Dashboard module (dashboard statistics)
     OrderModule, // Order module (rich model DDD + 4 advanced HTTP features)
+    ScheduledTasksModule, // Scheduled tasks (cron, interval, timeout examples)
+    UploadModule, // File upload (Multer + local storage)
+    AnalyticsModule, // Analytics dashboard data endpoints
   ],
   providers: [
     // Global rate-limiting guard

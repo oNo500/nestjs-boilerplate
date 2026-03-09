@@ -9,6 +9,7 @@ export default defineConfig({
     root: './',
     include: ['src/__tests__/**/*.e2e-spec.ts'],
     setupFiles: ['./src/__tests__/setup.ts'],
+    testTimeout: 30_000,
   },
   plugins: [
     swc.vite({

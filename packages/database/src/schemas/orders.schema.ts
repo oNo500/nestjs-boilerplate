@@ -23,7 +23,7 @@ export const ordersTable = pgTable(
 
     // Order items (embedded JSON, avoids multi-table JOINs)
     items: jsonb('items')
-      .$type<Array<{ productId: string; quantity: number; unitPrice: string }>>()
+      .$type<{ productId: string, quantity: number, unitPrice: string }[]>()
       .notNull()
       .default([]),
 

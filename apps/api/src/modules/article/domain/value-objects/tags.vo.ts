@@ -70,8 +70,8 @@ export class Tags {
       return false
     }
 
-    const sorted1 = [...this.#value].sort()
-    const sorted2 = [...other.#value].sort()
+    const sorted1 = [...this.#value].toSorted()
+    const sorted2 = [...other.#value].toSorted()
 
     return sorted1.every((tag, index) => tag === sorted2[index])
   }

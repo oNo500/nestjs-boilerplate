@@ -31,9 +31,8 @@ export const queryClient = new QueryClient({
   mutationCache: new MutationCache({
     onError: (error) => {
       if (error instanceof ApiClientError) {
-        // Field validation errors (errors containing a field property) are not toasted; bound to the form at the component layer
-        const hasFieldErrors = error.errors.some((e) => e.field)
-        if (hasFieldErrors) return
+        // Field validation errors are not toasted; handled at the component layer via setFields
+        if (error.errors.length > 0) return
 
         // System errors (5xx)
         if (error.status >= 500) {
@@ -41,8 +40,8 @@ export const queryClient = new QueryClient({
           return
         }
 
-        // Business errors (errors not bound to a field, e.g. EMAIL_EXISTS, 409, etc.)
-        notification.error(error.errors[0]?.message ?? error.title)
+        // Business errors (e.g. EMAIL_EXISTS, 409, INVALID_CREDENTIALS, etc.)
+        notification.error(error.userMessage)
         return
       }
 

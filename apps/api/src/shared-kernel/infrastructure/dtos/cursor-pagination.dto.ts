@@ -1,3 +1,4 @@
+import { ApiPropertyOptional } from '@nestjs/swagger'
 import { Type } from 'class-transformer'
 import { IsOptional } from 'class-validator'
 
@@ -22,8 +23,8 @@ import {
 export class CursorPaginationDto {
   /**
    * Number of items per page
-   * @example 20
    */
+  @ApiPropertyOptional({ example: 20 })
   @IsOptional()
   @Type(() => Number)
   @IsIntField()
@@ -33,8 +34,8 @@ export class CursorPaginationDto {
 
   /**
    * Cursor token (Base64-encoded JSON object)
-   * @example eyJpZCI6InVzcl8wMjAifQ==
    */
+  @ApiPropertyOptional({ example: 'eyJpZCI6InVzcl8wMjAifQ==' })
   @IsOptional()
   cursor?: string
 }

@@ -6,6 +6,7 @@ import type { Article } from '@/modules/article/domain/aggregates/article.aggreg
 export interface ArticleListQuery {
   page: number
   pageSize: number
+  q?: string
 }
 
 /**

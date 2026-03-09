@@ -12,8 +12,8 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * 完整健康检查
-         * @description 检查数据库、内存和磁盘健康状态，用于生产环境监控
+         * Full health check
+         * @description Checks database, memory, and disk health for production monitoring
          */
         get: operations["HealthController_check"];
         put?: never;
@@ -31,7 +31,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** 查询审计日志列表 */
+        /** Query audit log list */
         get: operations["AuditLogController_findAll"];
         put?: never;
         post?: never;
@@ -48,10 +48,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** 获取所有 todos */
+        /** Get all todos */
         get: operations["TodoController_findAll"];
         put?: never;
-        /** 创建新 todo */
+        /** Create a new todo */
         post: operations["TodoController_create"];
         delete?: never;
         options?: never;
@@ -66,16 +66,34 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** 根据 ID 获取 todo */
+        /** Get a todo by ID */
         get: operations["TodoController_findById"];
         put?: never;
         post?: never;
-        /** 删除 todo */
+        /** Delete a todo */
         delete: operations["TodoController_delete"];
         options?: never;
         head?: never;
-        /** 更新 todo */
+        /** Update a todo */
         patch: operations["TodoController_update"];
+        trace?: never;
+    };
+    "/api/profile": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get current user profile */
+        get: operations["ProfileController_getProfile"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Update current user profile */
+        patch: operations["ProfileController_updateProfile"];
         trace?: never;
     };
     "/api/articles": {
@@ -87,7 +105,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** 创建草稿文章 */
+        /** Create a draft article */
         post: operations["ArticleController_create"];
         delete?: never;
         options?: never;
@@ -108,7 +126,7 @@ export interface paths {
         delete?: never;
         options?: never;
         head?: never;
-        /** 发布文章 */
+        /** Publish an article */
         patch: operations["ArticleController_publish"];
         trace?: never;
     };
@@ -125,7 +143,7 @@ export interface paths {
         delete?: never;
         options?: never;
         head?: never;
-        /** 归档文章 */
+        /** Archive an article */
         patch: operations["ArticleController_archive"];
         trace?: never;
     };
@@ -136,12 +154,12 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** 根据 ID 获取文章详情 */
+        /** Get article details by ID */
         get: operations["ArticleController_findById"];
-        /** 更新文章内容（仅草稿状态可编辑） */
+        /** Update article content (only draft articles are editable) */
         put: operations["ArticleController_update"];
         post?: never;
-        /** 删除文章 */
+        /** Delete an article */
         delete: operations["ArticleController_delete"];
         options?: never;
         head?: never;
@@ -157,7 +175,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** 为文章添加标签 */
+        /** Add a tag to an article */
         post: operations["ArticleController_addTag"];
         delete?: never;
         options?: never;
@@ -175,7 +193,7 @@ export interface paths {
         get?: never;
         put?: never;
         post?: never;
-        /** 移除文章标签 */
+        /** Remove a tag from an article */
         delete: operations["ArticleController_removeTag"];
         options?: never;
         head?: never;
@@ -189,7 +207,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** 获取全部文章列表（无分页，适用于数据量小的全量获取场景） */
+        /** Get all articles (no pagination; suitable for small datasets) */
         get: operations["ArticleController_findAll"];
         put?: never;
         post?: never;
@@ -206,7 +224,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** 获取文章列表（偏移分页，默认推荐方式） */
+        /** Get article list (offset pagination; default recommended approach) */
         get: operations["ArticleController_findPaginated"];
         put?: never;
         post?: never;
@@ -223,7 +241,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** 获取文章列表（游标分页，适用于大数据集或实时数据场景） */
+        /** Get article list (cursor pagination; suitable for large or real-time datasets) */
         get: operations["ArticleController_findCursor"];
         put?: never;
         post?: never;
@@ -240,7 +258,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** 根据 Slug 获取文章 */
+        /** Get an article by slug */
         get: operations["ArticleController_findBySlug"];
         put?: never;
         post?: never;
@@ -259,7 +277,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** 用户注册 */
+        /** Register a new user */
         post: operations["AuthController_register"];
         delete?: never;
         options?: never;
@@ -276,7 +294,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** 用户登录 */
+        /** User login */
         post: operations["AuthController_login"];
         delete?: never;
         options?: never;
@@ -294,8 +312,8 @@ export interface paths {
         get?: never;
         put?: never;
         /**
-         * 刷新访问令牌
-         * @description 使用 Refresh Token 获取新的 Access Token（同时轮换 Refresh Token）
+         * Refresh access token
+         * @description Use a refresh token to obtain a new access token (the refresh token is rotated simultaneously)
          */
         post: operations["AuthController_refreshToken"];
         delete?: never;
@@ -311,7 +329,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** 获取当前会话信息 */
+        /** Get current session info */
         get: operations["AuthController_getSession"];
         put?: never;
         post?: never;
@@ -328,7 +346,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** 获取会话列表 */
+        /** List active sessions */
         get: operations["AuthController_listSessions"];
         put?: never;
         post?: never;
@@ -347,7 +365,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** 用户登出（单设备） */
+        /** Logout (single device) */
         post: operations["AuthController_logout"];
         delete?: never;
         options?: never;
@@ -364,7 +382,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** 撤销指定会话 */
+        /** Revoke a specific session */
         post: operations["AuthController_revokeSession"];
         delete?: never;
         options?: never;
@@ -381,8 +399,93 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** 撤销所有会话 */
+        /** Revoke all sessions */
         post: operations["AuthController_revokeSessions"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/oauth/google": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Initiate Google OAuth login */
+        get: operations["OAuthController_initiateGoogle"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/oauth/google/callback": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Google OAuth callback */
+        get: operations["OAuthController_googleCallback"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/oauth/github": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Initiate GitHub OAuth login */
+        get: operations["OAuthController_initiateGithub"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/oauth/github/callback": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** GitHub OAuth callback */
+        get: operations["OAuthController_githubCallback"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/login-logs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Query login log list (ADMIN only) */
+        get: operations["LoginLogController_findAll"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -396,11 +499,28 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** 获取用户列表 */
+        /** Get user list */
         get: operations["UserController_findAll"];
         put?: never;
-        /** 创建用户 */
+        /** Create user */
         post: operations["UserController_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/users/summary": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get user summary statistics */
+        get: operations["UserController_getSummary"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -414,15 +534,15 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** 获取用户详情 */
+        /** Get user details */
         get: operations["UserController_findById"];
         put?: never;
         post?: never;
-        /** 删除用户 */
+        /** Delete user */
         delete: operations["UserController_delete"];
         options?: never;
         head?: never;
-        /** 更新用户 */
+        /** Update user */
         patch: operations["UserController_update"];
         trace?: never;
     };
@@ -434,25 +554,8 @@ export interface paths {
             cookie?: never;
         };
         get?: never;
-        /** 分配用户角色（仅 ADMIN） */
+        /** Assign user role (ADMIN only) */
         put: operations["UserController_assignRole"];
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/dashboard/statistics": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** 获取仪表盘统计数据 */
-        get: operations["DashboardController_getStatistics"];
-        put?: never;
         post?: never;
         delete?: never;
         options?: never;
@@ -469,7 +572,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** 创建订单（幂等） */
+        /** Create order (idempotent) */
         post: operations["OrderController_create"];
         delete?: never;
         options?: never;
@@ -490,7 +593,7 @@ export interface paths {
         delete?: never;
         options?: never;
         head?: never;
-        /** 确认支付（乐观锁） */
+        /** Confirm payment (optimistic locking) */
         patch: operations["OrderController_pay"];
         trace?: never;
     };
@@ -503,7 +606,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** 发起发货（异步） */
+        /** Initiate shipping (async) */
         post: operations["OrderController_ship"];
         delete?: never;
         options?: never;
@@ -521,7 +624,7 @@ export interface paths {
         get?: never;
         put?: never;
         post?: never;
-        /** 批量取消订单（207 Multi-Status） */
+        /** Bulk cancel orders (207 Multi-Status) */
         delete: operations["OrderController_bulkCancel"];
         options?: never;
         head?: never;
@@ -535,7 +638,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** 获取订单详情（响应含 ETag） */
+        /** Get order details (response includes ETag) */
         get: operations["OrderController_findById"];
         put?: never;
         post?: never;
@@ -552,8 +655,93 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** 查询异步任务状态 */
+        /** Get async job status */
         get: operations["JobController_findById"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/upload/file": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Upload a single file (images and PDF, max 10MB) */
+        post: operations["UploadController_uploadFile"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/upload/files": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Upload up to 5 files (images and PDF, max 10MB each) */
+        post: operations["UploadController_uploadFiles"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/dashboard/analytics-summary": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get analytics summary (published today + completed orders) */
+        get: operations["AnalyticsController_getAnalyticsSummary"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/dashboard/monthly-overview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get monthly overview for last 12 months */
+        get: operations["AnalyticsController_getMonthlyOverview"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/dashboard/article-category-stats": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get article category distribution and view counts */
+        get: operations["AnalyticsController_getArticleCategoryStats"];
         put?: never;
         post?: never;
         delete?: never;
@@ -582,176 +770,249 @@ export interface components {
         };
         AuditLogListResponseDto: {
             /**
-             * @description 对象类型标识符
-             * @default list
+             * @description Object type identifier
              * @example list
              * @enum {string}
              */
             object: "list";
-            /** @description 实际数据数组 */
+            /** @description Actual data array */
             data: components["schemas"]["AuditLogResponseDto"][];
             /**
-             * @description 当前页码（从 1 开始）
+             * @description Current page number (1-based)
              * @example 1
              */
             page: number;
             /**
-             * @description 每页数量
+             * @description Number of items per page
              * @example 20
              */
             pageSize: number;
             /**
-             * @description 总项数
+             * @description Total number of items
              * @example 100
              */
             total: number;
             /**
-             * @description 是否有更多数据
+             * @description Whether there are more items
              * @example true
              */
             hasMore: boolean;
         };
         TodoResponseDto: {
+            /** @example 550e8400-e29b-41d4-a716-446655440000 */
             id: string;
+            /** @example Buy groceries */
             title: string;
+            /** @example Milk, eggs, bread */
             description: string | null;
+            /** @example false */
             isCompleted: boolean;
+            /**
+             * Format: date-time
+             * @example 2026-01-01T00:00:00.000Z
+             */
+            createdAt: string;
+            /**
+             * Format: date-time
+             * @example 2026-01-01T00:00:00.000Z
+             */
+            updatedAt: string;
+        };
+        TodoListResponseDto: {
+            /**
+             * @description Object type identifier
+             * @example list
+             * @enum {string}
+             */
+            object: "list";
+            /** @description Actual data array */
+            data: components["schemas"]["TodoResponseDto"][];
+        };
+        CreateTodoDto: {
+            /** @example Buy groceries */
+            title: string;
+            /** @example Milk, eggs, bread */
+            description?: string;
+            /** @example false */
+            isCompleted?: boolean;
+        };
+        UpdateTodoDto: {
+            /** @example Buy groceries */
+            title?: string;
+            /** @example Milk, eggs, bread */
+            description?: string;
+            /** @example true */
+            isCompleted?: boolean;
+        };
+        UserPreferencesDto: {
+            /** @enum {string} */
+            theme?: "light" | "dark" | "system";
+            lang?: string;
+            timezone?: string;
+            notifications?: boolean;
+        };
+        ProfileResponseDto: {
+            userId: string;
+            displayName?: string | null;
+            avatarUrl?: string | null;
+            bio?: string | null;
+            preferences: components["schemas"]["UserPreferencesDto"];
             /** Format: date-time */
             createdAt: string;
             /** Format: date-time */
             updatedAt: string;
         };
-        TodoListResponseDto: {
-            /**
-             * @description 对象类型标识符
-             * @default list
-             * @example list
-             * @enum {string}
-             */
-            object: "list";
-            /** @description 实际数据数组 */
-            data: components["schemas"]["TodoResponseDto"][];
+        UpdatePreferencesDto: {
+            /** @enum {string} */
+            theme?: "light" | "dark" | "system";
+            /** @example zh-CN */
+            lang?: string;
+            /** @example Asia/Shanghai */
+            timezone?: string;
+            /** @example true */
+            notifications?: boolean;
         };
-        CreateTodoDto: {
-            title: string;
-            description?: string;
-            isCompleted?: boolean;
-        };
-        UpdateTodoDto: {
-            title?: string;
-            description?: string;
-            isCompleted?: boolean;
+        UpdateProfileDto: {
+            displayName?: string | null;
+            avatarUrl?: string | null;
+            bio?: string | null;
+            preferences?: components["schemas"]["UpdatePreferencesDto"];
         };
         CreateArticleDto: {
+            /** @example Getting Started with NestJS */
+            title: string;
+            /** @example NestJS is a progressive Node.js framework... */
+            content: string;
             /**
              * @example tech
              * @enum {string}
              */
             category?: "tech" | "design" | "product" | "other";
-            title: string;
-            content: string;
+            /** @example John Doe */
             author?: string;
+            /** @example false */
             isPinned?: boolean;
         };
         ArticleResponseDto: {
+            /** @example 550e8400-e29b-41d4-a716-446655440000 */
+            id: string;
+            /** @example Getting Started with NestJS */
+            title: string;
+            /** @example NestJS is a progressive Node.js framework... */
+            content: string;
+            /** @example getting-started-with-nestjs */
+            slug: string;
             /**
              * @example draft
              * @enum {string}
              */
             status: "draft" | "published" | "archived";
             /**
+             * @example [
+             *       "nestjs",
+             *       "typescript"
+             *     ]
+             */
+            tags: string[];
+            /**
              * @example tech
              * @enum {string}
              */
             category: "tech" | "design" | "product" | "other";
-            id: string;
-            title: string;
-            content: string;
-            slug: string;
-            tags: string[];
+            /** @example John Doe */
             author: string;
+            /** @example 42 */
             viewCount: number;
+            /** @example false */
             isPinned: boolean;
-            /** Format: date-time */
+            /**
+             * Format: date-time
+             * @example 2026-01-01T00:00:00.000Z
+             */
             createdAt: string;
-            /** Format: date-time */
+            /**
+             * Format: date-time
+             * @example 2026-01-01T00:00:00.000Z
+             */
             updatedAt: string;
-            /** Format: date-time */
+            /** @example 2026-01-01T00:00:00.000Z */
             publishedAt: string | null;
         };
         UpdateArticleDto: {
+            /** @example Getting Started with NestJS */
+            title?: string;
+            /** @example NestJS is a progressive Node.js framework... */
+            content?: string;
             /**
              * @example tech
              * @enum {string}
              */
             category?: "tech" | "design" | "product" | "other";
-            title?: string;
-            content?: string;
+            /** @example John Doe */
             author?: string;
+            /** @example false */
             isPinned?: boolean;
         };
         AddTagDto: {
+            /** @example nestjs */
             tag: string;
         };
         ArticleAllListResponseDto: {
             /**
-             * @description 对象类型标识符
-             * @default list
+             * @description Object type identifier
              * @example list
              * @enum {string}
              */
             object: "list";
-            /** @description 实际数据数组 */
+            /** @description Actual data array */
             data: components["schemas"]["ArticleResponseDto"][];
         };
         ArticleListResponseDto: {
             /**
-             * @description 对象类型标识符
-             * @default list
+             * @description Object type identifier
              * @example list
              * @enum {string}
              */
             object: "list";
-            /** @description 实际数据数组 */
+            /** @description Actual data array */
             data: components["schemas"]["ArticleResponseDto"][];
             /**
-             * @description 当前页码（从 1 开始）
+             * @description Current page number (1-based)
              * @example 1
              */
             page: number;
             /**
-             * @description 每页数量
+             * @description Number of items per page
              * @example 20
              */
             pageSize: number;
             /**
-             * @description 总项数
+             * @description Total number of items
              * @example 100
              */
             total: number;
             /**
-             * @description 是否有更多数据
+             * @description Whether there are more items
              * @example true
              */
             hasMore: boolean;
         };
         ArticleCursorListResponseDto: {
             /**
-             * @description 对象类型标识符
-             * @default list
+             * @description Object type identifier
              * @example list
              * @enum {string}
              */
             object: "list";
-            /** @description 实际数据数组 */
+            /** @description Actual data array */
             data: components["schemas"]["ArticleResponseDto"][];
             /**
-             * @description 下一页游标令牌（Base64 编码），无更多数据时为 null
+             * @description Next page cursor token (Base64-encoded); null when no more data
              * @example eyJpZCI6InVzcl8wMjAifQ==
              */
-            nextCursor: Record<string, never> | null;
+            nextCursor: string | null;
             /**
-             * @description 是否有更多数据
+             * @description Whether there are more items
              * @example true
              */
             hasMore: boolean;
@@ -759,24 +1020,23 @@ export interface components {
         RegisterDto: {
             /** @example user@example.com */
             email: string;
-            /**
-             * @description 3-30个字符，只能包含字母、数字、下划线和连字符
-             * @example john_doe
-             */
+            /** @example john_doe */
             name: string;
-            /**
-             * @description 至少8个字符，必须包含字母和数字
-             * @example Pass123456
-             */
+            /** @example Pass123456 */
             password: string;
         };
         UserInfo: {
+            /** @example usr_01HXYZ */
             id: string;
+            /** @example user@example.com */
             email: string;
+            /** @example user */
             role: string | null;
         };
         LoginResponseDto: {
+            /** @example eyJhbGciOiJIUzI1NiJ9... */
             accessToken: string;
+            /** @example 550e8400-e29b-41d4-a716-446655440000 */
             refreshToken: string;
             user: components["schemas"]["UserInfo"];
         };
@@ -788,27 +1048,37 @@ export interface components {
         };
         RefreshTokenDto: {
             /**
-             * Format: uuid
-             * @description 登录时返回的 Refresh Token
+             * @description Refresh token returned at login
              * @example 550e8400-e29b-41d4-a716-446655440000
              */
             refreshToken: string;
         };
         RefreshTokenResponseDto: {
+            /** @example eyJhbGciOiJIUzI1NiJ9... */
             accessToken: string;
+            /** @example 550e8400-e29b-41d4-a716-446655440000 */
             refreshToken: string;
             user: components["schemas"]["UserInfo"];
         };
         SessionUserDto: {
+            /** @example usr_01HXYZ */
             id: string;
+            /** @example user@example.com */
             email: string;
+            /** @example user */
             role: string | null;
         };
         SessionInfoDto: {
+            /** @example ses_01HXYZ */
             id: string;
-            /** Format: date-time */
+            /**
+             * Format: date-time
+             * @example 2026-06-01T00:00:00.000Z
+             */
             expiresAt: string;
+            /** @example 127.0.0.1 */
             ipAddress: string | null;
+            /** @example Mozilla/5.0 */
             userAgent: string | null;
         };
         SessionResponseDto: {
@@ -816,13 +1086,23 @@ export interface components {
             session: components["schemas"]["SessionInfoDto"];
         };
         SessionItemDto: {
+            /** @example ses_01HXYZ */
             id: string;
-            /** Format: date-time */
+            /**
+             * Format: date-time
+             * @example 2026-01-01T00:00:00.000Z
+             */
             createdAt: string;
-            /** Format: date-time */
+            /**
+             * Format: date-time
+             * @example 2026-06-01T00:00:00.000Z
+             */
             expiresAt: string;
+            /** @example 127.0.0.1 */
             ipAddress: string | null;
+            /** @example Mozilla/5.0 */
             userAgent: string | null;
+            /** @example false */
             isCurrent: boolean;
         };
         SessionsListResponseDto: {
@@ -833,82 +1113,137 @@ export interface components {
             refreshToken: string;
         };
         LogoutResponseDto: {
-            /** @description 是否成功 */
+            /** @description Whether the operation succeeded */
             success: boolean;
-            /** @description 消息 */
+            /** @description Response message */
             message: string;
         };
         RevokeSessionDto: {
-            /** Format: uuid */
+            /** @example 550e8400-e29b-41d4-a716-446655440000 */
             sessionId: string;
         };
         RevokeSessionResponseDto: {
+            /** @example true */
             success: boolean;
+            /** @example Session revoked successfully */
             message: string;
         };
         LogoutAllResponseDto: {
-            /** @description 撤销的会话数量 */
+            /** @description Number of sessions revoked */
             revokedCount: number;
-            /** @description 消息 */
+            /** @description Response message */
             message: string;
         };
-        UserResponseDto: {
+        LoginLogItemDto: {
             id: string;
-            name: string;
-            displayName: string | null;
+            userId: string | null;
             email: string;
-            emailVerified: boolean;
-            image: string | null;
-            role: string | null;
-            banned: boolean;
-            banReason: string | null;
+            /** @enum {string} */
+            status: "success" | "failed";
+            ipAddress: string | null;
+            userAgent: string | null;
+            failReason: string | null;
             /** Format: date-time */
             createdAt: string;
-            /** Format: date-time */
+        };
+        LoginLogListResponseDto: {
+            /** @enum {string} */
+            object: "list";
+            data: components["schemas"]["LoginLogItemDto"][];
+            total: number;
+            page: number;
+            pageSize: number;
+            hasMore: boolean;
+        };
+        UserResponseDto: {
+            /** @example usr_01HXYZ */
+            id: string;
+            /** @example John Doe */
+            name: string;
+            /** @example Johnny */
+            displayName: string | null;
+            /** @example user@example.com */
+            email: string;
+            /** @example true */
+            emailVerified: boolean;
+            /** @example https://example.com/avatar.png */
+            image: string | null;
+            /** @example user */
+            role: string | null;
+            /** @example false */
+            banned: boolean;
+            /** @example null */
+            banReason: string | null;
+            /**
+             * Format: date-time
+             * @example 2026-01-01T00:00:00.000Z
+             */
+            createdAt: string;
+            /**
+             * Format: date-time
+             * @example 2026-01-01T00:00:00.000Z
+             */
             updatedAt: string;
         };
         UserListResponseDto: {
             /**
-             * @description 对象类型标识符
-             * @default list
+             * @description Object type identifier
              * @example list
              * @enum {string}
              */
             object: "list";
-            /** @description 实际数据数组 */
+            /** @description Actual data array */
             data: components["schemas"]["UserResponseDto"][];
             /**
-             * @description 当前页码（从 1 开始）
+             * @description Current page number (1-based)
              * @example 1
              */
             page: number;
             /**
-             * @description 每页数量
+             * @description Number of items per page
              * @example 20
              */
             pageSize: number;
             /**
-             * @description 总项数
+             * @description Total number of items
              * @example 100
              */
             total: number;
             /**
-             * @description 是否有更多数据
+             * @description Whether there are more items
              * @example true
              */
             hasMore: boolean;
         };
+        UserSummaryDto: {
+            total: number;
+            active: number;
+            adminCount: number;
+            newToday: number;
+        };
         CreateUserDto: {
+            /** @example John Doe */
             name?: string;
+            /** @example Johnny */
             displayName?: string;
+            /** @example user@example.com */
             email: string;
+            /** @example Pass123456 */
             password: string;
-            role?: string;
+            /**
+             * @example user
+             * @enum {string}
+             */
+            role?: "ADMIN" | "USER" | "EDITOR" | "MODERATOR";
         };
         UpdateUserDto: {
+            /** @example John Doe */
             name?: string;
+            /** @example Johnny */
             displayName?: string;
+            /** @example false */
             banned?: boolean;
+            /** @example Violated terms of service */
             banReason?: string;
         };
         AssignRoleDto: {
@@ -918,135 +1253,253 @@ export interface components {
              */
             role: "ADMIN" | "USER" | "EDITOR" | "MODERATOR";
         };
-        StatisticsDto: {
-            totalUsers: number;
-            activeUsers: number;
-            adminUsers: number;
-            newUsersToday: number;
-        };
         OrderItemDto: {
+            /** @example prod_01HXYZ */
             productId: string;
+            /** @example 2 */
             quantity: number;
-            /** @description 字符串类型保证精度安全 */
+            /**
+             * @description Unit price as string to ensure decimal precision safety
+             * @example 99.99
+             */
             unitPrice: string;
         };
         CreateOrderDto: {
+            /** @example usr_01HXYZ */
             userId: string;
             items: components["schemas"]["OrderItemDto"][];
+            /**
+             * @description 3 uppercase letters, e.g. CNY, USD
+             * @example CNY
+             */
             currency?: string;
         };
         OrderItemResponseDto: {
+            /** @example prod_01HXYZ */
             productId: string;
+            /** @example 2 */
             quantity: number;
+            /** @example 99.99 */
             unitPrice: string;
         };
         OrderResponseDto: {
+            /** @example ord_01HXYZ */
+            id: string;
+            /** @example usr_01HXYZ */
+            userId: string;
             /** @enum {string} */
             status: "pending_payment" | "paid" | "shipping" | "completed" | "cancelled";
-            id: string;
-            userId: string;
             items: components["schemas"]["OrderItemResponseDto"][];
+            /** @example 199.98 */
             totalAmount: string;
+            /** @example CNY */
             currency: string;
-            /** @description 乐观锁版本号（用于 ETag） */
+            /**
+             * @description Optimistic lock version number (used for ETag)
+             * @example 1
+             */
             version: number;
-            /** Format: date-time */
+            /**
+             * Format: date-time
+             * @example 2026-01-01T00:00:00.000Z
+             */
             createdAt: string;
-            /** Format: date-time */
+            /**
+             * Format: date-time
+             * @example 2026-01-01T00:00:00.000Z
+             */
             updatedAt: string;
         };
         ShipOrderResponseDto: {
+            /**
+             * @description Async job ID; client polls GET /jobs/:jobId for status
+             * @example job_01HXYZ
+             */
             jobId: string;
         };
         BulkCancelDto: {
+            /**
+             * @example [
+             *       "550e8400-e29b-41d4-a716-446655440000"
+             *     ]
+             */
             ids: string[];
         };
         BulkCancelItemResponseDto: {
+            /** @example ord_01HXYZ */
+            id: string;
             /** @example 204 */
             status: number;
-            id: string;
-            error?: {
-                code: string;
-                message: string;
-            };
+            error: {
+                code?: string;
+                message?: string;
+            } | null;
         };
         BulkCancelResponseDto: {
+            /** @example batch_result */
             object: string;
             data: components["schemas"]["BulkCancelItemResponseDto"][];
+            /**
+             * @example {
+             *       "succeeded": 3,
+             *       "failed": 1
+             *     }
+             */
             summary: {
-                succeeded: number;
-                failed: number;
+                succeeded?: number;
+                failed?: number;
             };
         };
         JobResponseDto: {
             id: string;
             type: string;
-            status: Record<string, never>;
+            /** @enum {string} */
+            status: "pending" | "running" | "succeeded" | "failed" | "cancelled";
             payload: Record<string, never>;
-            /** @description 任务完成后填充 */
-            result: Record<string, never>;
+            /** @description Populated after the job completes */
+            result: Record<string, never> | null;
+            /** @description Populated after the job fails */
             error: {
-                code: string;
-                message: string;
-            };
+                code?: string;
+                message?: string;
+            } | null;
             /** Format: date-time */
             createdAt: string;
             /** Format: date-time */
             updatedAt: string;
         };
+        AnalyticsSummaryDto: {
+            /** @description Number of articles published today */
+            publishedToday: number;
+            /** @description Number of completed orders */
+            completedOrders: number;
+        };
+        MonthlyOverviewItemDto: {
+            /**
+             * @description Month in YYYY-MM format
+             * @example 2025-03
+             */
+            month: string;
+            /** @description Number of new registered users */
+            newUsers: number;
+            /** @description Number of published articles */
+            publishedArticles: number;
+            /** @description Number of login attempts */
+            loginAttempts: number;
+        };
+        MonthlyOverviewDto: {
+            months: components["schemas"]["MonthlyOverviewItemDto"][];
+        };
+        ArticleCategoryStatItemDto: {
+            /** @enum {string} */
+            category: "tech" | "design" | "product" | "other";
+            /** @description Total article count in this category */
+            count: number;
+            /** @description Total view count for this category */
+            viewCount: number;
+        };
+        ArticleCategoryStatsDto: {
+            categories: components["schemas"]["ArticleCategoryStatItemDto"][];
+        };
+        FieldError: {
+            /**
+             * @description Field name (field-level validation error when present)
+             * @example email
+             */
+            field?: string;
+            /**
+             * @description JSON Pointer (RFC 6901) to the specific field
+             * @example /email
+             */
+            pointer?: string;
+            /**
+             * @description Machine-readable error code (UPPER_SNAKE_CASE)
+             * @example INVALID_EMAIL
+             */
+            code: string;
+            /**
+             * @description Human-readable error message
+             * @example email must be a valid email address
+             */
+            message: string;
+            /**
+             * @description Constraint details
+             * @example {
+             *       "min": 8,
+             *       "max": 100,
+             *       "provided": 5
+             *     }
+             */
+            constraints?: Record<string, never>;
+            /**
+             * @description Expected format
+             * @example user@domain.com
+             */
+            expected_format?: string;
+        };
         ProblemDetailsDto: {
             /**
-             * @description 问题类型 URI，应可解引用到人类可读文档
+             * @description Problem type URI, should be dereferenceable to human-readable documentation
              * @example https://api.example.com/errors/validation-failed
              */
             type: string;
             /**
-             * @description 简短的人类可读摘要
-             * @example 请求验证失败
+             * @description Short human-readable summary
+             * @example Unprocessable Entity
              */
             title: string;
             /**
-             * @description HTTP 状态码
+             * @description HTTP status code
              * @example 422
              */
             status: number;
             /**
-             * @description 问题发生的 URI 引用
+             * @description URI reference where the problem occurred
              * @example /api/users
              */
             instance?: string;
             /**
-             * @description 请求追踪 ID
+             * @description Request tracing ID
              * @example req_xyz789
              */
             request_id?: string;
             /**
-             * @description 关联 ID（业务事务追踪）
+             * @description Correlation ID (business transaction tracing)
              * @example corr_shop_session_abc123
              */
             correlation_id?: string;
             /**
-             * @description 分布式追踪 ID（W3C Trace Context）
+             * @description Distributed tracing ID (W3C Trace Context)
              * @example 4bf92f3577b34da6a3ce929d0e0e4736
              */
             trace_id?: string;
             /**
-             * @description 错误发生时间（ISO 8601格式）
+             * @description Time the error occurred (ISO 8601 format)
              * @example 2024-11-03T10:30:00Z
              */
             timestamp?: string;
             /**
-             * @description 错误详情数组（所有错误信息的唯一来源，有 field 表示字段错误，无 field 表示通用错误）
+             * @description Machine-readable error code (business errors only)
+             * @example INVALID_CREDENTIALS
+             */
+            code?: string;
+            /**
+             * @description Human-readable detail for this specific request occurrence
+             * @example Invalid email or password
+             */
+            detail?: string;
+            /**
+             * @description Field-level error details (validation errors only; absent for business/system errors)
              * @example [
              *       {
              *         "field": "email",
              *         "pointer": "/email",
              *         "code": "INVALID_EMAIL",
-             *         "message": "邮箱格式不正确"
+             *         "message": "email must be a valid email address"
              *       }
              *     ]
              */
-            errors: Record<string, never>[];
+            errors?: components["schemas"]["FieldError"][];
         };
     };
     responses: never;
@@ -1173,7 +1626,7 @@ export interface operations {
                     };
                 };
             };
-            /** @description 错误响应（包括 400/401/403/404/422/429/500 等） */
+            /** @description Error response (includes 400/401/403/404/422/429/500, etc.) */
             default: {
                 headers: {
                     [name: string]: unknown;
@@ -1187,14 +1640,10 @@ export interface operations {
     AuditLogController_findAll: {
         parameters: {
             query?: {
-                /** @description 按操作人 ID 筛选 */
-                actorId?: string;
-                /** @description 按操作类型筛选 */
-                action?: string;
-                /** @description 页码（从1开始） */
                 page?: number;
-                /** @description 每页数量 */
                 pageSize?: number;
+                actorId?: string;
+                action?: string;
             };
             header?: never;
             path?: never;
@@ -1210,7 +1659,7 @@ export interface operations {
                     "application/json": components["schemas"]["AuditLogListResponseDto"];
                 };
             };
-            /** @description 错误响应（包括 400/401/403/404/422/429/500 等） */
+            /** @description Error response (includes 400/401/403/404/422/429/500, etc.) */
             default: {
                 headers: {
                     [name: string]: unknown;
@@ -1230,7 +1679,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description 成功返回 todos 列表 */
+            /** @description Returns the list of todos */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -1239,7 +1688,7 @@ export interface operations {
                     "application/json": components["schemas"]["TodoListResponseDto"];
                 };
             };
-            /** @description 错误响应（包括 400/401/403/404/422/429/500 等） */
+            /** @description Error response (includes 400/401/403/404/422/429/500, etc.) */
             default: {
                 headers: {
                     [name: string]: unknown;
@@ -1263,7 +1712,7 @@ export interface operations {
             };
         };
         responses: {
-            /** @description 成功创建 todo */
+            /** @description Todo created successfully */
             201: {
                 headers: {
                     [name: string]: unknown;
@@ -1272,14 +1721,14 @@ export interface operations {
                     "application/json": components["schemas"]["TodoResponseDto"];
                 };
             };
-            /** @description 验证失败 */
+            /** @description Validation failed */
             422: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
             };
-            /** @description 错误响应（包括 400/401/403/404/422/429/500 等） */
+            /** @description Error response (includes 400/401/403/404/422/429/500, etc.) */
             default: {
                 headers: {
                     [name: string]: unknown;
@@ -1301,7 +1750,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description 成功返回 todo */
+            /** @description Returns the todo */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -1310,14 +1759,14 @@ export interface operations {
                     "application/json": components["schemas"]["TodoResponseDto"];
                 };
             };
-            /** @description Todo 不存在 */
+            /** @description Todo not found */
             404: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
             };
-            /** @description 错误响应（包括 400/401/403/404/422/429/500 等） */
+            /** @description Error response (includes 400/401/403/404/422/429/500, etc.) */
             default: {
                 headers: {
                     [name: string]: unknown;
@@ -1339,21 +1788,21 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description 成功删除 todo */
+            /** @description Todo deleted successfully */
             204: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
             };
-            /** @description Todo 不存在 */
+            /** @description Todo not found */
             404: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
             };
-            /** @description 错误响应（包括 400/401/403/404/422/429/500 等） */
+            /** @description Error response (includes 400/401/403/404/422/429/500, etc.) */
             default: {
                 headers: {
                     [name: string]: unknown;
@@ -1379,7 +1828,7 @@ export interface operations {
             };
         };
         responses: {
-            /** @description 成功更新 todo */
+            /** @description Todo updated successfully */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -1388,21 +1837,81 @@ export interface operations {
                     "application/json": components["schemas"]["TodoResponseDto"];
                 };
             };
-            /** @description Todo 不存在 */
+            /** @description Todo not found */
             404: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
             };
-            /** @description 验证失败 */
+            /** @description Validation failed */
             422: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
             };
-            /** @description 错误响应（包括 400/401/403/404/422/429/500 等） */
+            /** @description Error response (includes 400/401/403/404/422/429/500, etc.) */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetailsDto"];
+                };
+            };
+        };
+    };
+    ProfileController_getProfile: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProfileResponseDto"];
+                };
+            };
+            /** @description Error response (includes 400/401/403/404/422/429/500, etc.) */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetailsDto"];
+                };
+            };
+        };
+    };
+    ProfileController_updateProfile: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateProfileDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProfileResponseDto"];
+                };
+            };
+            /** @description Error response (includes 400/401/403/404/422/429/500, etc.) */
             default: {
                 headers: {
                     [name: string]: unknown;
@@ -1426,7 +1935,7 @@ export interface operations {
             };
         };
         responses: {
-            /** @description 创建成功 */
+            /** @description Article created successfully */
             201: {
                 headers: {
                     [name: string]: unknown;
@@ -1435,14 +1944,14 @@ export interface operations {
                     "application/json": components["schemas"]["ArticleResponseDto"];
                 };
             };
-            /** @description 请求参数错误 */
+            /** @description Invalid request parameters */
             400: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
             };
-            /** @description 错误响应（包括 400/401/403/404/422/429/500 等） */
+            /** @description Error response (includes 400/401/403/404/422/429/500, etc.) */
             default: {
                 headers: {
                     [name: string]: unknown;
@@ -1458,14 +1967,14 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description 文章 ID */
+                /** @description Article ID */
                 id: string;
             };
             cookie?: never;
         };
         requestBody?: never;
         responses: {
-            /** @description 发布成功 */
+            /** @description Article published successfully */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -1474,21 +1983,21 @@ export interface operations {
                     "application/json": components["schemas"]["ArticleResponseDto"];
                 };
             };
-            /** @description 业务规则错误（如内容不足 50 字） */
+            /** @description Business rule violation (e.g. content is fewer than 50 characters) */
             400: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
             };
-            /** @description 文章不存在 */
+            /** @description Article not found */
             404: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
             };
-            /** @description 错误响应（包括 400/401/403/404/422/429/500 等） */
+            /** @description Error response (includes 400/401/403/404/422/429/500, etc.) */
             default: {
                 headers: {
                     [name: string]: unknown;
@@ -1504,14 +2013,14 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description 文章 ID */
+                /** @description Article ID */
                 id: string;
             };
             cookie?: never;
         };
         requestBody?: never;
         responses: {
-            /** @description 归档成功 */
+            /** @description Article archived successfully */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -1520,21 +2029,21 @@ export interface operations {
                     "application/json": components["schemas"]["ArticleResponseDto"];
                 };
             };
-            /** @description 业务规则错误（如文章未发布） */
+            /** @description Business rule violation (e.g. article is not published) */
             400: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
             };
-            /** @description 文章不存在 */
+            /** @description Article not found */
             404: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
             };
-            /** @description 错误响应（包括 400/401/403/404/422/429/500 等） */
+            /** @description Error response (includes 400/401/403/404/422/429/500, etc.) */
             default: {
                 headers: {
                     [name: string]: unknown;
@@ -1550,14 +2059,14 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description 文章 ID */
+                /** @description Article ID */
                 id: string;
             };
             cookie?: never;
         };
         requestBody?: never;
         responses: {
-            /** @description 查询成功 */
+            /** @description Article found successfully */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -1566,14 +2075,14 @@ export interface operations {
                     "application/json": components["schemas"]["ArticleResponseDto"];
                 };
             };
-            /** @description 文章不存在 */
+            /** @description Article not found */
             404: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
             };
-            /** @description 错误响应（包括 400/401/403/404/422/429/500 等） */
+            /** @description Error response (includes 400/401/403/404/422/429/500, etc.) */
             default: {
                 headers: {
                     [name: string]: unknown;
@@ -1589,7 +2098,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description 文章 ID */
+                /** @description Article ID */
                 id: string;
             };
             cookie?: never;
@@ -1600,7 +2109,7 @@ export interface operations {
             };
         };
         responses: {
-            /** @description 更新成功 */
+            /** @description Article updated successfully */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -1609,21 +2118,21 @@ export interface operations {
                     "application/json": components["schemas"]["ArticleResponseDto"];
                 };
             };
-            /** @description 业务规则错误（如文章已发布） */
+            /** @description Business rule violation (e.g. article is already published) */
             400: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
             };
-            /** @description 文章不存在 */
+            /** @description Article not found */
             404: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
             };
-            /** @description 错误响应（包括 400/401/403/404/422/429/500 等） */
+            /** @description Error response (includes 400/401/403/404/422/429/500, etc.) */
             default: {
                 headers: {
                     [name: string]: unknown;
@@ -1639,28 +2148,28 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description 文章 ID */
+                /** @description Article ID */
                 id: string;
             };
             cookie?: never;
         };
         requestBody?: never;
         responses: {
-            /** @description 删除成功 */
+            /** @description Article deleted successfully */
             204: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
             };
-            /** @description 文章不存在 */
+            /** @description Article not found */
             404: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
             };
-            /** @description 错误响应（包括 400/401/403/404/422/429/500 等） */
+            /** @description Error response (includes 400/401/403/404/422/429/500, etc.) */
             default: {
                 headers: {
                     [name: string]: unknown;
@@ -1676,7 +2185,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description 文章 ID */
+                /** @description Article ID */
                 id: string;
             };
             cookie?: never;
@@ -1687,7 +2196,7 @@ export interface operations {
             };
         };
         responses: {
-            /** @description 添加成功 */
+            /** @description Tag added successfully */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -1696,21 +2205,21 @@ export interface operations {
                     "application/json": components["schemas"]["ArticleResponseDto"];
                 };
             };
-            /** @description 业务规则错误（如超过标签数量限制） */
+            /** @description Business rule violation (e.g. tag count limit exceeded) */
             400: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
             };
-            /** @description 文章不存在 */
+            /** @description Article not found */
             404: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
             };
-            /** @description 错误响应（包括 400/401/403/404/422/429/500 等） */
+            /** @description Error response (includes 400/401/403/404/422/429/500, etc.) */
             default: {
                 headers: {
                     [name: string]: unknown;
@@ -1726,16 +2235,16 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description 文章 ID */
+                /** @description Article ID */
                 id: string;
-                /** @description 标签名称 */
+                /** @description Tag name */
                 tag: string;
             };
             cookie?: never;
         };
         requestBody?: never;
         responses: {
-            /** @description 移除成功 */
+            /** @description Tag removed successfully */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -1744,14 +2253,14 @@ export interface operations {
                     "application/json": components["schemas"]["ArticleResponseDto"];
                 };
             };
-            /** @description 文章不存在 */
+            /** @description Article not found */
             404: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
             };
-            /** @description 错误响应（包括 400/401/403/404/422/429/500 等） */
+            /** @description Error response (includes 400/401/403/404/422/429/500, etc.) */
             default: {
                 headers: {
                     [name: string]: unknown;
@@ -1779,7 +2288,7 @@ export interface operations {
                     "application/json": components["schemas"]["ArticleAllListResponseDto"];
                 };
             };
-            /** @description 错误响应（包括 400/401/403/404/422/429/500 等） */
+            /** @description Error response (includes 400/401/403/404/422/429/500, etc.) */
             default: {
                 headers: {
                     [name: string]: unknown;
@@ -1793,10 +2302,9 @@ export interface operations {
     ArticleController_findPaginated: {
         parameters: {
             query?: {
-                /** @description 页码（从1开始） */
                 page?: number;
-                /** @description 每页数量 */
                 pageSize?: number;
+                q?: string;
             };
             header?: never;
             path?: never;
@@ -1812,7 +2320,7 @@ export interface operations {
                     "application/json": components["schemas"]["ArticleListResponseDto"];
                 };
             };
-            /** @description 错误响应（包括 400/401/403/404/422/429/500 等） */
+            /** @description Error response (includes 400/401/403/404/422/429/500, etc.) */
             default: {
                 headers: {
                     [name: string]: unknown;
@@ -1826,9 +2334,7 @@ export interface operations {
     ArticleController_findCursor: {
         parameters: {
             query?: {
-                /** @description 每页数量 */
                 pageSize?: number;
-                /** @description 游标令牌（Base64编码的JSON对象） */
                 cursor?: string;
             };
             header?: never;
@@ -1845,7 +2351,7 @@ export interface operations {
                     "application/json": components["schemas"]["ArticleCursorListResponseDto"];
                 };
             };
-            /** @description 错误响应（包括 400/401/403/404/422/429/500 等） */
+            /** @description Error response (includes 400/401/403/404/422/429/500, etc.) */
             default: {
                 headers: {
                     [name: string]: unknown;
@@ -1861,14 +2367,14 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description 文章 Slug */
+                /** @description Article slug */
                 slug: string;
             };
             cookie?: never;
         };
         requestBody?: never;
         responses: {
-            /** @description 查询成功 */
+            /** @description Article found successfully */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -1877,14 +2383,14 @@ export interface operations {
                     "application/json": components["schemas"]["ArticleResponseDto"];
                 };
             };
-            /** @description 文章不存在 */
+            /** @description Article not found */
             404: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
             };
-            /** @description 错误响应（包括 400/401/403/404/422/429/500 等） */
+            /** @description Error response (includes 400/401/403/404/422/429/500, etc.) */
             default: {
                 headers: {
                     [name: string]: unknown;
@@ -1916,7 +2422,7 @@ export interface operations {
                     "application/json": components["schemas"]["LoginResponseDto"];
                 };
             };
-            /** @description 错误响应（包括 400/401/403/404/422/429/500 等） */
+            /** @description Error response (includes 400/401/403/404/422/429/500, etc.) */
             default: {
                 headers: {
                     [name: string]: unknown;
@@ -1940,7 +2446,7 @@ export interface operations {
             };
         };
         responses: {
-            201: {
+            200: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -1948,7 +2454,7 @@ export interface operations {
                     "application/json": components["schemas"]["LoginResponseDto"];
                 };
             };
-            /** @description 错误响应（包括 400/401/403/404/422/429/500 等） */
+            /** @description Error response (includes 400/401/403/404/422/429/500, etc.) */
             default: {
                 headers: {
                     [name: string]: unknown;
@@ -1980,7 +2486,7 @@ export interface operations {
                     "application/json": components["schemas"]["RefreshTokenResponseDto"];
                 };
             };
-            /** @description 错误响应（包括 400/401/403/404/422/429/500 等） */
+            /** @description Error response (includes 400/401/403/404/422/429/500, etc.) */
             default: {
                 headers: {
                     [name: string]: unknown;
@@ -2008,7 +2514,7 @@ export interface operations {
                     "application/json": components["schemas"]["SessionResponseDto"];
                 };
             };
-            /** @description 错误响应（包括 400/401/403/404/422/429/500 等） */
+            /** @description Error response (includes 400/401/403/404/422/429/500, etc.) */
             default: {
                 headers: {
                     [name: string]: unknown;
@@ -2036,7 +2542,7 @@ export interface operations {
                     "application/json": components["schemas"]["SessionsListResponseDto"];
                 };
             };
-            /** @description 错误响应（包括 400/401/403/404/422/429/500 等） */
+            /** @description Error response (includes 400/401/403/404/422/429/500, etc.) */
             default: {
                 headers: {
                     [name: string]: unknown;
@@ -2060,7 +2566,7 @@ export interface operations {
             };
         };
         responses: {
-            201: {
+            200: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -2068,7 +2574,7 @@ export interface operations {
                     "application/json": components["schemas"]["LogoutResponseDto"];
                 };
             };
-            /** @description 错误响应（包括 400/401/403/404/422/429/500 等） */
+            /** @description Error response (includes 400/401/403/404/422/429/500, etc.) */
             default: {
                 headers: {
                     [name: string]: unknown;
@@ -2100,7 +2606,7 @@ export interface operations {
                     "application/json": components["schemas"]["RevokeSessionResponseDto"];
                 };
             };
-            /** @description 错误响应（包括 400/401/403/404/422/429/500 等） */
+            /** @description Error response (includes 400/401/403/404/422/429/500, etc.) */
             default: {
                 headers: {
                     [name: string]: unknown;
@@ -2128,7 +2634,144 @@ export interface operations {
                     "application/json": components["schemas"]["LogoutAllResponseDto"];
                 };
             };
-            /** @description 错误响应（包括 400/401/403/404/422/429/500 等） */
+            /** @description Error response (includes 400/401/403/404/422/429/500, etc.) */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetailsDto"];
+                };
+            };
+        };
+    };
+    OAuthController_initiateGoogle: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Error response (includes 400/401/403/404/422/429/500, etc.) */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetailsDto"];
+                };
+            };
+        };
+    };
+    OAuthController_googleCallback: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Error response (includes 400/401/403/404/422/429/500, etc.) */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetailsDto"];
+                };
+            };
+        };
+    };
+    OAuthController_initiateGithub: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Error response (includes 400/401/403/404/422/429/500, etc.) */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetailsDto"];
+                };
+            };
+        };
+    };
+    OAuthController_githubCallback: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Error response (includes 400/401/403/404/422/429/500, etc.) */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetailsDto"];
+                };
+            };
+        };
+    };
+    LoginLogController_findAll: {
+        parameters: {
+            query?: {
+                page?: number;
+                pageSize?: number;
+                email?: string;
+                status?: "success" | "failed";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LoginLogListResponseDto"];
+                };
+            };
+            /** @description Error response (includes 400/401/403/404/422/429/500, etc.) */
             default: {
                 headers: {
                     [name: string]: unknown;
@@ -2142,16 +2785,11 @@ export interface operations {
     UserController_findAll: {
         parameters: {
             query?: {
-                /** @description 搜索关键词（匹配名称或邮箱） */
-                search?: string;
-                /** @description 按角色筛选 */
-                role?: string;
-                /** @description 按封禁状态筛选 */
-                banned?: boolean;
-                /** @description 页码（从1开始） */
                 page?: number;
-                /** @description 每页数量 */
                 pageSize?: number;
+                search?: string;
+                role?: string;
+                banned?: boolean;
             };
             header?: never;
             path?: never;
@@ -2167,7 +2805,7 @@ export interface operations {
                     "application/json": components["schemas"]["UserListResponseDto"];
                 };
             };
-            /** @description 错误响应（包括 400/401/403/404/422/429/500 等） */
+            /** @description Error response (includes 400/401/403/404/422/429/500, etc.) */
             default: {
                 headers: {
                     [name: string]: unknown;
@@ -2199,14 +2837,42 @@ export interface operations {
                     "application/json": components["schemas"]["UserResponseDto"];
                 };
             };
-            /** @description 邮箱已被使用 */
+            /** @description Email already in use */
             409: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
             };
-            /** @description 错误响应（包括 400/401/403/404/422/429/500 等） */
+            /** @description Error response (includes 400/401/403/404/422/429/500, etc.) */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetailsDto"];
+                };
+            };
+        };
+    };
+    UserController_getSummary: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UserSummaryDto"];
+                };
+            };
+            /** @description Error response (includes 400/401/403/404/422/429/500, etc.) */
             default: {
                 headers: {
                     [name: string]: unknown;
@@ -2236,14 +2902,14 @@ export interface operations {
                     "application/json": components["schemas"]["UserResponseDto"];
                 };
             };
-            /** @description 用户不存在 */
+            /** @description User not found */
             404: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
             };
-            /** @description 错误响应（包括 400/401/403/404/422/429/500 等） */
+            /** @description Error response (includes 400/401/403/404/422/429/500, etc.) */
             default: {
                 headers: {
                     [name: string]: unknown;
@@ -2265,21 +2931,21 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description 删除成功 */
+            /** @description Deleted successfully */
             204: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
             };
-            /** @description 用户不存在 */
+            /** @description User not found */
             404: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
             };
-            /** @description 错误响应（包括 400/401/403/404/422/429/500 等） */
+            /** @description Error response (includes 400/401/403/404/422/429/500, etc.) */
             default: {
                 headers: {
                     [name: string]: unknown;
@@ -2313,14 +2979,14 @@ export interface operations {
                     "application/json": components["schemas"]["UserResponseDto"];
                 };
             };
-            /** @description 用户不存在 */
+            /** @description User not found */
             404: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
             };
-            /** @description 错误响应（包括 400/401/403/404/422/429/500 等） */
+            /** @description Error response (includes 400/401/403/404/422/429/500, etc.) */
             default: {
                 headers: {
                     [name: string]: unknown;
@@ -2354,49 +3020,21 @@ export interface operations {
                     "application/json": components["schemas"]["UserResponseDto"];
                 };
             };
-            /** @description 权限不足 */
+            /** @description Insufficient permissions */
             403: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
             };
-            /** @description 用户不存在 */
+            /** @description User not found */
             404: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
             };
-            /** @description 错误响应（包括 400/401/403/404/422/429/500 等） */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ProblemDetailsDto"];
-                };
-            };
-        };
-    };
-    DashboardController_getStatistics: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["StatisticsDto"];
-                };
-            };
-            /** @description 错误响应（包括 400/401/403/404/422/429/500 等） */
+            /** @description Error response (includes 400/401/403/404/422/429/500, etc.) */
             default: {
                 headers: {
                     [name: string]: unknown;
@@ -2412,7 +3050,7 @@ export interface operations {
             query?: never;
             header: {
                 "idempotency-key": string;
-                /** @description 客户端生成的 UUID，用于防止重复下单 */
+                /** @description Client-generated UUID to prevent duplicate order submissions */
                 "Idempotency-Key": string;
             };
             path?: never;
@@ -2424,7 +3062,7 @@ export interface operations {
             };
         };
         responses: {
-            /** @description 幂等重放（响应头含 Idempotent-Replayed: true） */
+            /** @description Idempotent replay (response header contains Idempotent-Replayed: true) */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -2433,7 +3071,7 @@ export interface operations {
                     "application/json": components["schemas"]["OrderResponseDto"];
                 };
             };
-            /** @description 订单创建成功 */
+            /** @description Order created successfully */
             201: {
                 headers: {
                     [name: string]: unknown;
@@ -2442,14 +3080,14 @@ export interface operations {
                     "application/json": components["schemas"]["OrderResponseDto"];
                 };
             };
-            /** @description 相同 Idempotency-Key 但请求 body 不同 */
+            /** @description Same Idempotency-Key but different request body */
             422: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
             };
-            /** @description 错误响应（包括 400/401/403/404/422/429/500 等） */
+            /** @description Error response (includes 400/401/403/404/422/429/500, etc.) */
             default: {
                 headers: {
                     [name: string]: unknown;
@@ -2465,18 +3103,18 @@ export interface operations {
             query?: never;
             header: {
                 "if-match": string;
-                /** @description ETag 版本号（来自 GET /orders/:id 响应头），格式: "<number>" */
+                /** @description ETag version number (from GET /orders/:id response header), format: "<number>" */
                 "If-Match": string;
             };
             path: {
-                /** @description 订单 ID */
+                /** @description Order ID */
                 id: string;
             };
             cookie?: never;
         };
         requestBody?: never;
         responses: {
-            /** @description 支付成功 */
+            /** @description Payment successful */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -2485,35 +3123,35 @@ export interface operations {
                     "application/json": components["schemas"]["OrderResponseDto"];
                 };
             };
-            /** @description 订单不存在 */
+            /** @description Order not found */
             404: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
             };
-            /** @description 订单已支付 */
+            /** @description Order already paid */
             409: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
             };
-            /** @description 版本冲突（其他请求已修改订单） */
+            /** @description Version conflict (order was modified by another request) */
             412: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
             };
-            /** @description 缺少 If-Match 请求头 */
+            /** @description Missing If-Match request header */
             428: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
             };
-            /** @description 错误响应（包括 400/401/403/404/422/429/500 等） */
+            /** @description Error response (includes 400/401/403/404/422/429/500, etc.) */
             default: {
                 headers: {
                     [name: string]: unknown;
@@ -2529,18 +3167,18 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description 订单 ID */
+                /** @description Order ID */
                 id: string;
             };
             cookie?: never;
         };
         requestBody?: never;
         responses: {
-            /** @description 发货请求已接受，使用 Location 头中的 URL 轮询任务状态 */
+            /** @description Shipping request accepted; poll the URL in the Location header for job status */
             202: {
                 headers: {
                     /**
-                     * @description 任务状态查询 URL
+                     * @description Job status polling URL
                      * @example /api/jobs/550e8400-...
                      */
                     Location?: unknown;
@@ -2550,21 +3188,21 @@ export interface operations {
                     "application/json": components["schemas"]["ShipOrderResponseDto"];
                 };
             };
-            /** @description 订单状态不允许发货 */
+            /** @description Order status does not allow shipping */
             400: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
             };
-            /** @description 订单不存在 */
+            /** @description Order not found */
             404: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
             };
-            /** @description 错误响应（包括 400/401/403/404/422/429/500 等） */
+            /** @description Error response (includes 400/401/403/404/422/429/500, etc.) */
             default: {
                 headers: {
                     [name: string]: unknown;
@@ -2588,7 +3226,7 @@ export interface operations {
             };
         };
         responses: {
-            /** @description 全部取消成功 */
+            /** @description All orders cancelled successfully */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -2597,7 +3235,7 @@ export interface operations {
                     "application/json": components["schemas"]["BulkCancelResponseDto"];
                 };
             };
-            /** @description 部分成功（含单项错误详情） */
+            /** @description Partial success (includes per-item error details) */
             207: {
                 headers: {
                     [name: string]: unknown;
@@ -2606,7 +3244,7 @@ export interface operations {
                     "application/json": components["schemas"]["BulkCancelResponseDto"];
                 };
             };
-            /** @description 错误响应（包括 400/401/403/404/422/429/500 等） */
+            /** @description Error response (includes 400/401/403/404/422/429/500, etc.) */
             default: {
                 headers: {
                     [name: string]: unknown;
@@ -2622,18 +3260,18 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description 订单 ID */
+                /** @description Order ID */
                 id: string;
             };
             cookie?: never;
         };
         requestBody?: never;
         responses: {
-            /** @description 查询成功 */
+            /** @description Query successful */
             200: {
                 headers: {
                     /**
-                     * @description 版本号，用于乐观锁
+                     * @description Version number for optimistic locking
                      * @example "0"
                      */
                     ETag?: unknown;
@@ -2643,14 +3281,14 @@ export interface operations {
                     "application/json": components["schemas"]["OrderResponseDto"];
                 };
             };
-            /** @description 订单不存在 */
+            /** @description Order not found */
             404: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
             };
-            /** @description 错误响应（包括 400/401/403/404/422/429/500 等） */
+            /** @description Error response (includes 400/401/403/404/422/429/500, etc.) */
             default: {
                 headers: {
                     [name: string]: unknown;
@@ -2666,14 +3304,14 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description 任务 ID（来自 202 响应的 Location 头） */
+                /** @description Job ID (from the Location header in the 202 response) */
                 id: string;
             };
             cookie?: never;
         };
         requestBody?: never;
         responses: {
-            /** @description 查询成功 */
+            /** @description Query successful */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -2682,14 +3320,163 @@ export interface operations {
                     "application/json": components["schemas"]["JobResponseDto"];
                 };
             };
-            /** @description 任务不存在 */
+            /** @description Job not found */
             404: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
             };
-            /** @description 错误响应（包括 400/401/403/404/422/429/500 等） */
+            /** @description Error response (includes 400/401/403/404/422/429/500, etc.) */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetailsDto"];
+                };
+            };
+        };
+    };
+    UploadController_uploadFile: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": {
+                    /** Format: binary */
+                    file?: string;
+                };
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Error response (includes 400/401/403/404/422/429/500, etc.) */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetailsDto"];
+                };
+            };
+        };
+    };
+    UploadController_uploadFiles: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": {
+                    files?: string[];
+                };
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Error response (includes 400/401/403/404/422/429/500, etc.) */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetailsDto"];
+                };
+            };
+        };
+    };
+    AnalyticsController_getAnalyticsSummary: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AnalyticsSummaryDto"];
+                };
+            };
+            /** @description Error response (includes 400/401/403/404/422/429/500, etc.) */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetailsDto"];
+                };
+            };
+        };
+    };
+    AnalyticsController_getMonthlyOverview: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MonthlyOverviewDto"];
+                };
+            };
+            /** @description Error response (includes 400/401/403/404/422/429/500, etc.) */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetailsDto"];
+                };
+            };
+        };
+    };
+    AnalyticsController_getArticleCategoryStats: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ArticleCategoryStatsDto"];
+                };
+            };
+            /** @description Error response (includes 400/401/403/404/422/429/500, etc.) */
             default: {
                 headers: {
                     [name: string]: unknown;

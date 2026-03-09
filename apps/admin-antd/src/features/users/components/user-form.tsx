@@ -119,8 +119,8 @@ export function UserForm({ trigger, mode, initialValues, onSuccess }: UserFormPr
         label={t('fields.role')}
         placeholder={t('form.rolePlaceholder')}
         options={[
-          { label: t('role.admin'), value: 'admin' },
-          { label: t('role.user'), value: 'user' },
+          { label: t('role.admin'), value: 'ADMIN' },
+          { label: t('role.user'), value: 'USER' },
         ]}
         rules={mode === 'create' ? undefined : [{ required: false }]}
       />

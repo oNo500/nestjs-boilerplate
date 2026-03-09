@@ -1,60 +1,30 @@
 {
-  "dashboard": {
-    "_": "Dashboard",
-    "analysis": "Analysis",
-    "monitor": "Monitor",
-    "workplace": "Workplace"
+  "dashboards": {
+    "_": "Dashboards",
+    "analytics": "Analytics Dashboard",
+    "crm": "CRM Dashboard"
   },
-  "form": {
-    "_": "Form",
-    "basic": "Basic Form",
-    "step": "Step Form",
-    "advanced": "Advanced Form"
+  "apps": {
+    "_": "Apps",
+    "articles": "Articles",
+    "chat": "Chat"
   },
-  "list": {
-    "_": "List",
-    "search": {
-      "_": "Search List",
-      "articles": "Articles",
-      "projects": "Projects",
-      "applications": "Applications"
+  "pages": {
+    "_": "Pages",
+    "tables": {
+      "_": "Tables",
+      "dataTable": "Data Table",
+      "filterableTable": "Filterable Table",
+      "sortableTable": "Sortable Table"
     },
-    "table": "Standard Table",
-    "basic": "Basic List",
-    "tableList": "Query Table"
-  },
-  "profile": {
-    "_": "Profile",
-    "basic": "Basic Profile",
-    "advanced": "Advanced Profile"
-  },
-  "account": {
-    "_": "Account",
-    "center": "Account Center",
-    "settings": "Account Settings"
-  },
-  "result": {
-    "_": "Result",
-    "success": "Success",
-    "fail": "Fail"
-  },
-  "system": {
-    "_": "System",
-    "users": "Users",
-    "roles": "Roles",
-    "auditLogs": "Audit Logs"
-  },
-  "foundation": {
-    "_": "Foundation",
-    "components": "Components",
-    "icons": "Icons"
-  },
-  "exception": {
-    "_": "Exception",
-    "e403": "403 Forbidden",
-    "e404": "404 Not Found",
-    "e500": "500 Server Error",
-    "empty": "Empty"
-  },
-  "docs": "Docs"
+    "forms": {
+      "_": "Forms",
+      "settingsForm": "Settings Form",
+      "sessionManager": "Session Manager",
+      "fileUpload": "File Upload"
+    },
+    "notFound": "404",
+    "error": "Error",
+    "comingSoon": "Coming Soon"
+  }
 }

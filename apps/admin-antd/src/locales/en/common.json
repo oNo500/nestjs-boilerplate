@@ -13,15 +13,7 @@
     "view": "View",
     "save": "Save",
     "create": "Create",
-    "search": "Search",
-    "reset": "Reset",
-    "submit": "Submit",
     "retry": "Retry"
-  },
-  "status": {
-    "loading": "Loading",
-    "loadFailed": "Load Failed",
-    "loadFailedDesc": "Failed to load, please try again later"
   },
   "nav": {
     "home": "Home",

@@ -1,21 +1,12 @@
 import {
-  Home,
-  Users,
-  Palette,
-  ShieldCheck,
-  ScrollText,
-  Server,
-  LayoutList,
+  BarChart2,
+  TrendingUp,
+  MessageSquare,
   FileText,
-  LayoutGrid,
-  Smile,
-  TriangleAlert,
-  BookOpen,
-  FormInput,
-  List,
-  FileSearch,
-  User,
-  CheckCircle,
+  Table2,
+  PenLine,
+  AlertCircle,
+  Timer,
 } from 'lucide-react'
 
 import type { TFunction } from 'i18next'
@@ -33,202 +24,108 @@ export interface MenuItem {
 export function getMenuItems(t: TFunction<'menu'>): MenuItem[] {
   return [
     {
-      key: 'dashboard',
-      label: t('dashboard._'),
-      icon: Home,
+      key: 'dashboards',
+      label: t('dashboards._'),
+      icon: BarChart2,
       children: [
         {
-          path: '/dashboard/analysis',
-          label: t('dashboard.analysis'),
-          icon: Home,
+          path: '/dashboards/analytics',
+          label: t('dashboards.analytics'),
+          icon: BarChart2,
         },
         {
-          path: '/dashboard/monitor',
-          label: t('dashboard.monitor'),
-          icon: Home,
-        },
-        {
-          path: '/dashboard/workplace',
-          label: t('dashboard.workplace'),
-          icon: Home,
+          path: '/dashboards/crm',
+          label: t('dashboards.crm'),
+          icon: TrendingUp,
         },
       ],
     },
     {
-      key: 'form',
-      label: t('form._'),
-      icon: FormInput,
+      key: 'apps',
+      label: t('apps._'),
+      icon: MessageSquare,
       children: [
         {
-          path: '/form/basic',
-          label: t('form.basic'),
+          path: '/articles',
+          label: t('apps.articles'),
           icon: FileText,
         },
         {
-          path: '/form/step',
-          label: t('form.step'),
-          icon: FileText,
-        },
-        {
-          path: '/form/advanced',
-          label: t('form.advanced'),
-          icon: FileText,
+          path: '/apps/chat',
+          label: t('apps.chat'),
+          icon: MessageSquare,
         },
       ],
     },
     {
-      key: 'list',
-      label: t('list._'),
-      icon: List,
+      key: 'pages',
+      label: t('pages._'),
+      icon: AlertCircle,
       children: [
         {
-          key: 'list-search',
-          label: t('list.search._'),
-          icon: FileSearch,
+          key: 'pages-tables',
+          label: t('pages.tables._'),
+          icon: Table2,
+          roles: ['ADMIN'],
           children: [
-            { path: '/list/search/articles', label: t('list.search.articles'), icon: FileText },
-            { path: '/list/search/projects', label: t('list.search.projects'), icon: LayoutGrid },
-            { path: '/list/search/applications', label: t('list.search.applications'), icon: Server },
+            {
+              path: '/users',
+              label: t('pages.tables.dataTable'),
+              icon: Table2,
+              roles: ['ADMIN'],
+            },
+            {
+              path: '/login-logs',
+              label: t('pages.tables.filterableTable'),
+              icon: Table2,
+              roles: ['ADMIN'],
+            },
+            {
+              path: '/audit-logs',
+              label: t('pages.tables.sortableTable'),
+              icon: Table2,
+              roles: ['ADMIN'],
+            },
           ],
         },
         {
-          path: '/list/table',
-          label: t('list.table'),
-          icon: LayoutList,
+          key: 'pages-forms',
+          label: t('pages.forms._'),
+          icon: PenLine,
+          children: [
+            {
+              path: '/settings/general',
+              label: t('pages.forms.settingsForm'),
+              icon: PenLine,
+            },
+            {
+              path: '/settings/sessions',
+              label: t('pages.forms.sessionManager'),
+              icon: PenLine,
+            },
+            {
+              path: '/settings/upload-demo',
+              label: t('pages.forms.fileUpload'),
+              icon: PenLine,
+            },
+          ],
         },
         {
-          path: '/list/basic',
-          label: t('list.basic'),
-          icon: LayoutList,
+          path: '/pages/404',
+          label: t('pages.notFound'),
+          icon: AlertCircle,
         },
         {
-          path: '/list/table-list',
-          label: t('list.tableList'),
-          icon: LayoutList,
+          path: '/pages/error',
+          label: t('pages.error'),
+          icon: AlertCircle,
+        },
+        {
+          path: '/pages/coming-soon',
+          label: t('pages.comingSoon'),
+          icon: Timer,
         },
       ],
-    },
-    {
-      key: 'profile',
-      label: t('profile._'),
-      icon: FileSearch,
-      children: [
-        {
-          path: '/profile/basic',
-          label: t('profile.basic'),
-          icon: FileText,
-        },
-        {
-          path: '/profile/advanced',
-          label: t('profile.advanced'),
-          icon: FileText,
-        },
-      ],
-    },
-    {
-      key: 'account',
-      label: t('account._'),
-      icon: User,
-      children: [
-        {
-          path: '/account/center',
-          label: t('account.center'),
-          icon: User,
-        },
-        {
-          path: '/account/settings',
-          label: t('account.settings'),
-          icon: User,
-        },
-      ],
-    },
-    {
-      key: 'result',
-      label: t('result._'),
-      icon: CheckCircle,
-      children: [
-        {
-          path: '/result/success',
-          label: t('result.success'),
-          icon: CheckCircle,
-        },
-        {
-          path: '/result/fail',
-          label: t('result.fail'),
-          icon: CheckCircle,
-        },
-      ],
-    },
-    {
-      key: 'system',
-      label: t('system._'),
-      icon: Server,
-      roles: ['ADMIN'],
-      children: [
-        {
-          path: '/system/users',
-          label: t('system.users'),
-          icon: Users,
-          roles: ['ADMIN'],
-        },
-        {
-          path: '/system/roles',
-          label: t('system.roles'),
-          icon: ShieldCheck,
-          roles: ['ADMIN'],
-        },
-        {
-          path: '/system/audit-logs',
-          label: t('system.auditLogs'),
-          icon: ScrollText,
-          roles: ['ADMIN'],
-        },
-      ],
-    },
-    {
-      key: 'foundation',
-      label: t('foundation._'),
-      icon: Palette,
-      children: [
-        {
-          path: '/foundation/components',
-          label: t('foundation.components'),
-          icon: LayoutGrid,
-        },
-        {
-          path: '/foundation/icons',
-          label: t('foundation.icons'),
-          icon: Smile,
-        },
-      ],
-    },
-    {
-      key: 'exception',
-      label: t('exception._'),
-      icon: TriangleAlert,
-      children: [
-        {
-          path: '/exception/403',
-          label: t('exception.e403'),
-        },
-        {
-          path: '/exception/404',
-          label: t('exception.e404'),
-        },
-        {
-          path: '/exception/500',
-          label: t('exception.e500'),
-        },
-        {
-          path: '/exception/empty',
-          label: t('exception.empty'),
-        },
-      ],
-    },
-    {
-      path: '/docs',
-      label: t('docs'),
-      icon: BookOpen,
     },
   ]
 }

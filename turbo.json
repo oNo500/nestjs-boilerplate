@@ -7,8 +7,8 @@
       "outputs": ["dist/**"],
       "env": ["VITE_API_URL"]
     },
-    "check-types": {
-      "dependsOn": ["^check-types"]
+    "typecheck": {
+      "dependsOn": ["^typecheck"]
     },
     "lint": {
       "dependsOn": ["^build"]

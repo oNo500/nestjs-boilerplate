@@ -70,7 +70,7 @@ export function AuditLogsTable() {
       request={async (params: GetAuditLogsParams & { current?: number, pageSize?: number, action?: string }) => {
         const response = await getAuditLogs({
           page: params.current ?? 1,
-          page_size: params.pageSize ?? 20,
+          pageSize: params.pageSize ?? 20,
           ...(params.action && { action: params.action }),
         })
 
@@ -87,6 +87,7 @@ export function AuditLogsTable() {
       pagination={{
         defaultPageSize: 20,
         showSizeChanger: true,
+        pageSizeOptions: [10, 20, 50, 100],
       }}
       dateFormatter="string"
       toolBarRender={false}

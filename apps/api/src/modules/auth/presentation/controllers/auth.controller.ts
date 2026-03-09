@@ -19,14 +19,24 @@ export class AuthController {
   @Post('register')
   @HttpCode(201)
   @ApiOperation({ summary: 'Register a new user' })
+  @ApiResponse({ status: 201, type: RegisterResponseDto })
   async register(@Body() dto: RegisterDto): Promise<RegisterResponseDto> {
     return await this.authService.register(dto.email, dto.password, dto.name)
   }
 
   @Post('login')
+  @HttpCode(200)
   @ApiOperation({ summary: 'User login' })
-  async login(@Body() dto: LoginDto): Promise<LoginResponseDto> {
-    return await this.authService.login(dto.email, dto.password)
+  @ApiResponse({ status: 200, type: LoginResponseDto })
+  async login(
+    @Body() dto: LoginDto,
+    @Request() req: { headers: Record<string, string | string[] | undefined>, socket?: { remoteAddress?: string } },
+  ): Promise<LoginResponseDto> {
+    const deviceContext = {
+      ipAddress: (req.headers['x-forwarded-for'] as string | undefined)?.split(',')[0]?.trim() ?? req.socket?.remoteAddress,
+      userAgent: req.headers['user-agent'] as string | undefined,
+    }
+    return await this.authService.login(dto.email, dto.password, deviceContext)
   }
 
   /**
@@ -35,6 +45,7 @@ export class AuthController {
    * Refresh rotates the refresh token (the old one is revoked).
    */
   @Post('refresh-token')
+  @HttpCode(200)
   @ApiOperation({
     summary: 'Refresh access token',
     description: 'Use a refresh token to obtain a new access token (the refresh token is rotated simultaneously)',
@@ -68,9 +79,11 @@ export class AuthController {
   }
 
   @Post('logout')
+  @HttpCode(200)
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Logout (single device)' })
+  @ApiResponse({ status: 200, type: LogoutResponseDto })
   async logout(@Body() dto: LogoutDto): Promise<LogoutResponseDto> {
     const success = await this.authService.logout(dto.refreshToken)
     return {
@@ -80,6 +93,7 @@ export class AuthController {
   }
 
   @Post('revoke-session')
+  @HttpCode(200)
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Revoke a specific session' })
@@ -92,6 +106,7 @@ export class AuthController {
   }
 
   @Post('revoke-sessions')
+  @HttpCode(200)
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Revoke all sessions' })

@@ -20,12 +20,12 @@ const CATEGORY_FILLS = ['#1677ff', '#52c41a', '#faad14', '#f5222d', '#722ed1', '
 const CATEGORIES = ['Home Appliances', 'Food & Beverage', 'Personal Care', 'Clothing & Bags', 'Baby Products', 'Other']
 
 export const dashboardHandlers = [
-  http.get(`${BASE}/api/dashboard/statistics`, () => {
+  http.get(`${BASE}/api/users/summary`, () => {
     return HttpResponse.json({
-      totalUsers: faker.number.int({ min: 15, max: 30 }),
-      activeUsers: faker.number.int({ min: 10, max: 20 }),
-      adminUsers: faker.number.int({ min: 1, max: 5 }),
-      newUsersToday: faker.number.int({ min: 0, max: 8 }),
+      total: faker.number.int({ min: 15, max: 30 }),
+      active: faker.number.int({ min: 10, max: 20 }),
+      adminCount: faker.number.int({ min: 1, max: 5 }),
+      newToday: faker.number.int({ min: 0, max: 8 }),
     })
   }),
 

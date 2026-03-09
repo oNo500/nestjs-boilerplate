@@ -25,6 +25,7 @@ import {
   UserListResponseDto,
   UserResponseDto,
 } from '@/modules/user-management/presentation/dtos/user-response.dto'
+import { UserSummaryDto } from '@/modules/user-management/presentation/dtos/user-summary.dto'
 import { Roles } from '@/shared-kernel/infrastructure/decorators/roles.decorator'
 import { UseEnvelope } from '@/shared-kernel/infrastructure/decorators/use-envelope.decorator'
 import { JwtAuthGuard, RolesGuard } from '@/shared-kernel/infrastructure/guards'
@@ -68,6 +69,13 @@ export class UserController {
       pageSize,
       hasMore: page < totalPages,
     }
+  }
+
+  @Get('summary')
+  @ApiOperation({ summary: 'Get user summary statistics' })
+  @ApiResponse({ status: 200, type: UserSummaryDto })
+  async getSummary(): Promise<UserSummaryDto> {
+    return this.userService.getSummary()
   }
 
   @Get(':id')

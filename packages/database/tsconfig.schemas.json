@@ -1,7 +1,0 @@
-{
-  "extends": "@infra-x/typescript-config/tsconfig.library.json",
-  "compilerOptions": {
-    "isolatedDeclarations": false
-  },
-  "include": ["src/**/*"]
-}

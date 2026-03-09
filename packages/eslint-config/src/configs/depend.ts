@@ -1,13 +1,12 @@
 /**
  * Dependency optimization rule configuration for detecting packages replaceable with native APIs or micro-utilities
  */
-import { fixupPluginRules } from '@eslint/compat'
 import dependPlugin from 'eslint-plugin-depend'
 
 import { GLOB_SRC } from '../utils'
 
 import type { DependOptions } from '../types'
-import type { ESLint, Linter } from 'eslint'
+import type { Linter } from 'eslint'
 
 const DEFAULT_PRESETS: DependOptions['presets'] = ['native', 'microutilities', 'preferred']
 
@@ -19,7 +18,7 @@ export function depend(options: DependOptions = {}): Linter.Config[] {
       name: 'depend/rules',
       files: [GLOB_SRC],
       plugins: {
-        depend: fixupPluginRules(dependPlugin as unknown as ESLint.Plugin),
+        depend: dependPlugin,
       },
       rules: {
         'depend/ban-dependencies': [

@@ -6,32 +6,43 @@ import type { Article, ArticleCategory } from '@/modules/article/domain/aggregat
 import type { ArticleStatus } from '@/modules/article/domain/enums/article-status.enum'
 
 export class ArticleResponseDto {
+  @ApiProperty({ example: '550e8400-e29b-41d4-a716-446655440000' })
   id!: string
 
+  @ApiProperty({ example: 'Getting Started with NestJS' })
   title!: string
 
+  @ApiProperty({ example: 'NestJS is a progressive Node.js framework...' })
   content!: string
 
+  @ApiProperty({ example: 'getting-started-with-nestjs' })
   slug!: string
 
   @ApiProperty({ enum: ['draft', 'published', 'archived'], example: 'draft' })
   status!: ArticleStatus
 
+  @ApiProperty({ type: [String], example: ['nestjs', 'typescript'] })
   tags!: string[]
 
   @ApiProperty({ enum: ['tech', 'design', 'product', 'other'], example: 'tech' })
   category!: ArticleCategory
 
+  @ApiProperty({ example: 'John Doe' })
   author!: string
 
+  @ApiProperty({ example: 42 })
   viewCount!: number
 
+  @ApiProperty({ example: false })
   isPinned!: boolean
 
+  @ApiProperty({ example: '2026-01-01T00:00:00.000Z' })
   createdAt!: Date
 
+  @ApiProperty({ example: '2026-01-01T00:00:00.000Z' })
   updatedAt!: Date
 
+  @ApiProperty({ type: String, example: '2026-01-01T00:00:00.000Z', nullable: true })
   publishedAt!: Date | null
 
   static fromDomain(article: Article): ArticleResponseDto {

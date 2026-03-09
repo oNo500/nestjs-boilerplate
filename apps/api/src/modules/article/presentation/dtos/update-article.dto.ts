@@ -14,12 +14,14 @@ import type { ArticleCategory } from '@/modules/article/domain/aggregates/articl
 const ARTICLE_CATEGORIES: ArticleCategory[] = ['tech', 'design', 'product', 'other']
 
 export class UpdateArticleDto {
+  @ApiPropertyOptional({ example: 'Getting Started with NestJS' })
   @IsOptional()
   @IsStringField()
   @MinLengthField(5, { message: 'Title must be at least 5 characters long' })
   @MaxLengthField(200, { message: 'Title must not exceed 200 characters' })
   title?: string
 
+  @ApiPropertyOptional({ example: 'NestJS is a progressive Node.js framework...' })
   @IsOptional()
   @IsStringField()
   @MinLengthField(1, { message: 'Content must not be empty' })
@@ -31,10 +33,12 @@ export class UpdateArticleDto {
   @IsInField(ARTICLE_CATEGORIES)
   category?: ArticleCategory
 
+  @ApiPropertyOptional({ example: 'John Doe' })
   @IsOptional()
   @IsStringField()
   author?: string
 
+  @ApiPropertyOptional({ example: false })
   @IsOptional()
   @IsBooleanField()
   isPinned?: boolean

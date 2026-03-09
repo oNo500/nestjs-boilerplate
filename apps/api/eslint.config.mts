@@ -1,7 +1,13 @@
-import { composeConfig } from '@workspace/eslint-config'
+import { GLOB_TESTS, composeConfig } from '@workspace/eslint-config'
+import { defineConfig } from 'eslint/config'
+
+const API_TEST_FILES = [
+  ...GLOB_TESTS,
+  '**/*.e2e-spec.{js,mjs,cjs,jsx,ts,mts,cts,tsx}',
+]
 
 const baseConfig = composeConfig({
-  jsdoc:true,
+  jsdoc: true,
   typescript: {
     tsconfigRootDir: import.meta.dirname,
   },
@@ -11,7 +17,6 @@ const baseConfig = composeConfig({
       'package-json/valid-devDependencies': 'off', // allow link: local dependencies
     },
   },
-  vitest: true,
   // Module boundary checks: enforce VSA/DDD architecture rules (module isolation)
   boundaries: {
     elements: [
@@ -81,38 +86,49 @@ const baseConfig = composeConfig({
   imports: {},
 })
 
+const vitestConfig = defineConfig({
+  files: API_TEST_FILES,
+  extends: composeConfig({
+    typescript: { tsconfigRootDir: import.meta.dirname },
+    vitest: true,
+    unicorn: false,
+    stylistic: false,
+    depend: false,
+  }),
+})
+
 // Schema file exception: Drizzle Kit does not support path aliases, so relative imports must be used
-export default [
-  ...baseConfig,
-  {
-    files: ['**/schemas/*.schema.ts'],
-    rules: {
-      'no-restricted-imports': 'off',
-    },
+const schemaException = defineConfig({
+  files: ['**/schemas/*.schema.ts'],
+  rules: {
+    'no-restricted-imports': 'off',
   },
-  // Allow the auth module to depend on the profile and audit-log modules
-  {
-    files: ['src/modules/auth/**/*.ts'],
-    rules: {
-      'boundaries/element-types': [
-        'error',
-        {
-          default: 'disallow',
-          rules: [
-            {
-              from: ['module'],
-              allow: [
-                'app',
-                'shared-kernel',
-                ['module', { moduleName: 'auth' }],
-                ['module', { moduleName: 'profile' }],
-                ['module', { moduleName: 'audit-log' }],
-                'main',
-              ],
-            },
-          ],
-        },
-      ],
-    },
+})
+
+// Allow the auth module to depend on the profile and audit-log modules
+const authBoundaryException = defineConfig({
+  files: ['src/modules/auth/**/*.ts'],
+  rules: {
+    'boundaries/element-types': [
+      'error',
+      {
+        default: 'disallow',
+        rules: [
+          {
+            from: ['module'],
+            allow: [
+              'app',
+              'shared-kernel',
+              ['module', { moduleName: 'auth' }],
+              ['module', { moduleName: 'profile' }],
+              ['module', { moduleName: 'audit-log' }],
+              'main',
+            ],
+          },
+        ],
+      },
+    ],
   },
-]
+})
+
+export default [...baseConfig, ...vitestConfig, ...schemaException, ...authBoundaryException]

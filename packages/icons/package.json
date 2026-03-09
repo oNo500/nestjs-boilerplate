@@ -18,7 +18,7 @@
     "@types/react": "^19.2.14",
     "@workspace/eslint-config": "workspace:*",
     "prettier": "^3.8.1",
-    "tsdown": "^0.15.12",
+    "tsdown": "^0.21.0",
     "typescript": "^5.9.3"
   }
 }

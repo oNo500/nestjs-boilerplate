@@ -72,6 +72,16 @@ export interface UpdateUserProfileData {
 }
 
 /**
+ * User summary statistics
+ */
+export interface UserSummary {
+  total: number
+  active: number // banned = false
+  adminCount: number // role = 'ADMIN'
+  newToday: number // createdAt >= today 00:00
+}
+
+/**
  * User Repository port interface
  *
  * Defines persistence operations for user management
@@ -111,6 +121,11 @@ export interface UserManagementRepository {
    * Delete a user (hard delete)
    */
   hardDelete(id: string): Promise<boolean>
+
+  /**
+   * Get user summary statistics
+   */
+  getSummary(): Promise<UserSummary>
 }
 
 /**

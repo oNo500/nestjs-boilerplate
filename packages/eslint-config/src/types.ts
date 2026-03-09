@@ -116,6 +116,11 @@ export interface ImportsOptions extends OptionsOverrides, OptionsStylistic {
    * @default false
    */
   noRelativeParentImports?: boolean
+  /**
+   * Root directory for tsconfig.json lookup; restricts resolver scope in monorepo to avoid cross-app path leakage
+   * Automatically injected by composeConfig from the global typescript.tsconfigRootDir option
+   */
+  tsconfigRootDir?: string
 }
 
 export type JavaScriptOptions = OptionsFiles & OptionsOverrides
@@ -137,7 +142,13 @@ export interface PackageJsonOptions extends OptionsOverrides {
 
 export type PrettierOptions = OptionsOverrides
 
-export type ReactOptions = OptionsFiles & OptionsOverrides
+export interface ReactOptions extends OptionsFiles, OptionsOverrides {
+  /**
+   * Whether to enable react-refresh plugin (for Vite projects).
+   * @default false
+   */
+  vite?: boolean
+}
 
 export type StorybookOptions = OptionsOverrides
 

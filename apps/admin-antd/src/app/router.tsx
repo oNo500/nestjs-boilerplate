@@ -15,6 +15,9 @@ const DashboardMonitorPage = lazy(() =>
 const DashboardWorkplacePage = lazy(() =>
   import('./routes/dashboard/workplace').then((m) => ({ default: m.DashboardWorkplacePage })),
 )
+const CrmDashboardPage = lazy(() =>
+  import('./routes/dashboards/crm').then((m) => ({ default: m.CrmDashboardPage })),
+)
 
 // Form pages
 const ScaffoldFormPage = lazy(() =>
@@ -114,6 +117,23 @@ const NotFoundPage = lazy(() =>
 
 const DocsPage = lazy(() => import('./routes/docs').then((m) => ({ default: m.DocsPage })))
 
+// New pages
+const ChatPage = lazy(() =>
+  import('./routes/apps/chat').then((m) => ({ default: m.ChatPage })),
+)
+const SessionManagerPage = lazy(() =>
+  import('./routes/settings/sessions').then((m) => ({ default: m.SessionManagerPage })),
+)
+const UploadDemoPage = lazy(() =>
+  import('./routes/settings/upload-demo').then((m) => ({ default: m.UploadDemoPage })),
+)
+const ComingSoonPage = lazy(() =>
+  import('./routes/pages/coming-soon').then((m) => ({ default: m.ComingSoonPage })),
+)
+const LoginLogsPage = lazy(() =>
+  import('./routes/pages/login-logs').then((m) => ({ default: m.LoginLogsPage })),
+)
+
 const wrap = (Page: React.ComponentType) => (
   <Suspense fallback={<Loading />}>
     <Page />
@@ -123,7 +143,7 @@ const wrap = (Page: React.ComponentType) => (
 export const router = createBrowserRouter([
   {
     path: '/',
-    element: <Navigate to="/dashboard/analysis" replace />,
+    element: <Navigate to="/dashboards/analytics" replace />,
   },
   {
     path: '/login',
@@ -137,14 +157,121 @@ export const router = createBrowserRouter([
     path: '/',
     element: <MainLayout />,
     children: [
+      // Dashboards
       {
-        path: 'dashboard',
-        element: <Navigate to="/dashboard/analysis" replace />,
-      },
-      {
-        path: 'dashboard/analysis',
+        path: 'dashboards/analytics',
         element: wrap(DashboardAnalysisPage),
       },
+      {
+        path: 'dashboards/crm',
+        element: wrap(CrmDashboardPage),
+      },
+      // Apps
+      {
+        path: 'articles',
+        element: wrap(ListSearchArticlesPage),
+      },
+      {
+        path: 'apps/chat',
+        element: wrap(ChatPage),
+      },
+      // Pages - Tables (ADMIN only)
+      {
+        path: 'users',
+        element: (
+          <Suspense fallback={<Loading />}>
+            <ProtectedRoute requireRoles={['ADMIN']}>
+              <UsersPage />
+            </ProtectedRoute>
+          </Suspense>
+        ),
+      },
+      {
+        path: 'users/:id',
+        element: (
+          <Suspense fallback={<Loading />}>
+            <ProtectedRoute requireRoles={['ADMIN']}>
+              <UserDetailPage />
+            </ProtectedRoute>
+          </Suspense>
+        ),
+      },
+      {
+        path: 'login-logs',
+        element: (
+          <Suspense fallback={<Loading />}>
+            <ProtectedRoute requireRoles={['ADMIN']}>
+              <LoginLogsPage />
+            </ProtectedRoute>
+          </Suspense>
+        ),
+      },
+      {
+        path: 'audit-logs',
+        element: (
+          <Suspense fallback={<Loading />}>
+            <ProtectedRoute requireRoles={['ADMIN']}>
+              <AuditLogsPage />
+            </ProtectedRoute>
+          </Suspense>
+        ),
+      },
+      // Pages - Forms
+      {
+        path: 'settings/general',
+        element: wrap(AccountSettingsPage),
+      },
+      {
+        path: 'settings/sessions',
+        element: wrap(SessionManagerPage),
+      },
+      {
+        path: 'settings/upload-demo',
+        element: wrap(UploadDemoPage),
+      },
+      // Pages - Exception
+      {
+        path: 'pages/404',
+        element: wrap(NotFoundPage),
+      },
+      {
+        path: 'pages/error',
+        element: wrap(Error500Page),
+      },
+      {
+        path: 'pages/coming-soon',
+        element: wrap(ComingSoonPage),
+      },
+      // Legacy redirects
+      {
+        path: 'dashboard/analysis',
+        element: <Navigate to="/dashboards/analytics" replace />,
+      },
+      {
+        path: 'dashboard',
+        element: <Navigate to="/dashboards/analytics" replace />,
+      },
+      {
+        path: 'system/users',
+        element: <Navigate to="/users" replace />,
+      },
+      {
+        path: 'system/users/:id',
+        element: <Navigate to="/users" replace />,
+      },
+      {
+        path: 'system/audit-logs',
+        element: <Navigate to="/audit-logs" replace />,
+      },
+      {
+        path: 'account/settings',
+        element: <Navigate to="/settings/general" replace />,
+      },
+      {
+        path: 'list/search/articles',
+        element: <Navigate to="/articles" replace />,
+      },
+      // Existing pages (kept but no menu entry)
       {
         path: 'dashboard/monitor',
         element: wrap(DashboardMonitorPage),
@@ -153,7 +280,6 @@ export const router = createBrowserRouter([
         path: 'dashboard/workplace',
         element: wrap(DashboardWorkplacePage),
       },
-      // Form pages
       {
         path: 'form/basic',
         element: wrap(ScaffoldFormPage),
@@ -165,11 +291,6 @@ export const router = createBrowserRouter([
       {
         path: 'form/advanced',
         element: wrap(FormAdvancedPage),
-      },
-      // List pages
-      {
-        path: 'list/search/articles',
-        element: wrap(ListSearchArticlesPage),
       },
       {
         path: 'list/search/projects',
@@ -195,7 +316,6 @@ export const router = createBrowserRouter([
         path: 'list/table-list',
         element: wrap(ListTableListPage),
       },
-      // Detail pages
       {
         path: 'profile/basic',
         element: wrap(ProfileBasicPage),
@@ -204,16 +324,10 @@ export const router = createBrowserRouter([
         path: 'profile/advanced',
         element: wrap(ProfileAdvancedPage),
       },
-      // Account pages
       {
         path: 'account/center',
         element: wrap(ProfilePage),
       },
-      {
-        path: 'account/settings',
-        element: wrap(AccountSettingsPage),
-      },
-      // Result pages
       {
         path: 'result/success',
         element: wrap(ResultSuccessPage),
@@ -222,35 +336,14 @@ export const router = createBrowserRouter([
         path: 'result/fail',
         element: wrap(ResultFailPage),
       },
-      // System management
       {
         path: 'system',
         element: (
           <ProtectedRoute requireRoles={['ADMIN']}>
             <Suspense fallback={<Loading />}>
-              <Navigate to="/system/users" replace />
+              <Navigate to="/users" replace />
             </Suspense>
           </ProtectedRoute>
-        ),
-      },
-      {
-        path: 'system/users',
-        element: (
-          <Suspense fallback={<Loading />}>
-            <ProtectedRoute requireRoles={['ADMIN']}>
-              <UsersPage />
-            </ProtectedRoute>
-          </Suspense>
-        ),
-      },
-      {
-        path: 'system/users/:id',
-        element: (
-          <Suspense fallback={<Loading />}>
-            <ProtectedRoute requireRoles={['ADMIN']}>
-              <UserDetailPage />
-            </ProtectedRoute>
-          </Suspense>
         ),
       },
       {
@@ -264,17 +357,6 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: 'system/audit-logs',
-        element: (
-          <Suspense fallback={<Loading />}>
-            <ProtectedRoute requireRoles={['ADMIN']}>
-              <AuditLogsPage />
-            </ProtectedRoute>
-          </Suspense>
-        ),
-      },
-      // Foundation
-      {
         path: 'foundation/components',
         element: wrap(FoundationComponentsPage),
       },
@@ -282,7 +364,6 @@ export const router = createBrowserRouter([
         path: 'foundation/icons',
         element: wrap(FoundationIconsPage),
       },
-      // Exception pages
       {
         path: 'exception/403',
         element: wrap(Error403Page),
@@ -299,7 +380,6 @@ export const router = createBrowserRouter([
         path: 'exception/empty',
         element: wrap(ErrorEmptyPage),
       },
-      // Docs
       {
         path: 'docs',
         element: wrap(DocsPage),

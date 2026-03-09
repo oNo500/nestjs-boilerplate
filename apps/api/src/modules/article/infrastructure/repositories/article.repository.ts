@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common'
 import { articlesTable } from '@workspace/database'
-import { and, count, eq, gt, or } from 'drizzle-orm'
+import { and, count, eq, gt, or, sql } from 'drizzle-orm'
 
 import { Article } from '@/modules/article/domain/aggregates/article.aggregate'
 import { ArticleStatus } from '@/modules/article/domain/enums/article-status.enum'
@@ -13,7 +13,7 @@ import { DB_TOKEN } from '@/shared-kernel/infrastructure/db/db.port'
 import type { ArticleCursorQuery, ArticleCursorResult, ArticleListQuery, ArticleListResult, ArticleRepository } from '@/modules/article/application/ports/article.repository.port'
 import type { ArticleCategory } from '@/modules/article/domain/aggregates/article.aggregate'
 import type { DrizzleDb } from '@/shared-kernel/infrastructure/db/db.port'
-import type { ArticleDatabase } from '@workspace/database'
+import type { ArticleDatabase, InsertArticleDatabase } from '@workspace/database'
 
 /**
  * Drizzle ORM implementation of ArticleRepository
@@ -78,12 +78,26 @@ export class ArticleRepositoryImpl implements ArticleRepository {
   }
 
   async findPaginated(query: ArticleListQuery): Promise<ArticleListResult> {
-    const { page, pageSize } = query
+    const { page, pageSize, q } = query
     const offset = (page - 1) * pageSize
 
+    const whereClause = q
+      ? sql`${articlesTable.searchVector} @@ plainto_tsquery('english', ${q})`
+      : undefined
+
     const [rows, [countRow]] = await Promise.all([
-      this.db.select().from(articlesTable).limit(pageSize).offset(offset),
-      this.db.select({ count: count() }).from(articlesTable),
+      this.db
+        .select()
+        .from(articlesTable)
+        .where(whereClause)
+        .orderBy(
+          q
+            ? sql`ts_rank(${articlesTable.searchVector}, plainto_tsquery('english', ${q})) DESC`
+            : articlesTable.createdAt,
+        )
+        .limit(pageSize)
+        .offset(offset),
+      this.db.select({ count: count() }).from(articlesTable).where(whereClause),
     ])
 
     return {
@@ -166,11 +180,13 @@ export class ArticleRepositoryImpl implements ArticleRepository {
   /**
    * Domain model -> Database record
    */
-  private toPersistence(article: Article): ArticleDatabase {
+  private toPersistence(article: Article): Omit<InsertArticleDatabase, 'searchVector'> & { searchVector: ReturnType<typeof sql> } {
+    const title = article.title.value
+    const content = article.content.value
     return {
       id: article.id,
-      title: article.title.value,
-      content: article.content.value,
+      title,
+      content,
       slug: article.slug.value,
       status: article.status,
       tags: [...article.tags.value],
@@ -181,6 +197,7 @@ export class ArticleRepositoryImpl implements ArticleRepository {
       createdAt: article.createdAt,
       updatedAt: article.updatedAt,
       publishedAt: article.publishedAt,
+      searchVector: sql`to_tsvector('english', ${title} || ' ' || ${content})`,
     }
   }
 }

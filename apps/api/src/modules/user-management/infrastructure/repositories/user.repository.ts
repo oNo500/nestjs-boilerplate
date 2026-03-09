@@ -7,7 +7,7 @@ import {
   usersTable,
 } from '@workspace/database'
 import * as bcrypt from 'bcrypt'
-import { and, count, eq, ilike, inArray } from 'drizzle-orm'
+import { and, count, eq, gte, ilike, inArray } from 'drizzle-orm'
 
 import { DB_TOKEN } from '@/shared-kernel/infrastructure/db/db.port'
 
@@ -18,6 +18,7 @@ import type {
   UserListQuery,
   UserListResult,
   UserManagementRepository,
+  UserSummary,
 } from '@/modules/user-management/application/ports/user.repository.port'
 import type { DrizzleDb } from '@/shared-kernel/infrastructure/db/db.port'
 
@@ -268,6 +269,25 @@ implements UserManagementRepository {
       .where(eq(usersTable.id, id))
 
     return (result.rowCount ?? 0) > 0
+  }
+
+  async getSummary(): Promise<UserSummary> {
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+
+    const [totalResult, activeResult, adminResult, newTodayResult] = await Promise.all([
+      this.db.select({ count: count() }).from(usersTable),
+      this.db.select({ count: count() }).from(usersTable).where(eq(usersTable.banned, false)),
+      this.db.select({ count: count() }).from(usersTable).where(eq(usersTable.role, 'ADMIN')),
+      this.db.select({ count: count() }).from(usersTable).where(gte(usersTable.createdAt, today)),
+    ])
+
+    return {
+      total: totalResult[0]?.count ?? 0,
+      active: activeResult[0]?.count ?? 0,
+      adminCount: adminResult[0]?.count ?? 0,
+      newToday: newTodayResult[0]?.count ?? 0,
+    }
   }
 
   /**

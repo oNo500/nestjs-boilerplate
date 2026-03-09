@@ -18,17 +18,23 @@ export class LoginDto {
 }
 
 export class UserInfo {
+  @ApiProperty({ example: 'usr_01HXYZ' })
   id: string
 
+  @ApiProperty({ example: 'user@example.com' })
   email: string
 
+  @ApiProperty({ type: String, example: 'user', nullable: true })
   role: string | null
 }
 
 export class LoginResponseDto {
+  @ApiProperty({ example: 'eyJhbGciOiJIUzI1NiJ9...' })
   accessToken: string
 
+  @ApiProperty({ example: '550e8400-e29b-41d4-a716-446655440000' })
   refreshToken: string
 
+  @ApiProperty({ type: () => UserInfo })
   user: UserInfo
 }

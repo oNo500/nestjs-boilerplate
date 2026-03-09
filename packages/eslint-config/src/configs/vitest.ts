@@ -1,14 +1,13 @@
 /**
  * Vitest test rule configuration with testing best practices and quality assurance rules
  */
-import { fixupPluginRules } from '@eslint/compat'
 import vitestPlugin from '@vitest/eslint-plugin'
 import { defineConfig } from 'eslint/config'
 
 import { GLOB_TESTS, isInEditorEnv } from '../utils'
 
 import type { VitestOptions } from '../types'
-import type { ESLint, Linter } from 'eslint'
+import type { Linter } from 'eslint'
 
 export function vitest(options: VitestOptions = {}): Linter.Config[] {
   const {
@@ -22,7 +21,7 @@ export function vitest(options: VitestOptions = {}): Linter.Config[] {
       name: 'vitest/rules',
       files,
       plugins: {
-        vitest: fixupPluginRules(vitestPlugin as unknown as ESLint.Plugin),
+        vitest: vitestPlugin,
       },
       rules: {
         ...vitestPlugin.configs.recommended.rules,

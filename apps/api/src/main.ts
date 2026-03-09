@@ -20,14 +20,18 @@ import { TransformInterceptor } from '@/app/interceptors/transform.interceptor'
 import { AppModule } from './app.module'
 
 import type { Env } from '@/app/config/env.schema'
+import type { NestExpressApplication } from '@nestjs/platform-express'
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, {
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     bufferLogs: true, // buffer logs until Logger is ready
   })
 
   // Use nestjs-pino Logger
   app.useLogger(app.get(Logger))
+
+  // Static file serving for uploaded files
+  app.useStaticAssets('./uploads', { prefix: '/uploads' })
 
   // CORS configuration
   const configService = app.get<ConfigService<Env, true>>(ConfigService)
@@ -77,7 +81,7 @@ async function bootstrap() {
   app.useGlobalPipes(createValidationPipe())
 
   // Swagger documentation
-  await setupSwagger(app)
+  setupSwagger(app)
 
   const port = configService.get('PORT', { infer: true })
   await app.listen(port)

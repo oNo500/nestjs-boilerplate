@@ -1,3 +1,4 @@
+import { ApiPropertyOptional } from '@nestjs/swagger'
 import { Type } from 'class-transformer'
 import { IsOptional } from 'class-validator'
 
@@ -24,8 +25,8 @@ import {
 export class OffsetPaginationDto {
   /**
    * Page number (1-based)
-   * @example 1
    */
+  @ApiPropertyOptional({ example: 1 })
   @IsOptional()
   @Type(() => Number)
   @IsIntField()
@@ -34,8 +35,8 @@ export class OffsetPaginationDto {
 
   /**
    * Number of items per page
-   * @example 20
    */
+  @ApiPropertyOptional({ example: 20 })
   @IsOptional()
   @Type(() => Number)
   @IsIntField()
