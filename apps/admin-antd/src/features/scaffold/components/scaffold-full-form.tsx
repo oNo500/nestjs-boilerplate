@@ -21,13 +21,13 @@ function Optional({ label }: { label: string }) {
   return <em style={optionalStyle}>{label}</em>
 }
 
-export function ScaffoldFullForm() {
-  function onFinish(values: Record<string, unknown>): Promise<boolean> {
-    console.log('form values:', values)
-    void message.success('Submitted successfully')
-    return Promise.resolve(true)
-  }
+function onFinish(values: Record<string, unknown>): Promise<boolean> {
+  console.log('form values:', values)
+  void message.success('Submitted successfully')
+  return Promise.resolve(true)
+}
 
+export function ScaffoldFullForm() {
   return (
     <Card variant="borderless">
       <ProForm
