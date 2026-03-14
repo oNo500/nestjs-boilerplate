@@ -8,7 +8,7 @@
     "lint:fix": "turbo run lint:fix",
     "typecheck": "turbo run typecheck",
     "up:all": "taze -r",
-    "setup:env": "cp .env.example .env && pnpm -r exec cp .env.example .env"
+    "setup:env": "cp .env.example .env && pnpm --filter api --filter admin-antd --filter admin-shadcn --filter @workspace/database exec cp .env.example .env"
   },
   "devDependencies": {
     "taze": "^19.10.0",
