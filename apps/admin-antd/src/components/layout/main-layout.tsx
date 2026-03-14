@@ -2,7 +2,6 @@ import { ProLayout, SettingDrawer } from '@ant-design/pro-components'
 import { Dropdown } from 'antd'
 import { User, LogOut } from 'lucide-react'
 import { useState, useEffect } from 'react'
-import { useTranslation } from 'react-i18next'
 import { Outlet, useNavigate, useLocation } from 'react-router'
 
 import { env } from '@/config/env'
@@ -10,7 +9,6 @@ import { getMenuItems } from '@/config/menu'
 import { useAuthStore } from '@/features/auth'
 import { useThemeStore } from '@/stores/use-theme-store'
 
-import { LanguageSwitch } from './language-switch'
 import SvgAntdesign from './logo'
 
 import type { MenuItem } from '@/config/menu'
@@ -35,8 +33,6 @@ export function MainLayout() {
   const location: Location = useLocation()
   const { user, logout } = useAuthStore()
   const [collapsed, setCollapsed] = useState(false)
-  const { t: tMenu } = useTranslation('menu')
-  const { t: tCommon } = useTranslation('common')
 
   useEffect(() => {
     if (!user) {
@@ -54,7 +50,7 @@ export function MainLayout() {
     navTheme: isDark ? 'realDark' : 'light',
   })
 
-  const menuItems = getMenuItems(tMenu)
+  const menuItems = getMenuItems()
 
   const handleSettingChange = (newSettings: Partial<ProSettings>) => {
     setSettings(newSettings)
@@ -75,7 +71,7 @@ export function MainLayout() {
     {
       key: 'profile',
       icon: <User size={14} />,
-      label: tCommon('nav.personalCenter'),
+      label: 'Profile',
       onClick: () => void navigate('/profile'),
     },
     {
@@ -84,7 +80,7 @@ export function MainLayout() {
     {
       key: 'logout',
       icon: <LogOut size={14} />,
-      label: tCommon('nav.logout'),
+      label: 'Logout',
       danger: true,
       onClick: handleLogout,
     },
@@ -144,7 +140,7 @@ export function MainLayout() {
       breadcrumbRender={(routers = []) => [
         {
           path: '/',
-          breadcrumbName: tCommon('nav.home'),
+          breadcrumbName: 'Home',
         },
         ...routers,
       ]}
@@ -152,7 +148,7 @@ export function MainLayout() {
         const breadcrumbItem = properties.breadcrumb?.[properties.pathname ?? '/'] as
           | { name?: string }
           | undefined
-        const pageName = breadcrumbItem?.name ?? tCommon('nav.adminTitle')
+        const pageName = breadcrumbItem?.name ?? 'Admin'
         return `${pageName} - Admin`
       }}
       avatarProps={{
@@ -165,7 +161,6 @@ export function MainLayout() {
           </Dropdown>
         ),
       }}
-      actionsRender={() => [<LanguageSwitch key="lang" />]}
       menuFooterRender={(properties) => {
         if (properties?.collapsed) return
         return (

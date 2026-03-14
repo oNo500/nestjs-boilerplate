@@ -2,7 +2,6 @@ import { ProTable } from '@ant-design/pro-components'
 import { Space, Button, Popconfirm } from 'antd'
 import { Edit, Eye, Trash2, Plus } from 'lucide-react'
 import { useRef } from 'react'
-import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 
 import { useDeleteUser } from '@/features/users/api/use-delete-user'
@@ -17,8 +16,6 @@ export function UsersTable() {
   const actionRef = useRef<ActionType>(null)
   const navigate = useNavigate()
   const deleteMutation = useDeleteUser()
-  const { t } = useTranslation('users')
-  const { t: tCommon } = useTranslation('common')
 
   const handleDelete = (id: string) => {
     void deleteMutation.mutateAsync({ params: { path: { id } } }).then(() => {
@@ -32,51 +29,51 @@ export function UsersTable() {
 
   const columns: ProColumns<User>[] = [
     {
-      title: t('fields.id'),
+      title: 'ID',
       dataIndex: 'id',
       width: 80,
       search: false,
     },
     {
-      title: t('fields.name'),
+      title: 'Username',
       dataIndex: 'name',
       width: 120,
     },
     {
-      title: t('fields.email'),
+      title: 'Email',
       dataIndex: 'email',
       width: 200,
       search: false,
     },
     {
-      title: t('fields.role'),
+      title: 'Role',
       dataIndex: 'role',
       width: 100,
       valueType: 'select',
       valueEnum: {
-        admin: { text: t('role.admin'), status: 'Error' },
-        user: { text: t('role.user'), status: 'Default' },
+        admin: { text: 'Administrator', status: 'Error' },
+        user: { text: 'User', status: 'Default' },
       },
     },
     {
-      title: t('fields.status'),
+      title: 'Status',
       dataIndex: 'banned',
       width: 100,
       valueType: 'select',
       valueEnum: {
-        false: { text: t('status.normal'), status: 'Success' },
-        true: { text: t('status.banned'), status: 'Error' },
+        false: { text: 'Normal', status: 'Success' },
+        true: { text: 'Banned', status: 'Error' },
       },
     },
     {
-      title: t('fields.createdAt'),
+      title: 'Created At',
       dataIndex: 'createdAt',
       valueType: 'dateTime',
       width: 180,
       search: false,
     },
     {
-      title: tCommon('actions.edit'),
+      title: 'Edit',
       valueType: 'option',
       width: 150,
       render: (_, record) => (
@@ -87,7 +84,7 @@ export function UsersTable() {
             icon={<Eye size={14} />}
             onClick={() => void navigate(`/system/users/${record.id}`)}
           >
-            {tCommon('actions.view')}
+            View
           </Button>
           <UserForm
             mode="edit"
@@ -95,16 +92,16 @@ export function UsersTable() {
             onSuccess={handleSuccess}
             trigger={(
               <Button type="link" size="small" icon={<Edit size={14} />}>
-                {tCommon('actions.edit')}
+                Edit
               </Button>
             )}
           />
           <Popconfirm
-            title={t('actions.confirmDelete')}
-            description={t('actions.confirmDeleteDesc', { name: record.name })}
+            title="Confirm Delete"
+            description={`Are you sure you want to delete user "${record.name}"?`}
             onConfirm={() => handleDelete(record.id)}
-            okText={tCommon('actions.confirm')}
-            cancelText={tCommon('actions.cancel')}
+            okText="OK"
+            cancelText="Cancel"
           >
             <Button
               type="link"
@@ -113,7 +110,7 @@ export function UsersTable() {
               icon={<Trash2 size={14} />}
               loading={deleteMutation.isPending}
             >
-              {tCommon('actions.delete')}
+              Delete
             </Button>
           </Popconfirm>
         </Space>
@@ -166,7 +163,7 @@ export function UsersTable() {
           onSuccess={handleSuccess}
           trigger={(
             <Button type="primary" icon={<Plus size={16} />}>
-              {t('actions.create')}
+              Create User
             </Button>
           )}
         />,

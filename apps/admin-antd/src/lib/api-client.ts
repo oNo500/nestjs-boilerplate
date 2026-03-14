@@ -8,7 +8,6 @@
 import createClient from 'openapi-fetch'
 
 import { env } from '@/config/env'
-import { i18next } from '@/config/i18n'
 import { ApiClientError } from '@/lib/api-error'
 import { notification } from '@/lib/notification'
 import { getToken, setToken, setRefreshToken, getRefreshToken } from '@/lib/token'
@@ -46,7 +45,7 @@ fetchClient.use({
     const json: unknown = await response.clone().json().catch(() => null)
     const problemDetail = json && typeof json === 'object' && 'title' in json && 'status' in json
       ? json as ConstructorParameters<typeof ApiClientError>[0]
-      : { title: i18next.t('common:api.requestFailed'), status: response.status }
+      : { title: 'Request failed', status: response.status }
     throw new ApiClientError(problemDetail)
   },
 })
@@ -98,7 +97,7 @@ fetchClient.use({
         // Centralize all side effects of a refresh failure here; executed only once
         const { useAuthStore } = await import('@/features/auth/stores/use-auth-store')
         useAuthStore.getState().logout()
-        notification.error(i18next.t('common:api.sessionExpired'))
+        notification.error('Session expired, please log in again')
         globalThis.location.href = '/login'
         throw error
       })

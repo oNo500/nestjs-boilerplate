@@ -1,15 +1,13 @@
-import type { TFunction } from 'i18next'
-
-export function getRoleOptions(t: TFunction<'roles'>) {
+export function getRoleOptions() {
   return [
-    { label: t('role.user'), value: 'USER' },
-    { label: t('role.admin'), value: 'ADMIN' },
+    { label: 'User', value: 'USER' },
+    { label: 'Administrator', value: 'ADMIN' },
   ]
 }
 
-export function getRoleLabels(t: TFunction<'roles'>): Record<string, string> {
+export function getRoleLabels(): Record<string, string> {
   return {
-    USER: t('role.user'),
-    ADMIN: t('role.admin'),
+    USER: 'User',
+    ADMIN: 'Administrator',
   }
 }

@@ -1,7 +1,6 @@
 import { ModalForm, ProFormText } from '@ant-design/pro-components'
 import { Button } from 'antd'
 import { KeyRound } from 'lucide-react'
-import { useTranslation } from 'react-i18next'
 
 import { useChangePassword } from '@/features/profile/api/use-change-password'
 
@@ -9,7 +8,6 @@ import type { ChangePasswordDto } from '@/features/profile/types'
 
 export function ChangePasswordForm() {
   const changeMutation = useChangePassword()
-  const { t } = useTranslation('profile')
 
   const handleFinish = async (values: ChangePasswordDto): Promise<boolean> => {
     try {
@@ -27,8 +25,8 @@ export function ChangePasswordForm() {
 
   return (
     <ModalForm
-      title={t('changePassword.title')}
-      trigger={<Button icon={<KeyRound size={14} />}>{t('changePassword.trigger')}</Button>}
+      title="Change Password"
+      trigger={<Button icon={<KeyRound size={14} />}>Change Password</Button>}
       modalProps={{
         destroyOnClose: true,
       }}
@@ -36,31 +34,31 @@ export function ChangePasswordForm() {
     >
       <ProFormText.Password
         name="currentPassword"
-        label={t('fields.currentPassword')}
-        placeholder={t('form.currentPasswordPlaceholder')}
-        rules={[{ required: true, message: t('validation.currentPasswordRequired') }]}
+        label="Current Password"
+        placeholder="Please enter current password"
+        rules={[{ required: true, message: 'Please enter current password' }]}
       />
       <ProFormText.Password
         name="newPassword"
-        label={t('fields.newPassword')}
-        placeholder={t('form.newPasswordPlaceholder')}
+        label="New Password"
+        placeholder="Please enter new password (at least 8 characters)"
         rules={[
-          { required: true, message: t('validation.newPasswordRequired') },
-          { min: 8, message: t('validation.newPasswordMin') },
+          { required: true, message: 'Please enter new password' },
+          { min: 8, message: 'Password must be at least 8 characters' },
         ]}
       />
       <ProFormText.Password
         name="confirmPassword"
-        label={t('fields.confirmPassword')}
-        placeholder={t('form.confirmPasswordPlaceholder')}
+        label="Confirm New Password"
+        placeholder="Please enter new password again"
         rules={[
-          { required: true, message: t('validation.confirmPasswordRequired') },
+          { required: true, message: 'Please confirm new password' },
           ({ getFieldValue }) => ({
             validator(_, value: unknown) {
               if (!value || getFieldValue('newPassword') === value) {
                 return Promise.resolve()
               }
-              return Promise.reject(new Error(t('validation.passwordMismatch')))
+              return Promise.reject(new Error('The two passwords do not match'))
             },
           }),
         ]}

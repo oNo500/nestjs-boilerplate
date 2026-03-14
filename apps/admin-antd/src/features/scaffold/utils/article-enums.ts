@@ -1,35 +1,33 @@
-import type { TFunction } from 'i18next'
-
-export function getArticleStatusOptions(t: TFunction<'scaffold'>) {
+export function getArticleStatusOptions() {
   return [
-    { label: t('status.draft'), value: 'draft' },
-    { label: t('status.published'), value: 'published' },
-    { label: t('status.archived'), value: 'archived' },
+    { label: 'Draft', value: 'draft' },
+    { label: 'Published', value: 'published' },
+    { label: 'Archived', value: 'archived' },
   ]
 }
 
-export function getArticleCategoryOptions(t: TFunction<'scaffold'>) {
+export function getArticleCategoryOptions() {
   return [
-    { label: t('category.tech'), value: 'tech' },
-    { label: t('category.design'), value: 'design' },
-    { label: t('category.product'), value: 'product' },
-    { label: t('category.other'), value: 'other' },
+    { label: 'Tech', value: 'tech' },
+    { label: 'Design', value: 'design' },
+    { label: 'Product', value: 'product' },
+    { label: 'Other', value: 'other' },
   ]
 }
 
-export function getArticleStatusEnum(t: TFunction<'scaffold'>) {
+export function getArticleStatusEnum() {
   return {
-    draft: { text: t('status.draft'), status: 'Default' },
-    published: { text: t('status.published'), status: 'Success' },
-    archived: { text: t('status.archived'), status: 'Warning' },
+    draft: { text: 'Draft', status: 'Default' },
+    published: { text: 'Published', status: 'Success' },
+    archived: { text: 'Archived', status: 'Warning' },
   } as const
 }
 
-export function getArticleCategoryEnum(t: TFunction<'scaffold'>) {
+export function getArticleCategoryEnum() {
   return {
-    tech: { text: t('category.tech') },
-    design: { text: t('category.design') },
-    product: { text: t('category.product') },
-    other: { text: t('category.other') },
+    tech: { text: 'Tech' },
+    design: { text: 'Design' },
+    product: { text: 'Product' },
+    other: { text: 'Other' },
   } as const
 }

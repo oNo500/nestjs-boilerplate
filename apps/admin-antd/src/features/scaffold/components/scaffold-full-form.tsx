@@ -9,7 +9,6 @@ import {
   ProFormTextArea,
 } from '@ant-design/pro-components'
 import { Card, message } from 'antd'
-import { useTranslation } from 'react-i18next'
 
 import type React from 'react'
 
@@ -23,11 +22,9 @@ function Optional({ label }: { label: string }) {
 }
 
 export function ScaffoldFullForm() {
-  const { t } = useTranslation('scaffold')
-
   function onFinish(values: Record<string, unknown>): Promise<boolean> {
     console.log('form values:', values)
-    void message.success(t('fullForm.submitSuccess'))
+    void message.success('Submitted successfully')
     return Promise.resolve(true)
   }
 
@@ -43,70 +40,70 @@ export function ScaffoldFullForm() {
       >
         <ProFormText
           width="md"
-          label={t('fullForm.titleLabel')}
+          label="Title"
           name="title"
-          rules={[{ required: true, message: t('validation.titleRequired') }]}
-          placeholder={t('fullForm.titlePlaceholder')}
+          rules={[{ required: true, message: 'Please enter a title' }]}
+          placeholder="Give your goal a name"
         />
 
         <ProFormDateRangePicker
-          label={t('fullForm.dateLabel')}
+          label="Date Range"
           width="md"
           name="date"
-          rules={[{ required: true, message: t('fullForm.dateLabel') }]}
-          placeholder={[t('fullForm.dateStartPlaceholder'), t('fullForm.dateEndPlaceholder')]}
+          rules={[{ required: true, message: 'Date Range' }]}
+          placeholder={['Start date', 'End date']}
         />
 
         <ProFormTextArea
-          label={t('fullForm.goalLabel')}
+          label="Goal Description"
           width="xl"
           name="goal"
-          rules={[{ required: true, message: t('fullForm.goalLabel') }]}
-          placeholder={t('fullForm.goalPlaceholder')}
+          rules={[{ required: true, message: 'Goal Description' }]}
+          placeholder="Enter your phased work goal"
         />
 
         <ProFormTextArea
-          label={t('fullForm.standardLabel')}
+          label="Success Criteria"
           name="standard"
           width="xl"
-          rules={[{ required: true, message: t('fullForm.standardLabel') }]}
-          placeholder={t('fullForm.standardPlaceholder')}
+          rules={[{ required: true, message: 'Success Criteria' }]}
+          placeholder="Enter success criteria"
         />
 
         <ProFormText
           width="md"
           label={(
             <span>
-              {t('fullForm.clientLabel')}
-              <Optional label={t('fullForm.optional')} />
+              Client
+              <Optional label="(Optional)" />
             </span>
           )}
-          tooltip={t('fullForm.clientTooltip')}
+          tooltip="Who this goal serves"
           name="client"
-          placeholder={t('fullForm.clientPlaceholder')}
+          placeholder="Describe your clients, internal clients @name/ID"
         />
 
         <ProFormText
           width="md"
           label={(
             <span>
-              {t('fullForm.invitesLabel')}
-              <Optional label={t('fullForm.optional')} />
+              Reviewers
+              <Optional label="(Optional)" />
             </span>
           )}
           name="invites"
-          placeholder={t('fullForm.invitesPlaceholder')}
+          placeholder="@ name/ID, up to 5 reviewers"
         />
 
         <ProFormDigit
           label={(
             <span>
-              {t('fullForm.weightLabel')}
-              <Optional label={t('fullForm.optional')} />
+              Weight
+              <Optional label="(Optional)" />
             </span>
           )}
           name="weight"
-          placeholder={t('fullForm.weightPlaceholder')}
+          placeholder="Enter value"
           min={0}
           max={100}
           width="xs"
@@ -118,12 +115,12 @@ export function ScaffoldFullForm() {
 
         <ProFormRadio.Group
           name="publicType"
-          label={t('fullForm.publicTypeLabel')}
-          help={t('fullForm.publicTypeHelp')}
+          label="Visibility"
+          help="Clients and reviewers are shared by default"
           options={[
-            { value: '1', label: t('fullForm.publicTypePublic') },
-            { value: '2', label: t('fullForm.publicTypePartial') },
-            { value: '3', label: t('fullForm.publicTypePrivate') },
+            { value: '1', label: 'Public' },
+            { value: '2', label: 'Partial' },
+            { value: '3', label: 'Private' },
           ]}
         />
 
@@ -133,12 +130,12 @@ export function ScaffoldFullForm() {
               ? (
                   <ProFormSelect
                     width="md"
-                    label={t('fullForm.publicUsersLabel')}
+                    label="Visible To"
                     name="publicUsers"
                     options={[
-                      { value: '1', label: t('fullForm.colleague1') },
-                      { value: '2', label: t('fullForm.colleague2') },
-                      { value: '3', label: t('fullForm.colleague3') },
+                      { value: '1', label: 'Colleague A' },
+                      { value: '2', label: 'Colleague B' },
+                      { value: '3', label: 'Colleague C' },
                     ]}
                   />
                 )

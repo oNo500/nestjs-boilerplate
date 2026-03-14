@@ -16,6 +16,7 @@ import {
   dashboardNavItems,
   appsNavItems,
   pagesNavItems,
+  managementNavItems,
   appPaths,
 } from '@/config/app-paths'
 
@@ -29,6 +30,7 @@ import type { NavItem } from '@/config/app-paths'
 const ADMIN_ONLY_URLS = new Set<string>([
   appPaths.loginLogs.href,
   appPaths.auditLogs.href,
+  appPaths.roles.href,
 ])
 
 const teams = [
@@ -97,6 +99,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavMain label="Dashboards" items={withActive(dashboardNavItems)} />
         <NavMain label="Apps" items={withActive(appsNavItems)} />
         <NavMain label="Pages" items={withActive(filterByRole(pagesNavItems, isAdmin))} />
+        {isAdmin && <NavMain label="Management" items={withActive(managementNavItems)} />}
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={user} />

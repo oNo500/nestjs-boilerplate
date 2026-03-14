@@ -9,6 +9,7 @@ import {
   TimerIcon,
   TableIcon,
   ClipboardPenIcon,
+  ShieldCheckIcon,
 } from 'lucide-react'
 
 import type { LucideIcon } from 'lucide-react'
@@ -50,6 +51,10 @@ export const appPaths = {
   users: {
     href: '/users',
     label: 'Users',
+  },
+  roles: {
+    href: '/roles',
+    label: 'Roles',
   },
   loginLogs: {
     href: '/login-logs',
@@ -139,7 +144,13 @@ export const pagesNavItems: NavItem[] = [
   },
 ]
 
-export const managementNavItems: NavItem[] = []
+export const managementNavItems: NavItem[] = [
+  {
+    title: 'Roles',
+    url: appPaths.roles.href,
+    icon: ShieldCheckIcon,
+  },
+]
 
 // Kept for backwards compatibility
 export const navItems: NavItem[] = [

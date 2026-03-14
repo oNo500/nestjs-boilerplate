@@ -2,7 +2,6 @@ import { LoginForm as ProLoginForm, ProFormText } from '@ant-design/pro-componen
 import { useMutation } from '@tanstack/react-query'
 import { theme } from 'antd'
 import { User, Mail, KeyRound } from 'lucide-react'
-import { useTranslation } from 'react-i18next'
 import { Link, useNavigate } from 'react-router'
 
 import Logo from '@/components/layout/logo'
@@ -20,7 +19,6 @@ export function RegisterForm() {
   const navigate = useNavigate()
   const { login } = useAuthStore()
   const { token } = theme.useToken()
-  const { t } = useTranslation('auth')
 
   const registerMutation = useMutation({
     mutationFn: async (values: RegisterFormValues) => {
@@ -62,11 +60,11 @@ export function RegisterForm() {
               maxWidth: '75vw',
             }}
             logo={<Logo style={{ fontSize: 48 }} />}
-            title={t('register.title')}
-            subTitle={t('register.subTitle')}
+            title="Admin Template"
+            subTitle="Enterprise Admin System"
             submitter={{
               searchConfig: {
-                submitText: t('register.submit'),
+                submitText: 'Register',
               },
             }}
             onFinish={async (values: RegisterFormValues) => {
@@ -78,16 +76,16 @@ export function RegisterForm() {
               fieldProps={{
                 size: 'large',
                 prefix: <User size={16} />,
-                placeholder: t('placeholder.username'),
+                placeholder: 'Please enter your username',
                 autoComplete: 'username',
               }}
               rules={[
-                { required: true, message: t('validation.usernameRequired') },
-                { min: 2, message: t('validation.usernameMin') },
-                { max: 50, message: t('validation.usernameMax') },
+                { required: true, message: 'Please enter your username' },
+                { min: 2, message: 'Username must be at least 2 characters' },
+                { max: 50, message: 'Username must be at most 50 characters' },
                 {
                   pattern: /^[\w-]+$/,
-                  message: t('validation.usernamePattern'),
+                  message: 'Username can only contain letters, numbers, underscores and hyphens',
                 },
               ]}
             />
@@ -97,12 +95,12 @@ export function RegisterForm() {
               fieldProps={{
                 size: 'large',
                 prefix: <Mail size={16} />,
-                placeholder: t('placeholder.email'),
+                placeholder: 'admin@example.com / user@example.com',
                 autoComplete: 'email',
               }}
               rules={[
-                { required: true, message: t('validation.emailRequired') },
-                { type: 'email', message: t('validation.emailInvalid') },
+                { required: true, message: 'Please enter your email' },
+                { type: 'email', message: 'Please enter a valid email address' },
               ]}
             />
 
@@ -111,12 +109,12 @@ export function RegisterForm() {
               fieldProps={{
                 size: 'large',
                 prefix: <KeyRound size={16} />,
-                placeholder: t('placeholder.password'),
+                placeholder: 'password: 12345678',
                 autoComplete: 'new-password',
               }}
               rules={[
-                { required: true, message: t('validation.passwordRequired') },
-                { min: 8, message: t('validation.passwordMin') },
+                { required: true, message: 'Please enter your password' },
+                { min: 8, message: 'Password must be at least 8 characters' },
               ]}
             />
 
@@ -125,18 +123,18 @@ export function RegisterForm() {
               fieldProps={{
                 size: 'large',
                 prefix: <KeyRound size={16} />,
-                placeholder: t('placeholder.confirmPassword'),
+                placeholder: 'Please enter your password again',
                 autoComplete: 'new-password',
               }}
               dependencies={['password']}
               rules={[
-                { required: true, message: t('validation.confirmPasswordRequired') },
+                { required: true, message: 'Please enter your password again' },
                 ({ getFieldValue }) => ({
                   validator(_rule, value) {
                     if (!value || getFieldValue('password') === value) {
                       return Promise.resolve()
                     }
-                    return Promise.reject(new Error(t('validation.passwordMismatch')))
+                    return Promise.reject(new Error('The two passwords do not match'))
                   },
                 }),
               ]}
@@ -144,9 +142,9 @@ export function RegisterForm() {
           </ProLoginForm>
 
           <div style={{ textAlign: 'center', marginTop: '-10px' }}>
-            <span style={{ color: token.colorTextSecondary }}>{t('register.hasAccount')}</span>
+            <span style={{ color: token.colorTextSecondary }}>Already have an account?</span>
             <Link to="/login" style={{ marginLeft: 4 }}>
-              {t('register.loginNow')}
+              Login Now
             </Link>
           </div>
         </div>

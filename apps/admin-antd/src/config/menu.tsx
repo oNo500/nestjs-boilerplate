@@ -9,7 +9,6 @@ import {
   Timer,
 } from 'lucide-react'
 
-import type { TFunction } from 'i18next'
 import type { LucideIcon } from 'lucide-react'
 
 export interface MenuItem {
@@ -21,68 +20,68 @@ export interface MenuItem {
   children?: MenuItem[]
 }
 
-export function getMenuItems(t: TFunction<'menu'>): MenuItem[] {
+export function getMenuItems(): MenuItem[] {
   return [
     {
       key: 'dashboards',
-      label: t('dashboards._'),
+      label: 'Dashboards',
       icon: BarChart2,
       children: [
         {
           path: '/dashboards/analytics',
-          label: t('dashboards.analytics'),
+          label: 'Analytics Dashboard',
           icon: BarChart2,
         },
         {
           path: '/dashboards/crm',
-          label: t('dashboards.crm'),
+          label: 'CRM Dashboard',
           icon: TrendingUp,
         },
       ],
     },
     {
       key: 'apps',
-      label: t('apps._'),
+      label: 'Apps',
       icon: MessageSquare,
       children: [
         {
           path: '/articles',
-          label: t('apps.articles'),
+          label: 'Articles',
           icon: FileText,
         },
         {
           path: '/apps/chat',
-          label: t('apps.chat'),
+          label: 'Chat',
           icon: MessageSquare,
         },
       ],
     },
     {
       key: 'pages',
-      label: t('pages._'),
+      label: 'Pages',
       icon: AlertCircle,
       children: [
         {
           key: 'pages-tables',
-          label: t('pages.tables._'),
+          label: 'Tables',
           icon: Table2,
           roles: ['ADMIN'],
           children: [
             {
               path: '/users',
-              label: t('pages.tables.dataTable'),
+              label: 'Data Table',
               icon: Table2,
               roles: ['ADMIN'],
             },
             {
               path: '/login-logs',
-              label: t('pages.tables.filterableTable'),
+              label: 'Filterable Table',
               icon: Table2,
               roles: ['ADMIN'],
             },
             {
               path: '/audit-logs',
-              label: t('pages.tables.sortableTable'),
+              label: 'Sortable Table',
               icon: Table2,
               roles: ['ADMIN'],
             },
@@ -90,39 +89,39 @@ export function getMenuItems(t: TFunction<'menu'>): MenuItem[] {
         },
         {
           key: 'pages-forms',
-          label: t('pages.forms._'),
+          label: 'Forms',
           icon: PenLine,
           children: [
             {
               path: '/settings/general',
-              label: t('pages.forms.settingsForm'),
+              label: 'Settings Form',
               icon: PenLine,
             },
             {
               path: '/settings/sessions',
-              label: t('pages.forms.sessionManager'),
+              label: 'Session Manager',
               icon: PenLine,
             },
             {
               path: '/settings/upload-demo',
-              label: t('pages.forms.fileUpload'),
+              label: 'File Upload',
               icon: PenLine,
             },
           ],
         },
         {
           path: '/pages/404',
-          label: t('pages.notFound'),
+          label: '404',
           icon: AlertCircle,
         },
         {
           path: '/pages/error',
-          label: t('pages.error'),
+          label: 'Error',
           icon: AlertCircle,
         },
         {
           path: '/pages/coming-soon',
-          label: t('pages.comingSoon'),
+          label: 'Coming Soon',
           icon: Timer,
         },
       ],

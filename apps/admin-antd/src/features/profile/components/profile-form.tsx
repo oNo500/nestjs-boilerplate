@@ -1,6 +1,5 @@
 import { ProCard, ProForm, ProFormText, ProFormTextArea } from '@ant-design/pro-components'
 import { Skeleton, Typography } from 'antd'
-import { useTranslation } from 'react-i18next'
 
 import { useProfile } from '@/features/profile/api/use-profile'
 import { useUpdateProfile } from '@/features/profile/api/use-update-profile'
@@ -12,7 +11,6 @@ const { Title } = Typography
 export function ProfileForm() {
   const { data: profile, isLoading } = useProfile()
   const updateMutation = useUpdateProfile()
-  const { t } = useTranslation('profile')
 
   const handleFinish = async (values: UpdateProfileDto): Promise<boolean> => {
     try {
@@ -35,7 +33,7 @@ export function ProfileForm() {
 
   return (
     <ProCard>
-      <Title level={4}>{t('form.basicInfoTitle')}</Title>
+      <Title level={4}>Basic Info</Title>
       <ProForm
         initialValues={{
           displayName: profile?.displayName ?? '',
@@ -45,7 +43,7 @@ export function ProfileForm() {
         onFinish={handleFinish}
         submitter={{
           searchConfig: {
-            submitText: t('form.saveChanges'),
+            submitText: 'Save Changes',
           },
           resetButtonProps: false,
         }}
@@ -53,24 +51,24 @@ export function ProfileForm() {
         <ProFormText
           width="md"
           name="displayName"
-          label={t('fields.displayName')}
-          placeholder={t('form.displayNamePlaceholder')}
-          rules={[{ max: 50, message: t('validation.displayNameMax') }]}
+          label="Display Name"
+          placeholder="Please enter display name"
+          rules={[{ max: 50, message: 'Display name must be at most 50 characters' }]}
         />
         <ProFormText
           width="lg"
           name="avatarUrl"
-          label={t('fields.avatarUrl')}
-          placeholder={t('form.avatarUrlPlaceholder')}
-          rules={[{ type: 'url', message: t('validation.avatarUrlInvalid') }]}
+          label="Avatar URL"
+          placeholder="Please enter avatar URL"
+          rules={[{ type: 'url', message: 'Please enter a valid URL' }]}
         />
         <ProFormTextArea
           width="lg"
           name="bio"
-          label={t('fields.bio')}
-          placeholder={t('form.bioPlaceholder')}
+          label="Bio"
+          placeholder="Please enter your bio"
           fieldProps={{ rows: 4 }}
-          rules={[{ max: 200, message: t('validation.bioMax') }]}
+          rules={[{ max: 200, message: 'Bio must be at most 200 characters' }]}
         />
       </ProForm>
     </ProCard>

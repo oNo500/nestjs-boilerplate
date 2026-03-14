@@ -3,7 +3,6 @@ import { useMutation } from '@tanstack/react-query'
 import { Tabs, theme } from 'antd'
 import { Mail, KeyRound, Smartphone } from 'lucide-react'
 import { useState } from 'react'
-import { useTranslation } from 'react-i18next'
 import { Link, useNavigate } from 'react-router'
 
 import Logo from '@/components/layout/logo'
@@ -19,7 +18,6 @@ export function LoginForm() {
   const navigate = useNavigate()
   const authStore = useAuthStore()
   const { token } = theme.useToken()
-  const { t } = useTranslation('auth')
 
   const loginMutation = useMutation({
     mutationFn: async (credentials: LoginCredentials) => {
@@ -61,8 +59,8 @@ export function LoginForm() {
               maxWidth: '75vw',
             }}
             logo={<Logo style={{ fontSize: 48 }} />}
-            title={t('login.title')}
-            subTitle={t('login.subTitle')}
+            title="Admin Template"
+            subTitle="Enterprise Admin System"
             onFinish={async (values: LoginCredentials) => {
               await handleSubmit(values)
             }}
@@ -74,11 +72,11 @@ export function LoginForm() {
               items={[
                 {
                   key: 'account',
-                  label: t('login.accountTab'),
+                  label: 'Account Login',
                 },
                 {
                   key: 'phone',
-                  label: t('login.phoneTab'),
+                  label: 'Phone Login',
                 },
               ]}
             />
@@ -90,11 +88,11 @@ export function LoginForm() {
                   fieldProps={{
                     size: 'large',
                     prefix: <Mail size={16} />,
-                    placeholder: t('placeholder.email'),
+                    placeholder: 'admin@example.com / user@example.com',
                   }}
                   rules={[
-                    { required: true, message: t('validation.emailRequired') },
-                    { type: 'email', message: t('validation.emailInvalid') },
+                    { required: true, message: 'Please enter your email' },
+                    { type: 'email', message: 'Please enter a valid email address' },
                   ]}
                 />
 
@@ -103,11 +101,11 @@ export function LoginForm() {
                   fieldProps={{
                     size: 'large',
                     prefix: <KeyRound size={16} />,
-                    placeholder: t('placeholder.password'),
+                    placeholder: 'password: 12345678',
                   }}
                   rules={[
-                    { required: true, message: t('validation.passwordRequired') },
-                    { min: 8, message: t('validation.passwordMin') },
+                    { required: true, message: 'Please enter your password' },
+                    { min: 8, message: 'Password must be at least 8 characters' },
                   ]}
                 />
               </>
@@ -120,11 +118,11 @@ export function LoginForm() {
                   fieldProps={{
                     size: 'large',
                     prefix: <Smartphone size={16} />,
-                    placeholder: t('placeholder.phone'),
+                    placeholder: 'Please enter your phone number',
                   }}
                   rules={[
-                    { required: true, message: t('validation.phoneRequired') },
-                    { pattern: /^1\d{10}$/, message: t('validation.phonePattern') },
+                    { required: true, message: 'Please enter your phone number' },
+                    { pattern: /^1\d{10}$/, message: 'Invalid phone number format' },
                   ]}
                 />
 
@@ -133,18 +131,18 @@ export function LoginForm() {
                   fieldProps={{
                     size: 'large',
                     prefix: <KeyRound size={16} />,
-                    placeholder: t('placeholder.captcha'),
+                    placeholder: 'Please enter the captcha',
                   }}
                   captchaProps={{
                     size: 'large',
                   }}
                   captchaTextRender={(timing, count) => {
                     if (timing) {
-                      return t('captcha.resend', { count })
+                      return `Resend in ${count}s`
                     }
-                    return t('captcha.get')
+                    return 'Get Captcha'
                   }}
-                  rules={[{ required: true, message: t('validation.captchaRequired') }]}
+                  rules={[{ required: true, message: 'Please enter the captcha' }]}
                   onGetCaptcha={async (_phone) => {
                     // Mock send captcha, to be implemented
                   }}
@@ -153,13 +151,13 @@ export function LoginForm() {
             )}
 
             <div style={{ marginBottom: 24 }}>
-              <a style={{ float: 'right' }}>{t('login.forgotPassword')}</a>
+              <a style={{ float: 'right' }}>Forgot Password</a>
             </div>
           </ProLoginForm>
           <div style={{ textAlign: 'center', marginTop: '-10px' }}>
-            <span style={{ color: token.colorTextSecondary }}>{t('login.noAccount')}</span>
+            <span style={{ color: token.colorTextSecondary }}>Don&apos;t have an account?</span>
             <Link to="/register" style={{ marginLeft: 4 }}>
-              {t('login.registerNow')}
+              Register Now
             </Link>
           </div>
         </div>

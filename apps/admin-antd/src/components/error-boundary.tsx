@@ -3,7 +3,6 @@ import { AlertCircle } from 'lucide-react'
 import { Component } from 'react'
 
 import { env } from '@/config/env'
-import { i18next } from '@/config/i18n'
 import { logError } from '@/utils/log-error'
 
 import type { ReactNode } from 'react'
@@ -90,11 +89,11 @@ export class ErrorBoundary extends Component<ErrorBoundaryProperties, ErrorBound
           <Result
             icon={<AlertCircle size={72} color="var(--ant-color-error)" />}
             status="error"
-            title={i18next.t('common:error.pageErrorTitle')}
-            subTitle={env.isDevelopment ? this.state.error?.message : i18next.t('common:error.pageErrorDesc')}
+            title="Page Error"
+            subTitle={env.isDevelopment ? this.state.error?.message : 'Sorry, something went wrong on this page'}
             extra={(
               <Button type="primary" onClick={this.handleReset}>
-                {i18next.t('common:error.refresh')}
+                Refresh Page
               </Button>
             )}
           />

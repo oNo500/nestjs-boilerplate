@@ -1,7 +1,6 @@
 import { ProTable } from '@ant-design/pro-components'
 import { Select, Popconfirm, Tag, Space } from 'antd'
 import { useRef, useState } from 'react'
-import { useTranslation } from 'react-i18next'
 
 import { useAuthStore } from '@/features/auth'
 import { useAssignRole } from '@/features/roles/api/use-assign-role'
@@ -21,11 +20,9 @@ export function RolesTable() {
   const { user: currentUser } = useAuthStore()
   const assignRoleMutation = useAssignRole()
   const [pendingRole, setPendingRole] = useState<Record<string, string>>({})
-  const { t } = useTranslation('roles')
-  const { t: tCommon } = useTranslation('common')
 
-  const roleOptions = getRoleOptions(t)
-  const roleLabels = getRoleLabels(t)
+  const roleOptions = getRoleOptions()
+  const roleLabels = getRoleLabels()
 
   const handleAssignRole = (userId: string, role: string) => {
     void assignRoleMutation
@@ -52,24 +49,24 @@ export function RolesTable() {
 
   const columns: ProColumns<User>[] = [
     {
-      title: t('fields.id'),
+      title: 'ID',
       dataIndex: 'id',
       width: 80,
       search: false,
     },
     {
-      title: t('fields.name'),
+      title: 'Username',
       dataIndex: 'name',
       width: 150,
     },
     {
-      title: t('fields.email'),
+      title: 'Email',
       dataIndex: 'email',
       width: 200,
       search: false,
     },
     {
-      title: t('fields.currentRole'),
+      title: 'Current Role',
       dataIndex: 'role',
       width: 120,
       search: false,
@@ -79,7 +76,7 @@ export function RolesTable() {
       },
     },
     {
-      title: t('fields.roleAction'),
+      title: 'Role Action',
       valueType: 'option',
       width: 220,
       render: (_, record) => {
@@ -101,8 +98,8 @@ export function RolesTable() {
             />
             {selected !== currentRole && (
               <Popconfirm
-                title={t('actions.confirmTitle')}
-                description={t('actions.confirmDesc', { role: roleLabels[selected] ?? selected })}
+                title="Confirm Role Change"
+                description={`Change role to "${roleLabels[selected] ?? selected}"?`}
                 onConfirm={() => handleAssignRole(record.id, selected)}
                 onCancel={() => {
                   setPendingRole((prev) => {
@@ -111,11 +108,11 @@ export function RolesTable() {
                     return next
                   })
                 }}
-                okText={tCommon('actions.confirm')}
-                cancelText={tCommon('actions.cancel')}
+                okText="OK"
+                cancelText="Cancel"
               >
                 <Tag color="processing" style={{ cursor: 'pointer' }}>
-                  {t('actions.save')}
+                  Save
                 </Tag>
               </Popconfirm>
             )}

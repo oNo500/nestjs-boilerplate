@@ -4,8 +4,10 @@ import { ANALYTICS_REPOSITORY } from '@/modules/analytics/application/ports/anal
 import { AnalyticsService } from '@/modules/analytics/application/services/analytics.service'
 import { AnalyticsRepositoryImpl } from '@/modules/analytics/infrastructure/repositories/analytics.repository'
 import { AnalyticsController } from '@/modules/analytics/presentation/controllers/analytics.controller'
+import { CacheModule } from '@/modules/cache/cache.module'
 
 @Module({
+  imports: [CacheModule],
   controllers: [AnalyticsController],
   providers: [
     AnalyticsService,
