@@ -1,6 +1,5 @@
 import { ModalForm, ProFormSelect, ProFormSwitch, ProFormText, ProFormTextArea } from '@ant-design/pro-components'
 import { useRef } from 'react'
-import { useTranslation } from 'react-i18next'
 
 import type { Article, CreateArticleDto, UpdateArticleDto } from '@/features/scaffold/types'
 import type { ProFormInstance } from '@ant-design/pro-components'
@@ -15,11 +14,10 @@ interface ScaffoldFormProperties {
 
 export function ScaffoldForm({ trigger, mode, initialValues, categoryOptions, onFinish }: ScaffoldFormProperties) {
   const formRef = useRef<ProFormInstance>(null)
-  const { t } = useTranslation('scaffold')
 
   return (
     <ModalForm
-      title={mode === 'create' ? t('form.createTitle') : t('form.editTitle')}
+      title={mode === 'create' ? 'Create Article' : 'Edit Article'}
       trigger={trigger}
       formRef={formRef}
       autoFocusFirstInput
@@ -34,34 +32,34 @@ export function ScaffoldForm({ trigger, mode, initialValues, categoryOptions, on
     >
       <ProFormText
         name="title"
-        label={t('fields.title')}
-        placeholder={t('form.titlePlaceholder')}
+        label="Title"
+        placeholder="Enter article title"
         rules={[
-          { required: true, message: t('validation.titleRequired') },
-          { max: 100, message: t('validation.titleMax') },
+          { required: true, message: 'Please enter a title' },
+          { max: 100, message: 'Title must be at most 100 characters' },
         ]}
       />
       <ProFormTextArea
         name="content"
-        label={t('fields.content')}
-        placeholder={t('form.contentPlaceholder')}
-        rules={mode === 'create' ? [{ required: true, message: t('validation.contentRequired') }] : []}
+        label="Content"
+        placeholder="Enter article content"
+        rules={mode === 'create' ? [{ required: true, message: 'Please enter content' }] : []}
         fieldProps={{ rows: 6 }}
       />
       <ProFormText
         name="author"
-        label={t('fields.author')}
-        placeholder={t('form.authorPlaceholder')}
-        rules={[{ required: true, message: t('validation.authorRequired') }]}
+        label="Author"
+        placeholder="Enter author name"
+        rules={[{ required: true, message: 'Please enter author name' }]}
       />
       <ProFormSelect
         name="category"
-        label={t('fields.category')}
-        placeholder={t('form.categoryPlaceholder')}
+        label="Category"
+        placeholder="Select category"
         options={categoryOptions}
-        rules={[{ required: true, message: t('validation.categoryRequired') }]}
+        rules={[{ required: true, message: 'Please select a category' }]}
       />
-      <ProFormSwitch name="isPinned" label={t('fields.isPinned')} />
+      <ProFormSwitch name="isPinned" label="Pinned" />
     </ModalForm>
   )
 }

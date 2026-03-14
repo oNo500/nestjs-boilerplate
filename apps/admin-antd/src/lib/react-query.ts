@@ -1,7 +1,5 @@
 import { MutationCache, QueryClient } from '@tanstack/react-query'
 
-import { i18next } from '@/config/i18n'
-
 import { ApiClientError } from './api-error'
 import { notification } from './notification'
 
@@ -36,7 +34,7 @@ export const queryClient = new QueryClient({
 
         // System errors (5xx)
         if (error.status >= 500) {
-          notification.error(i18next.t('common:api.serverError'))
+          notification.error('Server error, please try again later')
           return
         }
 
@@ -46,7 +44,7 @@ export const queryClient = new QueryClient({
       }
 
       // Network errors or other unknown errors
-      notification.error(i18next.t('common:api.networkError'))
+      notification.error('Network error, please retry')
     },
   }),
   defaultOptions: queryConfig,

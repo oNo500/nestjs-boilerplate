@@ -1,7 +1,6 @@
 import { ProTable } from '@ant-design/pro-components'
 import { Tag, Typography } from 'antd'
 import { useRef } from 'react'
-import { useTranslation } from 'react-i18next'
 
 import { getLoginLogs } from '@/features/login-logs/api/use-login-logs'
 import { getStatusColor } from '@/features/login-logs/utils/status-color'
@@ -13,11 +12,10 @@ const { Text } = Typography
 
 export function LoginLogsTable() {
   const actionRef = useRef<ActionType>(null)
-  const { t } = useTranslation('login-logs')
 
   const columns: ProColumns<LoginLog>[] = [
     {
-      title: t('fields.createdAt'),
+      title: 'Time',
       dataIndex: 'createdAt',
       valueType: 'dateTime',
       width: 180,
@@ -26,33 +24,33 @@ export function LoginLogsTable() {
       defaultSortOrder: 'descend',
     },
     {
-      title: t('fields.email'),
+      title: 'Email',
       dataIndex: 'email',
       width: 220,
       render: (_, record) => <Text>{record.email}</Text>,
     },
     {
-      title: t('fields.status'),
+      title: 'Status',
       dataIndex: 'status',
       width: 100,
       valueType: 'select',
       valueEnum: {
-        success: { text: t('status.success') },
-        failed: { text: t('status.failed') },
+        success: { text: 'Success' },
+        failed: { text: 'Failed' },
       },
       render: (_, record) => (
-        <Tag color={getStatusColor(record.status)}>{t(`status.${record.status}`)}</Tag>
+        <Tag color={getStatusColor(record.status)}>{record.status === 'success' ? 'Success' : 'Failed'}</Tag>
       ),
     },
     {
-      title: t('fields.ipAddress'),
+      title: 'IP Address',
       dataIndex: 'ipAddress',
       width: 130,
       search: false,
       render: (_, record) => <Text>{record.ipAddress ?? '-'}</Text>,
     },
     {
-      title: t('fields.failReason'),
+      title: 'Fail Reason',
       dataIndex: 'failReason',
       width: 200,
       search: false,

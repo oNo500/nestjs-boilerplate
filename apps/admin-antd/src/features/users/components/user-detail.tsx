@@ -1,6 +1,5 @@
 import { ProDescriptions } from '@ant-design/pro-components'
 import { Button, Result, Skeleton, Tag } from 'antd'
-import { useTranslation } from 'react-i18next'
 
 import { useUser } from '@/features/users/api/use-user'
 
@@ -10,8 +9,6 @@ interface UserDetailProperties {
 
 export function UserDetail({ id }: UserDetailProperties) {
   const { data: user, isLoading, isError, refetch } = useUser(id)
-  const { t } = useTranslation('users')
-  const { t: tCommon } = useTranslation('common')
 
   if (isLoading) {
     return <Skeleton active paragraph={{ rows: 6 }} />
@@ -21,58 +18,58 @@ export function UserDetail({ id }: UserDetailProperties) {
     return (
       <Result
         status="error"
-        title={t('detail.loadFailed')}
-        subTitle={t('detail.loadFailedDesc')}
-        extra={<Button onClick={() => void refetch()}>{tCommon('actions.retry')}</Button>}
+        title="Load Failed"
+        subTitle="Failed to load user info, please try again later"
+        extra={<Button onClick={() => void refetch()}>Retry</Button>}
       />
     )
   }
 
   return (
     <ProDescriptions
-      title={t('detail.title')}
+      title="Basic Info"
       dataSource={user}
       columns={[
         {
-          title: t('fields.id'),
+          title: 'ID',
           dataIndex: 'id',
           valueType: 'text',
         },
         {
-          title: t('fields.name'),
+          title: 'Username',
           dataIndex: 'name',
           valueType: 'text',
         },
         {
-          title: t('fields.email'),
+          title: 'Email',
           dataIndex: 'email',
           valueType: 'text',
         },
         {
-          title: t('fields.role'),
+          title: 'Role',
           dataIndex: 'role',
           render: (_, record) => (
             <Tag color={record.role === 'admin' ? 'red' : 'default'}>
-              {record.role === 'admin' ? t('role.admin') : t('role.user')}
+              {record.role === 'admin' ? 'Administrator' : 'User'}
             </Tag>
           ),
         },
         {
-          title: t('fields.status'),
+          title: 'Status',
           dataIndex: 'banned',
           render: (_, record) => (
             <Tag color={record.banned ? 'error' : 'success'}>
-              {record.banned ? t('status.banned') : t('status.normal')}
+              {record.banned ? 'Banned' : 'Normal'}
             </Tag>
           ),
         },
         {
-          title: t('fields.createdAt'),
+          title: 'Created At',
           dataIndex: 'createdAt',
           valueType: 'dateTime',
         },
         {
-          title: t('fields.updatedAt'),
+          title: 'Updated At',
           dataIndex: 'updatedAt',
           valueType: 'dateTime',
         },

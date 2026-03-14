@@ -1,7 +1,6 @@
 import { ProTable } from '@ant-design/pro-components'
 import { Tag, Typography } from 'antd'
 import { useRef } from 'react'
-import { useTranslation } from 'react-i18next'
 
 import { getAuditLogs } from '@/features/audit-logs/api/use-audit-logs'
 import { getActionColor } from '@/features/audit-logs/utils/action-color'
@@ -13,11 +12,10 @@ const { Text } = Typography
 
 export function AuditLogsTable() {
   const actionRef = useRef<ActionType>(null)
-  const { t } = useTranslation('audit-logs')
 
   const columns: ProColumns<AuditLog>[] = [
     {
-      title: t('fields.createdAt'),
+      title: 'Time',
       dataIndex: 'createdAt',
       valueType: 'dateTime',
       width: 180,
@@ -26,14 +24,14 @@ export function AuditLogsTable() {
       defaultSortOrder: 'descend',
     },
     {
-      title: t('fields.actorEmail'),
+      title: 'Operator',
       dataIndex: 'actorEmail',
       width: 200,
       search: false,
       render: (_, record) => <Text>{record.actorEmail ?? '-'}</Text>,
     },
     {
-      title: t('fields.action'),
+      title: 'Action',
       dataIndex: 'action',
       width: 220,
       render: (_, record) => (
@@ -41,21 +39,21 @@ export function AuditLogsTable() {
       ),
     },
     {
-      title: t('fields.resourceType'),
+      title: 'Resource Type',
       dataIndex: 'resourceType',
       width: 120,
       search: false,
       render: (_, record) => <Text type="secondary">{record.resourceType ?? '-'}</Text>,
     },
     {
-      title: t('fields.resourceId'),
+      title: 'Resource ID',
       dataIndex: 'resourceId',
       width: 280,
       search: false,
       render: (_, record) => <Text type="secondary">{record.resourceId ?? '-'}</Text>,
     },
     {
-      title: t('fields.ipAddress'),
+      title: 'IP Address',
       dataIndex: 'ipAddress',
       width: 130,
       search: false,
@@ -94,9 +92,9 @@ export function AuditLogsTable() {
       expandable={{
         expandedRowRender: (record) => (
           <Typography.Paragraph>
-            <Text strong>{t('detail.label')}</Text>
+            <Text strong>Details:</Text>
             <pre style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-all' }}>
-              {record.detail ? JSON.stringify(record.detail, null, 2) : t('detail.empty')}
+              {record.detail ? JSON.stringify(record.detail, null, 2) : 'None'}
             </pre>
           </Typography.Paragraph>
         ),

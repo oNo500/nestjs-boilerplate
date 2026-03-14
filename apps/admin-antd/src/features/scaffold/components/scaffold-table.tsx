@@ -2,7 +2,6 @@ import { ProTable } from '@ant-design/pro-components'
 import { Button, Popconfirm, Space, Tag } from 'antd'
 import { Edit, Eye, Plus, Trash2 } from 'lucide-react'
 import { useRef } from 'react'
-import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 
 import { useCreateArticle, useDeleteArticle, useUpdateArticle } from '@/features/scaffold/api/use-articles'
@@ -39,28 +38,26 @@ async function fetchArticles(params: QueryParams): Promise<ArticleListResponse> 
 export function ScaffoldListTable() {
   const navigate = useNavigate()
   const actionRef = useRef<ActionType>(null)
-  const { t } = useTranslation('scaffold')
-  const { t: tCommon } = useTranslation('common')
 
-  const statusEnum = getArticleStatusEnum(t)
-  const categoryEnum = getArticleCategoryEnum(t)
+  const statusEnum = getArticleStatusEnum()
+  const categoryEnum = getArticleCategoryEnum()
 
   const columns: ProColumns<Article>[] = [
     {
-      title: t('fields.title'),
+      title: 'Title',
       dataIndex: 'title',
       width: 240,
       ellipsis: true,
     },
     {
-      title: t('fields.category'),
+      title: 'Category',
       dataIndex: 'category',
       width: 100,
       valueType: 'select',
       valueEnum: categoryEnum,
     },
     {
-      title: t('fields.status'),
+      title: 'Status',
       dataIndex: 'status',
       width: 100,
       valueType: 'select',
@@ -74,24 +71,24 @@ export function ScaffoldListTable() {
         return <Tag color={colorMap[record.status]}>{statusEnum[record.status]?.text}</Tag>
       },
     },
-    { title: t('fields.author'), dataIndex: 'author', width: 100, search: false },
-    { title: t('fields.viewCount'), dataIndex: 'viewCount', width: 80, search: false },
+    { title: 'Author', dataIndex: 'author', width: 100, search: false },
+    { title: 'Views', dataIndex: 'viewCount', width: 80, search: false },
     {
-      title: t('fields.isPinned'),
+      title: 'Pinned',
       dataIndex: 'isPinned',
       width: 70,
       search: false,
-      render: (_, record) => (record.isPinned ? <Tag color="blue">{t('fields.isPinned')}</Tag> : '-'),
+      render: (_, record) => (record.isPinned ? <Tag color="blue">Pinned</Tag> : '-'),
     },
     {
-      title: t('fields.publishedAt'),
+      title: 'Published At',
       dataIndex: 'publishedAt',
       width: 160,
       search: false,
       render: (_, record) => formatDate(record.publishedAt),
     },
     {
-      title: tCommon('actions.view'),
+      title: 'View',
       valueType: 'option',
       width: 80,
       render: (_, record) => (
@@ -101,7 +98,7 @@ export function ScaffoldListTable() {
           icon={<Eye size={14} />}
           onClick={() => void navigate(`/list/table/${record.id}`)}
         >
-          {tCommon('actions.view')}
+          View
         </Button>
       ),
     },
@@ -129,29 +126,27 @@ export function ScaffoldCrudTable() {
   const createArticle = useCreateArticle()
   const updateArticle = useUpdateArticle()
   const deleteArticle = useDeleteArticle()
-  const { t } = useTranslation('scaffold')
-  const { t: tCommon } = useTranslation('common')
 
-  const statusEnum = getArticleStatusEnum(t)
-  const categoryEnum = getArticleCategoryEnum(t)
-  const categoryOptions = getArticleCategoryOptions(t)
+  const statusEnum = getArticleStatusEnum()
+  const categoryEnum = getArticleCategoryEnum()
+  const categoryOptions = getArticleCategoryOptions()
 
   const columns: ProColumns<Article>[] = [
     {
-      title: t('fields.title'),
+      title: 'Title',
       dataIndex: 'title',
       width: 240,
       ellipsis: true,
     },
     {
-      title: t('fields.category'),
+      title: 'Category',
       dataIndex: 'category',
       width: 100,
       valueType: 'select',
       valueEnum: categoryEnum,
     },
     {
-      title: t('fields.status'),
+      title: 'Status',
       dataIndex: 'status',
       width: 100,
       valueType: 'select',
@@ -165,24 +160,24 @@ export function ScaffoldCrudTable() {
         return <Tag color={colorMap[record.status]}>{statusEnum[record.status]?.text}</Tag>
       },
     },
-    { title: t('fields.author'), dataIndex: 'author', width: 100, search: false },
-    { title: t('fields.viewCount'), dataIndex: 'viewCount', width: 80, search: false },
+    { title: 'Author', dataIndex: 'author', width: 100, search: false },
+    { title: 'Views', dataIndex: 'viewCount', width: 80, search: false },
     {
-      title: t('fields.isPinned'),
+      title: 'Pinned',
       dataIndex: 'isPinned',
       width: 70,
       search: false,
-      render: (_, record) => (record.isPinned ? <Tag color="blue">{t('fields.isPinned')}</Tag> : '-'),
+      render: (_, record) => (record.isPinned ? <Tag color="blue">Pinned</Tag> : '-'),
     },
     {
-      title: t('fields.publishedAt'),
+      title: 'Published At',
       dataIndex: 'publishedAt',
       width: 160,
       search: false,
       render: (_, record) => formatDate(record.publishedAt),
     },
     {
-      title: tCommon('actions.edit'),
+      title: 'Edit',
       valueType: 'option',
       width: 160,
       render: (_, record) => (
@@ -193,7 +188,7 @@ export function ScaffoldCrudTable() {
             categoryOptions={categoryOptions}
             trigger={(
               <Button type="link" size="small" icon={<Edit size={14} />}>
-                {tCommon('actions.edit')}
+                Edit
               </Button>
             )}
             onFinish={async (values) => {
@@ -203,17 +198,17 @@ export function ScaffoldCrudTable() {
             }}
           />
           <Popconfirm
-            title={t('actions.confirmDelete')}
-            description={t('actions.confirmDeleteDesc', { title: record.title })}
+            title="Confirm Delete"
+            description={`Are you sure you want to delete "${record.title}"?`}
             onConfirm={async () => {
               await deleteArticle.mutateAsync(record.id)
               void actionRef.current?.reload()
             }}
-            okText={tCommon('actions.confirm')}
-            cancelText={tCommon('actions.cancel')}
+            okText="OK"
+            cancelText="Cancel"
           >
             <Button type="link" size="small" danger icon={<Trash2 size={14} />}>
-              {tCommon('actions.delete')}
+              Delete
             </Button>
           </Popconfirm>
         </Space>
@@ -236,7 +231,7 @@ export function ScaffoldCrudTable() {
           categoryOptions={categoryOptions}
           trigger={(
             <Button type="primary" icon={<Plus size={16} />}>
-              {t('actions.createArticle')}
+              Create Article
             </Button>
           )}
           onFinish={async (values) => {

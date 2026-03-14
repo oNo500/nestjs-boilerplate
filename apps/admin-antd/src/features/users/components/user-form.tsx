@@ -1,6 +1,5 @@
 import { ModalForm, ProFormText, ProFormSelect } from '@ant-design/pro-components'
 import { useRef, useEffect } from 'react'
-import { useTranslation } from 'react-i18next'
 
 import { useCreateUser } from '@/features/users/api/use-create-user'
 import { useUpdateUser } from '@/features/users/api/use-update-user'
@@ -19,7 +18,6 @@ export function UserForm({ trigger, mode, initialValues, onSuccess }: UserFormPr
   const formRef = useRef<ProFormInstance>(null)
   const createMutation = useCreateUser()
   const updateMutation = useUpdateUser()
-  const { t } = useTranslation('users')
 
   useEffect(() => {
     if (mode === 'edit' && initialValues) {
@@ -68,7 +66,7 @@ export function UserForm({ trigger, mode, initialValues, onSuccess }: UserFormPr
 
   return (
     <ModalForm
-      title={mode === 'create' ? t('form.titleCreate') : t('form.titleEdit')}
+      title={mode === 'create' ? 'Create User' : 'Edit User'}
       trigger={trigger}
       formRef={formRef}
       autoFocusFirstInput
@@ -81,22 +79,22 @@ export function UserForm({ trigger, mode, initialValues, onSuccess }: UserFormPr
       <ProFormText
         width="md"
         name="name"
-        label={t('fields.name')}
-        placeholder={t('form.namePlaceholder')}
+        label="Username"
+        placeholder="Please enter username"
         rules={[
-          { min: 2, message: t('validation.nameMin') },
-          { max: 50, message: t('validation.nameMax') },
+          { min: 2, message: 'Username must be at least 2 characters' },
+          { max: 50, message: 'Username must be at most 50 characters' },
         ]}
       />
 
       <ProFormText
         width="md"
         name="email"
-        label={t('fields.email')}
-        placeholder={t('form.emailPlaceholder')}
+        label="Email"
+        placeholder="Please enter email"
         rules={[
-          { required: true, message: t('validation.emailRequired') },
-          { type: 'email', message: t('validation.emailInvalid') },
+          { required: true, message: 'Please enter email' },
+          { type: 'email', message: 'Please enter a valid email address' },
         ]}
       />
 
@@ -104,11 +102,11 @@ export function UserForm({ trigger, mode, initialValues, onSuccess }: UserFormPr
         <ProFormText.Password
           width="md"
           name="password"
-          label={t('fields.password')}
-          placeholder={t('form.passwordPlaceholder')}
+          label="Password"
+          placeholder="Please enter password"
           rules={[
-            { required: true, message: t('validation.passwordRequired') },
-            { min: 6, message: t('validation.passwordMin') },
+            { required: true, message: 'Please enter password' },
+            { min: 6, message: 'Password must be at least 6 characters' },
           ]}
         />
       )}
@@ -116,11 +114,11 @@ export function UserForm({ trigger, mode, initialValues, onSuccess }: UserFormPr
       <ProFormSelect
         width="md"
         name="role"
-        label={t('fields.role')}
-        placeholder={t('form.rolePlaceholder')}
+        label="Role"
+        placeholder="Please select role"
         options={[
-          { label: t('role.admin'), value: 'ADMIN' },
-          { label: t('role.user'), value: 'USER' },
+          { label: 'Administrator', value: 'ADMIN' },
+          { label: 'User', value: 'USER' },
         ]}
         rules={mode === 'create' ? undefined : [{ required: false }]}
       />
@@ -129,11 +127,11 @@ export function UserForm({ trigger, mode, initialValues, onSuccess }: UserFormPr
         <ProFormSelect
           width="md"
           name="banned"
-          label={t('fields.status')}
-          placeholder={t('form.statusPlaceholder')}
+          label="Status"
+          placeholder="Please select status"
           options={[
-            { label: t('status.normal'), value: false },
-            { label: t('status.banned'), value: true },
+            { label: 'Normal', value: false },
+            { label: 'Banned', value: true },
           ]}
         />
       )}

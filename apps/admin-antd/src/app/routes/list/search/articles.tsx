@@ -1,7 +1,6 @@
 import { PageContainer } from '@ant-design/pro-components'
 import { Avatar, Card, Input, List, Select, Space, Tag, Typography } from 'antd'
 import { FileText } from 'lucide-react'
-import { useTranslation } from 'react-i18next'
 
 import { useArticles } from '@/features/scaffold/api/use-articles'
 import { getArticleCategoryEnum, getArticleCategoryOptions } from '@/features/scaffold/utils/article-enums'
@@ -19,10 +18,9 @@ const CATEGORY_COLOR_MAP: Record<string, string> = {
 
 export function ListSearchArticlesPage() {
   const { data, isLoading } = useArticles({})
-  const { t } = useTranslation('scaffold')
 
-  const categoryEnum = getArticleCategoryEnum(t)
-  const categoryOptions = getArticleCategoryOptions(t)
+  const categoryEnum = getArticleCategoryEnum()
+  const categoryOptions = getArticleCategoryOptions()
 
   return (
     <PageContainer header={{ title: 'Search List (Articles)', breadcrumb: {} }}>
