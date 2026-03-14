@@ -11,6 +11,7 @@ import {
   UnprocessableEntityException,
 } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
+import { DrizzleQueryError } from 'drizzle-orm'
 import { DatabaseError } from 'pg'
 import { ClsService } from 'nestjs-cls'
 
@@ -107,12 +108,16 @@ export class AllExceptionsFilter implements ExceptionFilter {
     }
 
     // Map Postgres DatabaseError to an appropriate HttpException, then re-delegate
-    if (exception instanceof DatabaseError && this.problemDetailsFilter) {
-      const httpException = mapDatabaseError(exception)
-      this.logger.warn(
-        `[DB] code=${exception.code} table=${exception.table ?? 'unknown'} constraint=${exception.constraint ?? 'none'}`,
-      )
-      return this.problemDetailsFilter.catch(httpException, host)
+    if (exception instanceof DrizzleQueryError && this.problemDetailsFilter) {
+      const cause = exception.cause
+      if (cause instanceof DatabaseError) {
+        const httpException = mapDatabaseError(cause)
+        this.logger.warn(
+          `[DB] code=${cause.code} table=${cause.table ?? 'unknown'} constraint=${cause.constraint ?? 'none'}`,
+        )
+        return this.problemDetailsFilter.catch(httpException, host)
+      }
+      // cause is not a pg.DatabaseError (rare), fall through to 500 fallback
     }
 
     // Only handle non-HTTP exceptions (system errors)
