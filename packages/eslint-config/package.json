@@ -3,7 +3,7 @@
   "type": "module",
   "version": "0.1.0",
   "description": "A shared ESLint config for infra-x projects.",
-  "author": "oNo500",
+  "author": "infra-x",
   "license": "MIT",
   "exports": {
     ".": "./src/index.ts",
@@ -21,11 +21,11 @@
   "devDependencies": {
     "@infra-x/typescript-config": "0.1.6",
     "@types/eslint-plugin-jsx-a11y": "^6.10.1",
-    "@types/node": "^25.3.5",
-    "eslint": "^10.0.3",
+    "@types/node": "^25.0.3",
+    "eslint": "^9.39.2",
     "globals": "16.5.0",
     "jiti": "2.6.1",
-    "prettier": "^3.8.1",
+    "prettier": "^3.7.4",
     "typescript": "^5.9.3",
     "vitest": "^4.0.18"
   },
@@ -35,20 +35,21 @@
     "@eslint/core": "0.17.0",
     "@eslint/js": "^10.0.1",
     "@next/eslint-plugin-next": "^16.1.6",
-    "@stylistic/eslint-plugin": "^5.10.0",
+    "@stylistic/eslint-plugin": "^5.9.0",
     "@vitest/eslint-plugin": "^1.6.9",
+    "eslint-config-prettier": "^10.1.8",
     "eslint-import-resolver-typescript": "^4.4.4",
-    "eslint-plugin-better-tailwindcss": "^4.3.2",
+    "eslint-plugin-better-tailwindcss": "^4.3.1",
     "eslint-plugin-boundaries": "^5.4.0",
     "eslint-plugin-depend": "^1.5.0",
     "eslint-plugin-import-x": "4.16.1",
     "eslint-plugin-jsdoc": "^62.7.1",
     "eslint-plugin-jsx-a11y": "^6.10.2",
-    "eslint-plugin-package-json": "^0.89.4",
+    "eslint-plugin-package-json": "^0.89.2",
     "eslint-plugin-prettier": "^5.5.5",
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.5.2",
-    "eslint-plugin-storybook": "^10.2.16",
+    "eslint-plugin-storybook": "^10.2.14",
     "eslint-plugin-unicorn": "^63.0.0",
     "typescript-eslint": "^8.56.1"
   },
@@ -57,6 +58,7 @@
     "globals": "16.5.0",
     "jiti": "2.6.1",
     "prettier": "^3.7.4",
+    "storybook": ">=10.0.0",
     "typescript": "^5.9.3"
   },
   "peerDependenciesMeta": {
@@ -64,6 +66,9 @@
       "optional": true
     },
     "prettier": {
+      "optional": true
+    },
+    "storybook": {
       "optional": true
     },
     "typescript": {

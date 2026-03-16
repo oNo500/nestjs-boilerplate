@@ -12,8 +12,8 @@ import {
 } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { DrizzleQueryError } from 'drizzle-orm'
-import { DatabaseError } from 'pg'
 import { ClsService } from 'nestjs-cls'
+import { DatabaseError } from 'pg'
 
 import { ProblemDetailsFilter } from '@/app/filters/problem-details.filter'
 
@@ -33,47 +33,54 @@ import type { Request, Response } from 'express'
 function mapDatabaseError(error: DatabaseError): HttpException {
   switch (error.code) {
     // Class 23 — Integrity Constraint Violation
-    case '23505': // unique_violation
+    case '23505': { // unique_violation
       return new ConflictException({
         code: 'RESOURCE_CONFLICT',
         message: 'A resource with the same unique field already exists',
       })
-    case '23503': // foreign_key_violation
+    }
+    case '23503': { // foreign_key_violation
       return new UnprocessableEntityException({
         code: 'RESOURCE_CONFLICT',
         message: 'Referenced resource does not exist',
       })
-    case '23502': // not_null_violation
+    }
+    case '23502': { // not_null_violation
       return new UnprocessableEntityException({
         code: 'RESOURCE_CONFLICT',
         message: 'A required field is missing',
       })
-    case '23514': // check_violation
+    }
+    case '23514': { // check_violation
       return new UnprocessableEntityException({
         code: 'RESOURCE_CONFLICT',
         message: 'Data failed a database constraint check',
       })
+    }
     // Class 08 — Connection Exception
     case '08000':
     case '08003':
     case '08006':
     case '08001':
-    case '08004':
+    case '08004': {
       return new ServiceUnavailableException({
         code: 'INTERNAL_SERVER_ERROR',
         message: 'Database connection error',
       })
+    }
     // Class 57 — Operator Intervention (e.g. query_canceled, admin_shutdown)
-    case '57014': // query_canceled (e.g. statement_timeout)
+    case '57014': { // query_canceled (e.g. statement_timeout)
       return new ServiceUnavailableException({
         code: 'INTERNAL_SERVER_ERROR',
         message: 'Database query timed out',
       })
-    default:
+    }
+    default: {
       return new InternalServerErrorException({
         code: 'INTERNAL_SERVER_ERROR',
         message: 'An unexpected database error occurred',
       })
+    }
   }
 }
 
