@@ -1,14 +1,14 @@
 import { Inject, Injectable } from '@nestjs/common'
 
-import { ANALYTICS_REPOSITORY } from '@/modules/analytics/application/ports/analytics.repository.port'
+import { ANALYTICS_QUERY } from '@/modules/analytics/application/ports/analytics.query.port'
 import { CACHE_PORT } from '@/modules/cache/application/ports/cache.port'
 
 import type {
   AnalyticsSummary,
   ArticleCategoryStats,
-  IAnalyticsRepository,
+  IAnalyticsQuery,
   MonthlyOverview,
-} from '@/modules/analytics/application/ports/analytics.repository.port'
+} from '@/modules/analytics/application/ports/analytics.query.port'
 import type { CachePort } from '@/modules/cache/application/ports/cache.port'
 
 const CACHE_KEYS = {
@@ -26,8 +26,8 @@ const CACHE_TTL = {
 @Injectable()
 export class AnalyticsService {
   constructor(
-    @Inject(ANALYTICS_REPOSITORY)
-    private readonly analyticsRepository: IAnalyticsRepository,
+    @Inject(ANALYTICS_QUERY)
+    private readonly analyticsQuery: IAnalyticsQuery,
     @Inject(CACHE_PORT)
     private readonly cache: CachePort,
   ) {}
@@ -35,7 +35,7 @@ export class AnalyticsService {
   getSummary(): Promise<AnalyticsSummary> {
     return this.cache.wrap(
       CACHE_KEYS.SUMMARY,
-      () => this.analyticsRepository.getSummary(),
+      () => this.analyticsQuery.getSummary(),
       CACHE_TTL.SUMMARY,
     )
   }
@@ -43,7 +43,7 @@ export class AnalyticsService {
   getMonthlyOverview(): Promise<MonthlyOverview> {
     return this.cache.wrap(
       CACHE_KEYS.MONTHLY_OVERVIEW,
-      () => this.analyticsRepository.getMonthlyOverview(),
+      () => this.analyticsQuery.getMonthlyOverview(),
       CACHE_TTL.MONTHLY_OVERVIEW,
     )
   }
@@ -51,7 +51,7 @@ export class AnalyticsService {
   getArticleCategoryStats(): Promise<ArticleCategoryStats> {
     return this.cache.wrap(
       CACHE_KEYS.ARTICLE_CATEGORY_STATS,
-      () => this.analyticsRepository.getArticleCategoryStats(),
+      () => this.analyticsQuery.getArticleCategoryStats(),
       CACHE_TTL.ARTICLE_CATEGORY_STATS,
     )
   }
