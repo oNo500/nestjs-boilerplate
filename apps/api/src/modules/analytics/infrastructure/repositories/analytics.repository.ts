@@ -8,16 +8,16 @@ import type {
   AnalyticsSummary,
   ArticleCategoryStatItem,
   ArticleCategoryStats,
-  IAnalyticsRepository,
+  IAnalyticsQuery,
   MonthlyOverview,
   MonthlyOverviewItem,
-} from '@/modules/analytics/application/ports/analytics.repository.port'
+} from '@/modules/analytics/application/ports/analytics.query.port'
 import type { DrizzleDb } from '@/shared-kernel/infrastructure/db/db.port'
 
 const ARTICLE_CATEGORIES = ['tech', 'design', 'product', 'other'] as const
 
 @Injectable()
-export class AnalyticsRepositoryImpl implements IAnalyticsRepository {
+export class AnalyticsRepositoryImpl implements IAnalyticsQuery {
   constructor(
     @Inject(DB_TOKEN)
     private readonly db: DrizzleDb,

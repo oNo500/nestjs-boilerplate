@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common'
 
-import { ANALYTICS_REPOSITORY } from '@/modules/analytics/application/ports/analytics.repository.port'
+import { ANALYTICS_QUERY } from '@/modules/analytics/application/ports/analytics.query.port'
 import { AnalyticsService } from '@/modules/analytics/application/services/analytics.service'
 import { AnalyticsRepositoryImpl } from '@/modules/analytics/infrastructure/repositories/analytics.repository'
 import { AnalyticsController } from '@/modules/analytics/presentation/controllers/analytics.controller'
@@ -12,7 +12,7 @@ import { CacheModule } from '@/modules/cache/cache.module'
   providers: [
     AnalyticsService,
     {
-      provide: ANALYTICS_REPOSITORY,
+      provide: ANALYTICS_QUERY,
       useClass: AnalyticsRepositoryImpl,
     },
   ],

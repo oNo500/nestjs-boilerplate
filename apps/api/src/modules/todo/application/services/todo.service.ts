@@ -8,6 +8,17 @@ import type { CreateTodoDto } from '@/modules/todo/presentation/dtos/create-todo
 import type { UpdateTodoDto } from '@/modules/todo/presentation/dtos/update-todo.dto'
 import type { Todo } from '@workspace/database'
 
+/**
+ * TodoService — reference implementation for the simplest CRUD pattern.
+ *
+ * The service layer is intentionally kept here even for pass-through operations
+ * to maintain a consistent architectural style across all modules.
+ * In a real project, trivial resources like this could bypass the service layer
+ * and have the controller call the repository port directly.
+ *
+ * Non-trivial application logic (e.g. NotFoundException mapping) belongs here,
+ * not in the controller or repository.
+ */
 @Injectable()
 export class TodoService {
   constructor(

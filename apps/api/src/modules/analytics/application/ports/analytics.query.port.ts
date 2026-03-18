@@ -24,10 +24,11 @@ export interface ArticleCategoryStats {
   categories: ArticleCategoryStatItem[]
 }
 
-export interface IAnalyticsRepository {
+// Read-only query interface (no write operations — use IAnalyticsQuery, not IAnalyticsRepository)
+export interface IAnalyticsQuery {
   getSummary(): Promise<AnalyticsSummary>
   getMonthlyOverview(): Promise<MonthlyOverview>
   getArticleCategoryStats(): Promise<ArticleCategoryStats>
 }
 
-export const ANALYTICS_REPOSITORY = Symbol('ANALYTICS_REPOSITORY')
+export const ANALYTICS_QUERY = Symbol('ANALYTICS_QUERY')
