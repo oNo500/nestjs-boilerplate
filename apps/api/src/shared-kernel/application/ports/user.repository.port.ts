@@ -24,11 +24,13 @@ export interface CreateUserData {
   role?: string
 }
 
+/**
+ * Auth-scoped user repository: read + create only.
+ * Management operations (ban, delete) belong to UserManagementRepository.
+ */
 export interface UserRepository {
   create(data: CreateUserData): Promise<User>
   findById(id: string): Promise<User | null>
-  setBanned(id: string, banned: boolean, reason?: string, expires?: Date): Promise<boolean>
-  hardDelete(id: string): Promise<boolean>
   exists(id: string): Promise<boolean>
   existsAndActive(id: string): Promise<boolean>
 }

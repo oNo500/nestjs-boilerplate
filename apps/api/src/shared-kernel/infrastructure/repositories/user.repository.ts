@@ -59,28 +59,6 @@ export class UserRepositoryImpl implements UserRepository {
     return this.toEntity(result[0]!)
   }
 
-  async setBanned(id: string, banned: boolean, reason?: string, expires?: Date): Promise<boolean> {
-    const result = await this.db
-      .update(usersTable)
-      .set({
-        banned,
-        banReason: reason ?? null,
-        banExpires: expires ?? null,
-        updatedAt: new Date(),
-      })
-      .where(eq(usersTable.id, id))
-
-    return (result.rowCount ?? 0) > 0
-  }
-
-  async hardDelete(id: string): Promise<boolean> {
-    const result = await this.db
-      .delete(usersTable)
-      .where(eq(usersTable.id, id))
-
-    return (result.rowCount ?? 0) > 0
-  }
-
   async exists(id: string): Promise<boolean> {
     const result = await this.db
       .select({ id: usersTable.id })
