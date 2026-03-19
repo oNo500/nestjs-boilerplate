@@ -16,7 +16,7 @@ export default defineConfig({
   },
   server: {
     port: 8081,
-    open: true,
+    open: false,
   },
   build: {
     sourcemap: false,
