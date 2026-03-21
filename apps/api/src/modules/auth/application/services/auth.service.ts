@@ -9,27 +9,27 @@ import {
 import { ConfigService } from '@nestjs/config'
 import { JwtService } from '@nestjs/jwt'
 
+import { DomainEventPublisher } from '@/app/events/domain-event-publisher'
 import { AUTH_IDENTITY_REPOSITORY } from '@/modules/auth/application/ports/auth-identity.repository.port'
 import { AUTH_SESSION_REPOSITORY } from '@/modules/auth/application/ports/auth-session.repository.port'
 import { LOGIN_LOG_REPOSITORY } from '@/modules/auth/application/ports/login-log.repository.port'
 import { PASSWORD_HASHER } from '@/modules/auth/application/ports/password-hasher.port'
 import { USER_ROLE_REPOSITORY } from '@/modules/auth/application/ports/user-role.repository.port'
+import { USER_REPOSITORY } from '@/modules/auth/application/ports/user.repository.port'
 import { AuthIdentity } from '@/modules/auth/domain/aggregates/auth-identity.aggregate'
 import { AuthSession } from '@/modules/auth/domain/entities/auth-session.entity'
-import { USER_REPOSITORY } from '@/shared-kernel/application/ports/user.repository.port'
-import { AUDIT_LOGGER } from '@/shared-kernel/infrastructure/audit/audit-logger.port'
+import { UserLoggedInEvent } from '@/modules/auth/domain/events/user-logged-in.event'
 import { ErrorCode } from '@/shared-kernel/infrastructure/enums/error-code'
 
 import type { Env } from '@/app/config/env.schema'
 import type { AuthIdentityRepository } from '@/modules/auth/application/ports/auth-identity.repository.port'
 import type { AuthSessionRepository } from '@/modules/auth/application/ports/auth-session.repository.port'
+import type { JwtPayload } from '@/modules/auth/application/ports/jwt.port'
 import type { LoginLogRepository } from '@/modules/auth/application/ports/login-log.repository.port'
 import type { PasswordHasher } from '@/modules/auth/application/ports/password-hasher.port'
 import type { UserRoleRepository } from '@/modules/auth/application/ports/user-role.repository.port'
-import type { JwtPayload } from '@/modules/auth/infrastructure/strategies/jwt.strategy'
-import type { UserRepository } from '@/shared-kernel/application/ports/user.repository.port'
+import type { UserRepository } from '@/modules/auth/application/ports/user.repository.port'
 import type { RoleType } from '@/shared-kernel/domain/value-objects/role.vo'
-import type { AuditLogger } from '@/shared-kernel/infrastructure/audit/audit-logger.port'
 
 interface DeviceContext {
   ipAddress?: string
@@ -54,7 +54,7 @@ export class AuthService {
     private readonly userRepo: UserRepository,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService<Env, true>,
-    @Inject(AUDIT_LOGGER) private readonly auditLogger: AuditLogger,
+    private readonly eventPublisher: DomainEventPublisher,
     @Inject(LOGIN_LOG_REPOSITORY) private readonly loginLogRepo: LoginLogRepository,
   ) {}
 
@@ -100,12 +100,7 @@ export class AuthService {
     const role = await this.userRoleRepo.getRole(identity.userId)
     const result = await this.generateTokens(identity.userId, email, role, deviceContext)
 
-    // Login has no JWT, cannot be captured automatically by the interceptor; must be logged manually
-    void this.auditLogger.log({
-      action: 'auth.login',
-      actorId: identity.userId,
-      actorEmail: email,
-    })
+    void this.eventPublisher.publish(new UserLoggedInEvent(identity.userId, email))
 
     void this.loginLogRepo.create({
       userId: identity.userId,

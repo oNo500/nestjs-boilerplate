@@ -6,9 +6,9 @@ import { ArticleArchivedEvent } from '@/modules/article/domain/events/article-ar
 import { ArticleCreatedEvent } from '@/modules/article/domain/events/article-created.event'
 import { ArticlePublishedEvent } from '@/modules/article/domain/events/article-published.event'
 import { ArticleUpdatedEvent } from '@/modules/article/domain/events/article-updated.event'
-import { AUDIT_LOGGER } from '@/shared-kernel/infrastructure/audit/audit-logger.port'
+import { AUDIT_LOGGER } from '@/shared-kernel/application/ports/audit-logger.port'
 
-import type { AuditLogger } from '@/shared-kernel/infrastructure/audit/audit-logger.port'
+import type { AuditLogger } from '@/shared-kernel/application/ports/audit-logger.port'
 
 @Injectable()
 export class ArticleEventsListener {

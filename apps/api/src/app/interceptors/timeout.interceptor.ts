@@ -21,7 +21,7 @@ import type { Observable } from 'rxjs'
 export class TimeoutInterceptor implements NestInterceptor {
   private readonly timeoutMs: number
 
-  constructor(timeoutMs: number = 30_000) {
+  constructor(timeoutMs = 30_000) {
     this.timeoutMs = timeoutMs
   }
 

@@ -6,7 +6,7 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger'
 import { OAuthService } from '@/modules/auth/application/services/oauth.service'
 
 import type { Env } from '@/app/config/env.schema'
-import type { OAuthUserProfile } from '@/modules/auth/presentation/dtos/oauth-callback.dto'
+import type { OAuthUserProfile } from '@/modules/auth/application/ports/oauth.port'
 import type { Request, Response } from 'express'
 
 type OAuthRequest = Request & { user?: OAuthUserProfile }

@@ -1,6 +1,6 @@
-import { defineConfig } from 'vitest/config'
 import react from '@vitejs/plugin-react'
 import tsconfigPaths from 'vite-tsconfig-paths'
+import { defineConfig } from 'vitest/config'
 
 const sharedConfig = {
   plugins: [tsconfigPaths(), react()],
@@ -30,7 +30,7 @@ export default defineConfig({
           ...sharedTestConfig,
           name: 'e2e',
           include: ['__tests__/e2e/**/*.test.{ts,tsx}'],
-          testTimeout: 15000,
+          testTimeout: 15_000,
         },
       },
     ],

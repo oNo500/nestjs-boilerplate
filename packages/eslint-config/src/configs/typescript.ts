@@ -34,16 +34,8 @@ export function typescript(options: TypeScriptOptions = {}): Linter.Config[] {
       '@typescript-eslint/consistent-type-imports': 'error',
       '@typescript-eslint/no-unused-vars': 'off',
       '@typescript-eslint/no-deprecated': 'warn',
-      '@typescript-eslint/no-inferrable-types': 'off',
+      // '@typescript-eslint/no-inferrable-types': 'off', would cause redundant type annotations
       '@typescript-eslint/unbound-method': 'warn',
-      '@typescript-eslint/no-misused-promises': [
-        'error',
-        {
-          checksVoidReturn: {
-            attributes: false,
-          },
-        },
-      ],
 
       ...overrides,
     },

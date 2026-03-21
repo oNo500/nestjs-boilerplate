@@ -1,4 +1,4 @@
-import { composeConfig } from '@workspace/eslint-config'
+import { composeConfig } from '@infra-x/eslint-config'
 
 import type { Linter } from 'eslint'
 

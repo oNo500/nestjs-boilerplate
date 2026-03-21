@@ -2,11 +2,11 @@ import { Inject, Injectable } from '@nestjs/common'
 import { sessionsTable } from '@workspace/database'
 import { eq, lt } from 'drizzle-orm'
 
+import { DB_TOKEN } from '@/app/database/db.port'
 import { AuthSession } from '@/modules/auth/domain/entities/auth-session.entity'
-import { DB_TOKEN } from '@/shared-kernel/infrastructure/db/db.port'
 
+import type { DrizzleDb } from '@/app/database/db.port'
 import type { AuthSessionRepository } from '@/modules/auth/application/ports/auth-session.repository.port'
-import type { DrizzleDb } from '@/shared-kernel/infrastructure/db/db.port'
 
 /**
  * Drizzle AuthSession Repository implementation

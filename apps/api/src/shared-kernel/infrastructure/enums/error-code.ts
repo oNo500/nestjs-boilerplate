@@ -42,6 +42,9 @@ export const ErrorCode = {
   PRECONDITION_REQUIRED: 'PRECONDITION_REQUIRED',
   // Job
   JOB_NOT_FOUND: 'JOB_NOT_FOUND',
+  // Chat
+  CHAT_NOT_FOUND: 'CHAT_NOT_FOUND',
+  CHAT_FORBIDDEN: 'CHAT_FORBIDDEN',
 } as const
 
 export type ErrorCode = (typeof ErrorCode)[keyof typeof ErrorCode]

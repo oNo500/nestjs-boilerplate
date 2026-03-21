@@ -2,7 +2,6 @@ import { relations } from 'drizzle-orm'
 
 import {
   usersTable,
-  profilesTable,
   accountsTable,
   sessionsTable,
 } from './schemas'
@@ -10,34 +9,17 @@ import {
 /**
  * Users table relations
  */
-export const usersRelations = relations(usersTable, ({ one, many }) => ({
-  // 1:1 with profiles
-  profile: one(profilesTable, {
-    fields: [usersTable.id],
-    references: [profilesTable.userId],
-  }),
-  // 1:N with auth_accounts
+export const usersRelations = relations(usersTable, ({ many }) => ({
+  // 1:N with accounts
   accounts: many(accountsTable),
-  // 1:N with auth_sessions
+  // 1:N with sessions
   sessions: many(sessionsTable),
 }))
 
 /**
- * Profiles table relations
- */
-export const profilesRelations = relations(profilesTable, ({ one }) => ({
-  // N:1 with users
-  user: one(usersTable, {
-    fields: [profilesTable.userId],
-    references: [usersTable.id],
-  }),
-}))
-
-/**
- * Auth Accounts table relations
+ * Accounts table relations
  */
 export const accountsRelations = relations(accountsTable, ({ one }) => ({
-  // N:1 with users
   user: one(usersTable, {
     fields: [accountsTable.userId],
     references: [usersTable.id],
@@ -45,10 +27,9 @@ export const accountsRelations = relations(accountsTable, ({ one }) => ({
 }))
 
 /**
- * Auth Sessions table relations
+ * Sessions table relations
  */
 export const sessionsRelations = relations(sessionsTable, ({ one }) => ({
-  // N:1 with users
   user: one(usersTable, {
     fields: [sessionsTable.userId],
     references: [usersTable.id],

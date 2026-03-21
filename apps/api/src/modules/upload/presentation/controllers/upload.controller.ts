@@ -3,20 +3,17 @@ import {
   Post,
   UploadedFile,
   UploadedFiles,
-  UseGuards,
   UseInterceptors,
 } from '@nestjs/common'
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express'
 import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger'
 
-import { JwtAuthGuard } from '@/modules/auth/presentation/guards/jwt-auth.guard'
 import { UploadService } from '@/modules/upload/application/services/upload.service'
-import { multerConfig } from '@/modules/upload/constants/multer.config'
+import { multerConfig } from '@/modules/upload/infrastructure/multer.config'
 import { UploadResponseDto } from '@/modules/upload/presentation/dtos/upload-response.dto'
 
 @ApiTags('upload')
 @Controller('upload')
-@UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
 export class UploadController {
   constructor(private readonly uploadService: UploadService) {}
@@ -32,7 +29,7 @@ export class UploadController {
     },
   })
   uploadFile(@UploadedFile() file: Express.Multer.File): UploadResponseDto {
-    return this.uploadService.buildResponse(file)
+    return this.uploadService.buildResult(file)
   }
 
   @Post('files')
@@ -46,6 +43,6 @@ export class UploadController {
     },
   })
   uploadFiles(@UploadedFiles() files: Express.Multer.File[]): UploadResponseDto[] {
-    return files.map((file) => this.uploadService.buildResponse(file))
+    return files.map((file) => this.uploadService.buildResult(file))
   }
 }

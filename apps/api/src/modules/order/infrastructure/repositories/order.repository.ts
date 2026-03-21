@@ -2,15 +2,15 @@ import { Inject, Injectable, PreconditionFailedException } from '@nestjs/common'
 import { ordersTable } from '@workspace/database'
 import { eq, and } from 'drizzle-orm'
 
+import { DB_TOKEN } from '@/app/database/db.port'
 import { Order } from '@/modules/order/domain/aggregates/order.aggregate'
 import { OrderStatus } from '@/modules/order/domain/enums/order-status.enum'
 import { Money } from '@/modules/order/domain/value-objects/money.vo'
 import { OrderItem } from '@/modules/order/domain/value-objects/order-item.vo'
-import { DB_TOKEN } from '@/shared-kernel/infrastructure/db/db.port'
 import { ErrorCode } from '@/shared-kernel/infrastructure/enums/error-code'
 
+import type { DrizzleDb } from '@/app/database/db.port'
 import type { OrderRepository } from '@/modules/order/application/ports/order.repository.port'
-import type { DrizzleDb } from '@/shared-kernel/infrastructure/db/db.port'
 import type { OrderDatabase } from '@workspace/database'
 
 /**

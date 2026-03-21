@@ -2,12 +2,16 @@ export interface AuditLogData {
   action: string
   actorId?: string
   actorEmail?: string
+  actorName?: string
   resourceType?: string
   resourceId?: string
+  before?: Record<string, unknown>
+  after?: Record<string, unknown>
   detail?: Record<string, unknown>
   ipAddress?: string
   userAgent?: string
   requestId?: string
+  occurredAt?: Date
 }
 
 export interface AuditLogRecord {
@@ -15,12 +19,16 @@ export interface AuditLogRecord {
   action: string
   actorId: string | null
   actorEmail: string | null
+  actorName: string | null
   resourceType: string | null
   resourceId: string | null
+  before: unknown
+  after: unknown
   detail: unknown
   ipAddress: string | null
   userAgent: string | null
   requestId: string | null
+  occurredAt: Date | null
   createdAt: Date
 }
 

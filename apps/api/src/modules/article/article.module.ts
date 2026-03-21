@@ -4,8 +4,8 @@ import { ArticleEventsListener } from '@/modules/article/application/listeners/a
 import { ARTICLE_REPOSITORY } from '@/modules/article/application/ports/article.repository.port'
 import { SLUG_GENERATOR } from '@/modules/article/application/ports/slug-generator.port'
 import { ArticleService } from '@/modules/article/application/services/article.service'
+import { SlugGeneratorService } from '@/modules/article/infrastructure/adapters/slug-generator.service'
 import { ArticleRepositoryImpl } from '@/modules/article/infrastructure/repositories/article.repository'
-import { SlugGeneratorService } from '@/modules/article/infrastructure/services/slug-generator.service'
 import { ArticleController } from '@/modules/article/presentation/controllers/article.controller'
 
 /**

@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common'
 import { ConfigModule, ConfigService } from '@nestjs/config'
-import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core'
+import { APP_GUARD } from '@nestjs/core'
 import { EventEmitterModule } from '@nestjs/event-emitter'
 import { ScheduleModule } from '@nestjs/schedule'
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler'
@@ -8,10 +8,11 @@ import { ClsModule } from 'nestjs-cls'
 
 import { createClsConfig } from '@/app/config/cls.config'
 import { validateEnv } from '@/app/config/env.schema'
+import { DrizzleModule } from '@/app/database/db.module'
+import { DomainEventsModule } from '@/app/events/domain-events.module'
 import { AllExceptionsFilter } from '@/app/filters/all-exceptions.filter'
 import { ProblemDetailsFilter } from '@/app/filters/problem-details.filter'
 import { ThrottlerExceptionFilter } from '@/app/filters/throttler-exception.filter'
-import { HealthModule } from '@/app/health/health.module'
 import { CorrelationIdInterceptor } from '@/app/interceptors/correlation-id.interceptor'
 import { RequestContextInterceptor } from '@/app/interceptors/request-context.interceptor'
 import { TraceContextInterceptor } from '@/app/interceptors/trace-context.interceptor'
@@ -19,18 +20,17 @@ import { LoggerModule } from '@/app/logger/logger.module'
 import { ETagMiddleware } from '@/app/middleware/etag.middleware'
 import { AnalyticsModule } from '@/modules/analytics/analytics.module'
 import { ArticleModule } from '@/modules/article/article.module'
-import { AuditLogInterceptor } from '@/modules/audit-log/audit-log.interceptor'
 import { AuditLogModule } from '@/modules/audit-log/audit-log.module'
 import { AuthModule } from '@/modules/auth/auth.module'
+import { JwtAuthGuard } from '@/modules/auth/presentation/guards/jwt-auth.guard'
+import { RolesGuard } from '@/modules/auth/presentation/guards/roles.guard'
 import { CacheModule } from '@/modules/cache/cache.module'
+import { HealthModule } from '@/modules/health/health.module'
+import { IdentityModule } from '@/modules/identity/identity.module'
 import { OrderModule } from '@/modules/order/order.module'
-import { ProfileModule } from '@/modules/profile/profile.module'
 import { ScheduledTasksModule } from '@/modules/scheduled-tasks/scheduled-tasks.module'
 import { TodoModule } from '@/modules/todo/todo.module'
 import { UploadModule } from '@/modules/upload/upload.module'
-import { UserManagementModule } from '@/modules/user-management/user-management.module'
-import { DrizzleModule } from '@/shared-kernel/infrastructure/db/db.module'
-import { DomainEventsModule } from '@/shared-kernel/infrastructure/events/domain-events.module'
 
 import type { Env } from '@/app/config/env.schema'
 import type { NestModule, MiddlewareConsumer } from '@nestjs/common'
@@ -48,6 +48,7 @@ import type { NestModule, MiddlewareConsumer } from '@nestjs/common'
     // Config module: global environment variable management
     ConfigModule.forRoot({
       isGlobal: true, // make ConfigService available throughout the application
+      envFilePath: ['../../.env', '.env'], // root shared vars, then local overrides
       validate: validateEnv, // validate environment variables with Zod
       cache: true, // cache environment variables for improved performance
     }),
@@ -84,22 +85,20 @@ import type { NestModule, MiddlewareConsumer } from '@nestjs/common'
     AuditLogModule, // audit log module (global)
     // Business modules
     TodoModule, // Todo module (anemic model example)
-    ProfileModule, // Profile module (user profile management)
     CacheModule, // Cache module (thin application layer example)
     ArticleModule, // Article module (rich model DDD example)
     AuthModule, // Auth module (authentication + DDD example)
-    UserManagementModule, // User Management module (user management CRUD)
+    IdentityModule, // Identity module (user identity shared subdomain, @Global)
     OrderModule, // Order module (rich model DDD + 4 advanced HTTP features)
     ScheduledTasksModule, // Scheduled tasks (cron, interval, timeout examples)
     UploadModule, // File upload (Multer + local storage)
     AnalyticsModule, // Analytics dashboard data endpoints
   ],
   providers: [
-    // Global rate-limiting guard
-    {
-      provide: APP_GUARD,
-      useClass: ThrottlerGuard,
-    },
+    // Global guards (order matters: JWT first, then roles, then throttler)
+    { provide: APP_GUARD, useClass: JwtAuthGuard },
+    { provide: APP_GUARD, useClass: RolesGuard },
+    { provide: APP_GUARD, useClass: ThrottlerGuard },
     // Exception filters (require ClsService injection)
     AllExceptionsFilter,
     ProblemDetailsFilter,
@@ -108,11 +107,6 @@ import type { NestModule, MiddlewareConsumer } from '@nestjs/common'
     RequestContextInterceptor,
     CorrelationIdInterceptor,
     TraceContextInterceptor,
-    // Audit log interceptor (global, depends on AuditLogModule)
-    {
-      provide: APP_INTERCEPTOR,
-      useClass: AuditLogInterceptor,
-    },
   ],
 })
 export class AppModule implements NestModule {

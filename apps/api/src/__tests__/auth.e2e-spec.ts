@@ -1,10 +1,10 @@
-import { USER_MANAGEMENT_REPOSITORY } from '@/modules/user-management/application/ports/user.repository.port'
+import { IDENTITY_REPOSITORY } from '@/modules/identity/application/ports/user.repository.port'
 
 import { createTestApp } from './helpers/create-app'
 import { registerAndLogin } from './helpers/create-authenticated-request'
 import { createRequest } from './helpers/create-request'
 
-import type { UserManagementRepository } from '@/modules/user-management/application/ports/user.repository.port'
+import type { IdentityRepository } from '@/modules/identity/application/ports/user.repository.port'
 import type { INestApplication } from '@nestjs/common'
 
 // ============================================================
@@ -37,7 +37,7 @@ interface SessionsListResponse {
 describe('auth E2E Tests', () => {
   let app: INestApplication
   let prefix: string
-  let userRepo: UserManagementRepository
+  let userRepo: IdentityRepository
 
   // Track all registered user IDs for cleanup
   const createdUserIds: string[] = []
@@ -56,7 +56,7 @@ describe('auth E2E Tests', () => {
   beforeAll(async () => {
     app = await createTestApp()
     prefix = globalThis.e2ePrefix ?? `e2e-${Date.now()}`
-    userRepo = app.get<UserManagementRepository>(USER_MANAGEMENT_REPOSITORY)
+    userRepo = app.get<IdentityRepository>(IDENTITY_REPOSITORY)
   })
 
   afterAll(async () => {

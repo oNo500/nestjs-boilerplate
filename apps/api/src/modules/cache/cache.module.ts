@@ -1,10 +1,10 @@
 import KeyvRedis from '@keyv/redis'
 import { CacheModule as NestCacheModule } from '@nestjs/cache-manager'
-import { Module } from '@nestjs/common'
+import { Global, Module } from '@nestjs/common'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 
-import { CACHE_PORT } from '@/modules/cache/application/ports/cache.port'
-import { CacheService } from '@/modules/cache/application/services/cache.service'
+import { CacheService } from '@/modules/cache/infrastructure/adapters/cache.service'
+import { CACHE_PORT } from '@/shared-kernel/application/ports/cache.port'
 
 import type { Env } from '@/app/config/env.schema'
 
@@ -17,6 +17,7 @@ import type { Env } from '@/app/config/env.schema'
  * - the service layer acts only as a coordinator with no complex business logic
  * - uses port/adapter pattern for easy replacement of the cache implementation
  */
+@Global() // @global-approved: Redis 缓存，所有需要缓存的 context 都依赖
 @Module({
   imports: [
     // Configure cache-manager to use Redis (via the Keyv adapter)

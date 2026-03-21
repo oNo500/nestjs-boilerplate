@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common'
 
-import { CacheModule } from '@/modules/cache/cache.module'
 import { OrderEventsListener } from '@/modules/order/application/listeners/order-events.listener'
 import { ShipOrderHandler } from '@/modules/order/application/listeners/ship-order.handler'
 import { JOB_REPOSITORY } from '@/modules/order/application/ports/job.repository.port'
@@ -21,10 +20,7 @@ import { OrderController } from '@/modules/order/presentation/controllers/order.
  * - Bulk operations (207 Multi-Status)
  */
 @Module({
-  imports: [
-    // Import CacheModule to access CACHE_PORT (idempotency key storage)
-    CacheModule,
-  ],
+  imports: [],
   controllers: [OrderController, JobController],
   providers: [
     // Application Service

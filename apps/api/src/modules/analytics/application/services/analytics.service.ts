@@ -1,7 +1,8 @@
-import { Inject, Injectable } from '@nestjs/common'
+import { Inject, Injectable, Logger } from '@nestjs/common'
+import { Cron } from '@nestjs/schedule'
 
 import { ANALYTICS_QUERY } from '@/modules/analytics/application/ports/analytics.query.port'
-import { CACHE_PORT } from '@/modules/cache/application/ports/cache.port'
+import { CACHE_PORT } from '@/shared-kernel/application/ports/cache.port'
 
 import type {
   AnalyticsSummary,
@@ -9,7 +10,7 @@ import type {
   IAnalyticsQuery,
   MonthlyOverview,
 } from '@/modules/analytics/application/ports/analytics.query.port'
-import type { CachePort } from '@/modules/cache/application/ports/cache.port'
+import type { CachePort } from '@/shared-kernel/application/ports/cache.port'
 
 const CACHE_KEYS = {
   SUMMARY: 'analytics:summary',
@@ -25,6 +26,8 @@ const CACHE_TTL = {
 
 @Injectable()
 export class AnalyticsService {
+  private readonly logger = new Logger(AnalyticsService.name)
+
   constructor(
     @Inject(ANALYTICS_QUERY)
     private readonly analyticsQuery: IAnalyticsQuery,
@@ -54,5 +57,11 @@ export class AnalyticsService {
       () => this.analyticsQuery.getArticleCategoryStats(),
       CACHE_TTL.ARTICLE_CATEGORY_STATS,
     )
+  }
+
+  @Cron('0 2 * * *')
+  async invalidateCache(): Promise<void> {
+    await Promise.all(Object.values(CACHE_KEYS).map((key) => this.cache.del(key)))
+    this.logger.log('Analytics cache invalidated')
   }
 }

@@ -2,12 +2,12 @@ import { Inject, Injectable } from '@nestjs/common'
 import { accountsTable } from '@workspace/database'
 import { eq, and } from 'drizzle-orm'
 
+import { DB_TOKEN } from '@/app/database/db.port'
 import { AuthIdentity } from '@/modules/auth/domain/aggregates/auth-identity.aggregate'
-import { DB_TOKEN } from '@/shared-kernel/infrastructure/db/db.port'
 
+import type { DrizzleDb } from '@/app/database/db.port'
 import type { AuthIdentityRepository } from '@/modules/auth/application/ports/auth-identity.repository.port'
 import type { AuthProvider } from '@/modules/auth/domain/value-objects/auth-provider'
-import type { DrizzleDb } from '@/shared-kernel/infrastructure/db/db.port'
 
 /**
  * Drizzle AuthIdentity Repository implementation

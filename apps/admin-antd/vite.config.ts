@@ -22,11 +22,12 @@ export default defineConfig({
     sourcemap: false,
     rollupOptions: {
       output: {
-        manualChunks: {
-          'react-vendor': ['react', 'react-dom', 'react-router'],
-          'antd-vendor': ['antd', '@ant-design/pro-components'],
-          'query-vendor': ['@tanstack/react-query'],
-          'chart-vendor': ['recharts'],
+        manualChunks(id) {
+          if (id.includes('react') || id.includes('react-dom') || id.includes('react-router')) return 'react-vendor'
+          if (id.includes('antd') || id.includes('@ant-design')) return 'antd-vendor'
+          if (id.includes('@tanstack/react-query')) return 'query-vendor'
+          if (id.includes('recharts')) return 'chart-vendor'
+          return
         },
       },
     },

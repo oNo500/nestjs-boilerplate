@@ -11,17 +11,6 @@ export interface OptionsOverrides {
 }
 
 /**
- * Stylistic options
- */
-export interface OptionsStylistic {
-  /**
-   * Whether to enable stylistic rules
-   * @default true
-   */
-  stylistic?: boolean
-}
-
-/**
  * File matching options
  */
 export interface OptionsFiles {
@@ -49,6 +38,12 @@ export interface OptionsTailwind {
    * @default 'src/global.css'
    */
   entryPoint?: string
+  /**
+   * Font size of the `<html>` element in pixels.
+   * Used by `enforce-canonical-classes` to determine if arbitrary values can be replaced with predefined sizing scales.
+   * @default 16
+   */
+  rootFontSize?: number
 }
 
 // ============================================================================
@@ -98,13 +93,13 @@ export interface DependOptions extends OptionsOverrides {
 }
 
 export interface IgnoresOptions {
-  /** Custom ignore patterns; pass false to disable the built-in defaults */
-  ignores?: string[] | false
-  /** Path to .gitignore file, or a boolean to enable/disable auto-detection */
-  gitignore?: string | boolean
+  /** Additional ignore patterns to merge with DEFAULT_IGNORES; pass false to disable all global ignores */
+  ignores?: string | string[] | false
+  /** Whether to parse .gitignore and merge into global ignores @default true */
+  gitignore?: boolean
 }
 
-export interface ImportsOptions extends OptionsOverrides, OptionsStylistic {
+export interface ImportsOptions extends OptionsOverrides {
   /**
    * Whether to enable TypeScript support
    * Automatically injected as true by composeConfig when the global typescript option is enabled
@@ -117,7 +112,7 @@ export interface ImportsOptions extends OptionsOverrides, OptionsStylistic {
    */
   noRelativeParentImports?: boolean
   /**
-   * Root directory for tsconfig.json lookup; restricts resolver scope in monorepo to avoid cross-app path leakage
+   * Root directory for tsconfig.json lookup; restricts resolver scope in monorepo to avoid cross-app roaming
    * Automatically injected by composeConfig from the global typescript.tsconfigRootDir option
    */
   tsconfigRootDir?: string
@@ -140,8 +135,6 @@ export interface PackageJsonOptions extends OptionsOverrides {
   enforceForPrivate?: boolean
 }
 
-export type PrettierOptions = OptionsOverrides
-
 export interface ReactOptions extends OptionsFiles, OptionsOverrides {
   /**
    * Whether to enable react-refresh plugin (for Vite projects).
@@ -162,4 +155,13 @@ export type UnicornOptions = OptionsFiles & OptionsOverrides
 
 export type VitestOptions = OptionsFiles & OptionsOverrides & {
   isInEditor?: boolean
+}
+
+export interface OxlintOptions {
+  /**
+   * Path to oxlint config file for dynamic rule generation.
+   * When provided, uses `buildFromOxlintConfigFile()` instead of the `flat/recommended` preset.
+   * @example './.oxlintrc.json'
+   */
+  configFile?: string
 }

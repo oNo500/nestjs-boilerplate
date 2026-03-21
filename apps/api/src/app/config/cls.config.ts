@@ -1,6 +1,6 @@
 import { randomUUID } from 'node:crypto'
 
-import { parseTraceparent } from '@/shared-kernel/infrastructure/utils/trace-context.util'
+import { parseTraceparent } from '@/app/interceptors/trace-context.util'
 
 import type { Request } from 'express'
 import type { ClsModuleOptions, ClsService } from 'nestjs-cls'

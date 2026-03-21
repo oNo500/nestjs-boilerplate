@@ -2,10 +2,10 @@ import { Inject, Injectable } from '@nestjs/common'
 import { todosTable } from '@workspace/database'
 import { eq } from 'drizzle-orm'
 
-import { DB_TOKEN } from '@/shared-kernel/infrastructure/db/db.port'
+import { DB_TOKEN } from '@/app/database/db.port'
 
+import type { DrizzleDb } from '@/app/database/db.port'
 import type { TodoRepository } from '@/modules/todo/application/ports/todo.repository.port'
-import type { DrizzleDb } from '@/shared-kernel/infrastructure/db/db.port'
 import type { Todo, InsertTodo } from '@workspace/database'
 
 /**

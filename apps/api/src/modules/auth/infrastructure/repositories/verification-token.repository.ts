@@ -4,13 +4,13 @@ import { Inject, Injectable } from '@nestjs/common'
 import { verificationsTable } from '@workspace/database'
 import { eq, lt } from 'drizzle-orm'
 
-import { DB_TOKEN } from '@/shared-kernel/infrastructure/db/db.port'
+import { DB_TOKEN } from '@/app/database/db.port'
 
+import type { DrizzleDb } from '@/app/database/db.port'
 import type {
   VerificationToken,
   VerificationTokenRepository,
 } from '@/modules/auth/application/ports/verification-token.repository.port'
-import type { DrizzleDb } from '@/shared-kernel/infrastructure/db/db.port'
 
 /**
  * Drizzle VerificationToken Repository implementation

@@ -4,7 +4,6 @@ import type { Linter } from "eslint";
 const config: Linter.Config[] = composeConfig({
   stylistic: false,
   unicorn: false,
-  prettier: false,
   typescript: {
     overrides: {
       "@typescript-eslint/no-unsafe-assignment": "off",
