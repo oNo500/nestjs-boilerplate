@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, Post, Request, UseGuards } from '@nestjs/common'
+import { Body, Controller, Get, HttpCode, Post, Request } from '@nestjs/common'
 import { ApiTags, ApiOperation, ApiBearerAuth, ApiResponse } from '@nestjs/swagger'
 
 import { AuthService } from '@/modules/auth/application/services/auth.service'
@@ -9,7 +9,7 @@ import { RegisterDto, RegisterResponseDto } from '@/modules/auth/presentation/dt
 import { RevokeSessionDto, RevokeSessionResponseDto } from '@/modules/auth/presentation/dtos/revoke-session.dto'
 import { SessionResponseDto } from '@/modules/auth/presentation/dtos/session-response.dto'
 import { SessionsListResponseDto } from '@/modules/auth/presentation/dtos/sessions-list-response.dto'
-import { JwtAuthGuard } from '@/modules/auth/presentation/guards/jwt-auth.guard'
+import { Public } from '@/shared-kernel/infrastructure/decorators/public.decorator'
 
 @ApiTags('auth')
 @Controller('auth')
@@ -18,6 +18,7 @@ export class AuthController {
 
   @Post('register')
   @HttpCode(201)
+  @Public()
   @ApiOperation({ summary: 'Register a new user' })
   @ApiResponse({ status: 201, type: RegisterResponseDto })
   async register(@Body() dto: RegisterDto): Promise<RegisterResponseDto> {
@@ -26,6 +27,7 @@ export class AuthController {
 
   @Post('login')
   @HttpCode(200)
+  @Public()
   @ApiOperation({ summary: 'User login' })
   @ApiResponse({ status: 200, type: LoginResponseDto })
   async login(
@@ -46,6 +48,7 @@ export class AuthController {
    */
   @Post('refresh-token')
   @HttpCode(200)
+  @Public()
   @ApiOperation({
     summary: 'Refresh access token',
     description: 'Use a refresh token to obtain a new access token (the refresh token is rotated simultaneously)',
@@ -56,7 +59,7 @@ export class AuthController {
   }
 
   @Get('session')
-  @UseGuards(JwtAuthGuard)
+
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Get current session info' })
   @ApiResponse({ status: 200, type: SessionResponseDto })
@@ -68,7 +71,7 @@ export class AuthController {
   }
 
   @Get('sessions')
-  @UseGuards(JwtAuthGuard)
+
   @ApiBearerAuth()
   @ApiOperation({ summary: 'List active sessions' })
   @ApiResponse({ status: 200, type: SessionsListResponseDto })
@@ -80,7 +83,7 @@ export class AuthController {
 
   @Post('logout')
   @HttpCode(200)
-  @UseGuards(JwtAuthGuard)
+
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Logout (single device)' })
   @ApiResponse({ status: 200, type: LogoutResponseDto })
@@ -94,7 +97,7 @@ export class AuthController {
 
   @Post('revoke-session')
   @HttpCode(200)
-  @UseGuards(JwtAuthGuard)
+
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Revoke a specific session' })
   @ApiResponse({ status: 200, type: RevokeSessionResponseDto })
@@ -107,7 +110,7 @@ export class AuthController {
 
   @Post('revoke-sessions')
   @HttpCode(200)
-  @UseGuards(JwtAuthGuard)
+
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Revoke all sessions' })
   @ApiResponse({ status: 200, type: LogoutAllResponseDto })

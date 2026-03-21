@@ -4,7 +4,7 @@ import { PassportStrategy } from '@nestjs/passport'
 import { Strategy as PassportGithubStrategy } from 'passport-github2'
 
 import type { Env } from '@/app/config/env.schema'
-import type { OAuthUserProfile } from '@/modules/auth/presentation/dtos/oauth-callback.dto'
+import type { OAuthUserProfile } from '@/modules/auth/application/ports/oauth.port'
 import type { VerifyCallback } from 'passport-oauth2'
 
 @Injectable()

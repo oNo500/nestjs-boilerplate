@@ -11,7 +11,7 @@ import type { Linter } from 'eslint'
 const DEFAULT_PRESETS: DependOptions['presets'] = ['native', 'microutilities', 'preferred']
 
 export function depend(options: DependOptions = {}): Linter.Config[] {
-  const { presets = DEFAULT_PRESETS, modules = [], allowed = [], overrides = {} } = options
+  const { presets = DEFAULT_PRESETS, modules = [], allowed = ['dotenv'], overrides = {} } = options
 
   return [
     {

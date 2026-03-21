@@ -2,13 +2,13 @@ import { randomUUID } from 'node:crypto'
 
 import { Inject, Injectable, NotFoundException } from '@nestjs/common'
 
+import { DomainEventPublisher } from '@/app/events/domain-event-publisher'
 import { ARTICLE_REPOSITORY } from '@/modules/article/application/ports/article.repository.port'
 import { SLUG_GENERATOR } from '@/modules/article/application/ports/slug-generator.port'
 import { Article } from '@/modules/article/domain/aggregates/article.aggregate'
 import { Content } from '@/modules/article/domain/value-objects/content.vo'
 import { Title } from '@/modules/article/domain/value-objects/title.vo'
 import { ErrorCode } from '@/shared-kernel/infrastructure/enums/error-code'
-import { DomainEventPublisher } from '@/shared-kernel/infrastructure/events/domain-event-publisher'
 
 import type { ArticleCursorResult, ArticleRepository } from '@/modules/article/application/ports/article.repository.port'
 import type { SlugGenerator } from '@/modules/article/application/ports/slug-generator.port'

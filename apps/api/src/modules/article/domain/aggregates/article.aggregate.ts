@@ -65,8 +65,8 @@ export class Article extends BaseAggregateRoot {
     content: Content,
     slug: Slug,
     category: ArticleCategory = 'other',
-    author: string = '',
-    isPinned: boolean = false,
+    author = '',
+    isPinned = false,
   ): Article {
     const now = new Date()
 

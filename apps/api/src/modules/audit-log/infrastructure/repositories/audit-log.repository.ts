@@ -2,8 +2,9 @@ import { Inject, Injectable } from '@nestjs/common'
 import { auditLogsTable } from '@workspace/database'
 import { and, count, desc, eq } from 'drizzle-orm'
 
-import { DB_TOKEN } from '@/shared-kernel/infrastructure/db/db.port'
+import { DB_TOKEN } from '@/app/database/db.port'
 
+import type { DrizzleDb } from '@/app/database/db.port'
 import type {
   AuditLogData,
   AuditLogListQuery,
@@ -11,7 +12,6 @@ import type {
   AuditLogRecord,
   AuditLogRepository,
 } from '@/modules/audit-log/application/ports/audit-log.repository.port'
-import type { DrizzleDb } from '@/shared-kernel/infrastructure/db/db.port'
 
 @Injectable()
 export class AuditLogRepositoryImpl implements AuditLogRepository {
@@ -25,12 +25,16 @@ export class AuditLogRepositoryImpl implements AuditLogRepository {
       action: data.action,
       actorId: data.actorId ?? null,
       actorEmail: data.actorEmail ?? null,
+      actorName: data.actorName ?? null,
       resourceType: data.resourceType ?? null,
       resourceId: data.resourceId ?? null,
+      before: data.before ?? null,
+      after: data.after ?? null,
       detail: data.detail ?? null,
       ipAddress: data.ipAddress ?? null,
       userAgent: data.userAgent ?? null,
       requestId: data.requestId ?? null,
+      occurredAt: data.occurredAt ?? null,
     })
   }
 
@@ -66,12 +70,16 @@ export class AuditLogRepositoryImpl implements AuditLogRepository {
       action: row.action,
       actorId: row.actorId,
       actorEmail: row.actorEmail,
+      actorName: row.actorName,
       resourceType: row.resourceType,
       resourceId: row.resourceId,
+      before: row.before,
+      after: row.after,
       detail: row.detail,
       ipAddress: row.ipAddress,
       userAgent: row.userAgent,
       requestId: row.requestId,
+      occurredAt: row.occurredAt,
       createdAt: row.createdAt,
     }))
 

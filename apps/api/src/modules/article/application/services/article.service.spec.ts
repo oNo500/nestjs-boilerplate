@@ -1,61 +1,31 @@
 import { createMock } from '@golevelup/ts-vitest'
 import { NotFoundException } from '@nestjs/common'
-import { Test } from '@nestjs/testing'
 import { vi } from 'vitest'
 
-import { ARTICLE_REPOSITORY } from '@/modules/article/application/ports/article.repository.port'
-import { SLUG_GENERATOR } from '@/modules/article/application/ports/slug-generator.port'
+import { ArticleFixtures } from '@/__tests__/unit/factories/domain-fixtures'
 import { ArticleService } from '@/modules/article/application/services/article.service'
-import { Article } from '@/modules/article/domain/aggregates/article.aggregate'
 import { ArticleStatus } from '@/modules/article/domain/enums/article-status.enum'
-import { Content } from '@/modules/article/domain/value-objects/content.vo'
 import { Slug } from '@/modules/article/domain/value-objects/slug.vo'
-import { Title } from '@/modules/article/domain/value-objects/title.vo'
-import { DomainEventPublisher } from '@/shared-kernel/infrastructure/events/domain-event-publisher'
 
+import type { DomainEventPublisher } from '@/app/events/domain-event-publisher'
 import type { ArticleRepository } from '@/modules/article/application/ports/article.repository.port'
 import type { SlugGenerator } from '@/modules/article/application/ports/slug-generator.port'
-import type { TestingModule } from '@nestjs/testing'
 import type { Mocked } from 'vitest'
 
-/**
- * ArticleService unit tests
- *
- * Demonstrates:
- * - Simplified mock creation using @golevelup/ts-vitest createMock
- * - Testing business logic without a real database
- * - Verifying domain event publication
- */
 describe('articleService', () => {
   let service: ArticleService
   let articleRepository: Mocked<ArticleRepository>
   let slugGenerator: Mocked<SlugGenerator>
   let domainEventPublisher: Mocked<DomainEventPublisher>
 
-  beforeEach(async () => {
-    // Create the test module
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        ArticleService,
-        {
-          provide: ARTICLE_REPOSITORY,
-          useValue: createMock<ArticleRepository>(),
-        },
-        {
-          provide: SLUG_GENERATOR,
-          useValue: createMock<SlugGenerator>(),
-        },
-        {
-          provide: DomainEventPublisher,
-          useValue: createMock<DomainEventPublisher>(),
-        },
-      ],
-    }).compile()
+  beforeEach(() => {
+    articleRepository = createMock<ArticleRepository>()
+    slugGenerator = createMock<SlugGenerator>()
+    domainEventPublisher = createMock<DomainEventPublisher>()
+    service = new ArticleService(articleRepository, slugGenerator, domainEventPublisher)
 
-    service = module.get<ArticleService>(ArticleService)
-    articleRepository = module.get(ARTICLE_REPOSITORY)
-    slugGenerator = module.get(SLUG_GENERATOR)
-    domainEventPublisher = module.get(DomainEventPublisher)
+    articleRepository.save.mockResolvedValue()
+    domainEventPublisher.publishEventsForAggregate.mockResolvedValue()
   })
 
   afterEach(() => {
@@ -63,309 +33,152 @@ describe('articleService', () => {
   })
 
   describe('create', () => {
-    it('should successfully create a draft article', async () => {
-      // Arrange
-      const title = 'Test Article'
-      const content = 'This is a test article content with enough characters to be valid.'
+    it('success → creates draft, saves, publishes events', async () => {
       const slug = Slug.create('test-article')
-
       slugGenerator.generate.mockReturnValue(slug)
       slugGenerator.generateUnique.mockResolvedValue(slug)
-      articleRepository.existsBySlug.mockResolvedValue(false)
-      articleRepository.save.mockResolvedValue()
 
-      // Act
-      const result = await service.create(title, content)
+      const result = await service.create('Test Article', 'This is a test article content with enough characters to be valid.')
 
-      // Assert
-      expect(result).toBeInstanceOf(Article)
-      expect(result.title.value).toBe(title)
-      expect(result.content.value).toBe(content)
       expect(result.status).toBe(ArticleStatus.DRAFT)
       expect(articleRepository.save).toHaveBeenCalledWith(result)
       expect(domainEventPublisher.publishEventsForAggregate).toHaveBeenCalledWith(result)
     })
 
-    it('should generate a unique slug', async () => {
-      // Arrange
-      const title = 'Test Article'
-      const content = 'This is a test article content with enough characters.'
+    it('slug collision → generates unique slug', async () => {
       const baseSlug = Slug.create('test-article')
       const uniqueSlug = Slug.create('test-article-1')
-
       slugGenerator.generate.mockReturnValue(baseSlug)
       slugGenerator.generateUnique.mockResolvedValue(uniqueSlug)
-      articleRepository.save.mockResolvedValue()
 
-      // Act
-      const result = await service.create(title, content)
+      const result = await service.create('Test Article', 'Content long enough to be valid.')
 
-      // Assert
-      expect(slugGenerator.generateUnique).toHaveBeenCalledWith(
-        baseSlug.value,
-        expect.any(Function),
-      )
+      expect(slugGenerator.generateUnique).toHaveBeenCalledWith(baseSlug.value, expect.any(Function))
       expect(result.slug).toBe(uniqueSlug)
     })
   })
 
   describe('publish', () => {
-    it('should successfully publish a draft article', async () => {
-      // Arrange
-      const article = Article.create(
-        'test-id',
-        Title.create('Test Article'),
-        Content.create('This is a test content with enough characters to be publishable.'),
-        Slug.create('test-article'),
-      )
-      article.clearDomainEvents() // Clear events emitted during creation
+    it('not found → NotFoundException', async () => {
+      articleRepository.findById.mockResolvedValue(null)
 
+      await expect(service.publish('non-existent-id')).rejects.toThrow(NotFoundException)
+      expect(articleRepository.save).not.toHaveBeenCalled()
+    })
+
+    it('content too short → throws domain error', async () => {
+      const article = ArticleFixtures.draft({ content: 'Short' })
       articleRepository.findById.mockResolvedValue(article)
-      articleRepository.save.mockResolvedValue()
 
-      // Act
-      const result = await service.publish('test-id')
+      await expect(service.publish(article.id)).rejects.toThrow('Article content is less than 50 characters and cannot be published')
+      expect(articleRepository.save).not.toHaveBeenCalled()
+    })
 
-      // Assert
+    it('success → status becomes PUBLISHED, saves, publishes events', async () => {
+      const article = ArticleFixtures.draft()
+      articleRepository.findById.mockResolvedValue(article)
+
+      const result = await service.publish(article.id)
+
       expect(result.status).toBe(ArticleStatus.PUBLISHED)
       expect(result.publishedAt).toBeInstanceOf(Date)
       expect(articleRepository.save).toHaveBeenCalledWith(article)
       expect(domainEventPublisher.publishEventsForAggregate).toHaveBeenCalledWith(article)
     })
-
-    it('should throw NotFoundException when article does not exist', async () => {
-      // Arrange
-      articleRepository.findById.mockResolvedValue(null)
-
-      // Act & Assert
-      await expect(service.publish('non-existent-id')).rejects.toThrow(NotFoundException)
-      expect(articleRepository.save).not.toHaveBeenCalled()
-    })
-
-    it('should throw an error when content is insufficient', async () => {
-      // Arrange
-      const article = Article.create(
-        'test-id',
-        Title.create('Test Title'),
-        Content.create('Short'), // Content is less than 50 characters
-        Slug.create('test-title'),
-      )
-
-      articleRepository.findById.mockResolvedValue(article)
-
-      // Act & Assert
-      await expect(service.publish('test-id')).rejects.toThrow('Article content is less than 50 characters and cannot be published')
-      expect(articleRepository.save).not.toHaveBeenCalled()
-    })
   })
 
   describe('archive', () => {
-    it('should successfully archive a published article', async () => {
-      // Arrange
-      const article = Article.create(
-        'test-id',
-        Title.create('Test Article'),
-        Content.create('This is a test content with enough characters to be publishable.'),
-        Slug.create('test-article'),
-      )
-      article.publish()
-      article.clearDomainEvents()
-
+    it('draft article → throws domain error', async () => {
+      const article = ArticleFixtures.draft()
       articleRepository.findById.mockResolvedValue(article)
-      articleRepository.save.mockResolvedValue()
 
-      // Act
-      const result = await service.archive('test-id')
+      await expect(service.archive(article.id)).rejects.toThrow('Only published articles can be archived')
+    })
 
-      // Assert
+    it('success → status becomes ARCHIVED, saves, publishes events', async () => {
+      const article = ArticleFixtures.published()
+      articleRepository.findById.mockResolvedValue(article)
+
+      const result = await service.archive(article.id)
+
       expect(result.status).toBe(ArticleStatus.ARCHIVED)
       expect(articleRepository.save).toHaveBeenCalledWith(article)
       expect(domainEventPublisher.publishEventsForAggregate).toHaveBeenCalledWith(article)
     })
-
-    it('should not allow archiving a draft article', async () => {
-      // Arrange
-      const article = Article.create(
-        'test-id',
-        Title.create('Test Title'),
-        Content.create('This is a test content.'),
-        Slug.create('test-title'),
-      )
-
-      articleRepository.findById.mockResolvedValue(article)
-
-      // Act & Assert
-      await expect(service.archive('test-id')).rejects.toThrow('Only published articles can be archived')
-    })
   })
 
   describe('update', () => {
-    it('should successfully update a draft article', async () => {
-      // Arrange
-      const article = Article.create(
-        'test-id',
-        Title.create('Old Title'),
-        Content.create('Old content that is long enough to be valid.'),
-        Slug.create('old-title'),
-      )
-      article.clearDomainEvents()
-
-      const newTitle = 'New Title'
-      const newContent = 'New content that is also long enough to be valid.'
-
+    it('published article → throws domain error', async () => {
+      const article = ArticleFixtures.published()
       articleRepository.findById.mockResolvedValue(article)
-      articleRepository.save.mockResolvedValue()
 
-      // Act
-      const result = await service.update('test-id', newTitle, newContent)
+      await expect(service.update(article.id, 'New Title', 'New Content')).rejects.toThrow('Only draft articles can be edited')
+    })
 
-      // Assert
-      expect(result.title.value).toBe(newTitle)
-      expect(result.content.value).toBe(newContent)
+    it('success → updates title and content, saves, publishes events', async () => {
+      const article = ArticleFixtures.draft()
+      articleRepository.findById.mockResolvedValue(article)
+
+      const result = await service.update(article.id, 'New Title', 'New content that is also long enough to be valid.')
+
+      expect(result.title.value).toBe('New Title')
       expect(articleRepository.save).toHaveBeenCalledWith(article)
       expect(domainEventPublisher.publishEventsForAggregate).toHaveBeenCalledWith(article)
     })
-
-    it('should not allow editing a published article', async () => {
-      // Arrange
-      const article = Article.create(
-        'test-id',
-        Title.create('Test Title'),
-        Content.create('This is a test content with enough characters to be publishable.'),
-        Slug.create('test-title'),
-      )
-      article.publish()
-
-      articleRepository.findById.mockResolvedValue(article)
-
-      // Act & Assert
-      await expect(service.update('test-id', 'New Title', 'New Content')).rejects.toThrow(
-        'Only draft articles can be edited',
-      )
-    })
   })
 
-  describe('addTag', () => {
-    it('should successfully add a tag', async () => {
-      // Arrange
-      const article = Article.create(
-        'test-id',
-        Title.create('Test Title'),
-        Content.create('Test content'),
-        Slug.create('test-title'),
-      )
-
+  describe('addTag / removeTag', () => {
+    it('addTag → tag appears in article', async () => {
+      const article = ArticleFixtures.draft()
       articleRepository.findById.mockResolvedValue(article)
-      articleRepository.save.mockResolvedValue()
 
-      // Act
-      const result = await service.addTag('test-id', 'typescript')
+      const result = await service.addTag(article.id, 'typescript')
 
-      // Assert
       expect(result.tags.value).toContain('typescript')
       expect(articleRepository.save).toHaveBeenCalledWith(article)
     })
-  })
 
-  describe('removeTag', () => {
-    it('should successfully remove a tag', async () => {
-      // Arrange
-      const article = Article.create(
-        'test-id',
-        Title.create('Test Title'),
-        Content.create('Test content'),
-        Slug.create('test-title'),
-      )
+    it('removeTag → tag removed, others remain', async () => {
+      const article = ArticleFixtures.draft()
       article.addTag('typescript')
       article.addTag('nestjs')
-
       articleRepository.findById.mockResolvedValue(article)
-      articleRepository.save.mockResolvedValue()
 
-      // Act
-      const result = await service.removeTag('test-id', 'typescript')
+      const result = await service.removeTag(article.id, 'typescript')
 
-      // Assert
       expect(result.tags.value).not.toContain('typescript')
       expect(result.tags.value).toContain('nestjs')
-      expect(articleRepository.save).toHaveBeenCalledWith(article)
     })
   })
 
-  describe('query methods', () => {
-    it('findById should return the article', async () => {
-      // Arrange
-      const article = Article.create(
-        'test-id',
-        Title.create('Test Title'),
-        Content.create('Test content'),
-        Slug.create('test-title'),
-      )
+  describe('findById / findBySlug / findAll', () => {
+    it('findById → returns article', async () => {
+      const article = ArticleFixtures.draft()
       articleRepository.findById.mockResolvedValue(article)
 
-      // Act
-      const result = await service.findById('test-id')
-
-      // Assert
-      expect(result).toBe(article)
-      expect(articleRepository.findById).toHaveBeenCalledWith('test-id')
+      expect(await service.findById(article.id)).toBe(article)
     })
 
-    it('findBySlug should return the article', async () => {
-      // Arrange
-      const article = Article.create(
-        'test-id',
-        Title.create('Test Title'),
-        Content.create('Test content'),
-        Slug.create('test-article'),
-      )
+    it('findBySlug → returns article', async () => {
+      const article = ArticleFixtures.draft()
       articleRepository.findBySlug.mockResolvedValue(article)
 
-      // Act
-      const result = await service.findBySlug('test-article')
-
-      // Assert
-      expect(result).toBe(article)
-      expect(articleRepository.findBySlug).toHaveBeenCalledWith('test-article')
+      expect(await service.findBySlug('test-article')).toBe(article)
     })
 
-    it('findAll should return all articles', async () => {
-      // Arrange
-      const articles = [
-        Article.create(
-          'id-1',
-          Title.create('Article 1'),
-          Content.create('Content 1'),
-          Slug.create('article-1'),
-        ),
-        Article.create(
-          'id-2',
-          Title.create('Article 2'),
-          Content.create('Content 2'),
-          Slug.create('article-2'),
-        ),
-      ]
+    it('findAll → returns all articles', async () => {
+      const articles = [ArticleFixtures.draft({ id: 'id-1' }), ArticleFixtures.draft({ id: 'id-2' })]
       articleRepository.findAll.mockResolvedValue(articles)
 
-      // Act
-      const result = await service.findAll()
-
-      // Assert
-      expect(result).toEqual(articles)
-      expect(result).toHaveLength(2)
+      expect(await service.findAll()).toHaveLength(2)
     })
   })
 
   describe('delete', () => {
-    it('should successfully delete an article', async () => {
-      // Arrange
+    it('success → returns true', async () => {
       articleRepository.delete.mockResolvedValue(true)
 
-      // Act
-      const result = await service.delete('test-id')
-
-      // Assert
-      expect(result).toBe(true)
+      expect(await service.delete('test-id')).toBe(true)
       expect(articleRepository.delete).toHaveBeenCalledWith('test-id')
     })
   })

@@ -4,23 +4,24 @@ import { Inject, Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { JwtService } from '@nestjs/jwt'
 
+import { DomainEventPublisher } from '@/app/events/domain-event-publisher'
 import { AUTH_IDENTITY_REPOSITORY } from '@/modules/auth/application/ports/auth-identity.repository.port'
 import { AUTH_SESSION_REPOSITORY } from '@/modules/auth/application/ports/auth-session.repository.port'
 import { USER_ROLE_REPOSITORY } from '@/modules/auth/application/ports/user-role.repository.port'
+import { USER_REPOSITORY } from '@/modules/auth/application/ports/user.repository.port'
 import { AuthIdentity } from '@/modules/auth/domain/aggregates/auth-identity.aggregate'
 import { AuthSession } from '@/modules/auth/domain/entities/auth-session.entity'
-import { USER_REPOSITORY } from '@/shared-kernel/application/ports/user.repository.port'
-import { AUDIT_LOGGER } from '@/shared-kernel/infrastructure/audit/audit-logger.port'
+import { UserLoggedInViaOAuthEvent } from '@/modules/auth/domain/events/user-logged-in-via-oauth.event'
+import { UserRegisteredViaOAuthEvent } from '@/modules/auth/domain/events/user-registered-via-oauth.event'
 
 import type { Env } from '@/app/config/env.schema'
 import type { AuthIdentityRepository } from '@/modules/auth/application/ports/auth-identity.repository.port'
 import type { AuthSessionRepository } from '@/modules/auth/application/ports/auth-session.repository.port'
+import type { JwtPayload } from '@/modules/auth/application/ports/jwt.port'
+import type { OAuthUserProfile } from '@/modules/auth/application/ports/oauth.port'
 import type { UserRoleRepository } from '@/modules/auth/application/ports/user-role.repository.port'
-import type { JwtPayload } from '@/modules/auth/infrastructure/strategies/jwt.strategy'
-import type { OAuthUserProfile } from '@/modules/auth/presentation/dtos/oauth-callback.dto'
-import type { UserRepository } from '@/shared-kernel/application/ports/user.repository.port'
+import type { UserRepository } from '@/modules/auth/application/ports/user.repository.port'
 import type { RoleType } from '@/shared-kernel/domain/value-objects/role.vo'
-import type { AuditLogger } from '@/shared-kernel/infrastructure/audit/audit-logger.port'
 
 @Injectable()
 export class OAuthService {
@@ -35,7 +36,7 @@ export class OAuthService {
     private readonly userRepo: UserRepository,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService<Env, true>,
-    @Inject(AUDIT_LOGGER) private readonly auditLogger: AuditLogger,
+    private readonly eventPublisher: DomainEventPublisher,
   ) {}
 
   /**
@@ -62,12 +63,9 @@ export class OAuthService {
     if (existingOAuthIdentity) {
       const role = await this.userRoleRepo.getRole(existingOAuthIdentity.userId)
       const tokens = await this.generateTokens(existingOAuthIdentity.userId, profile.email, role)
-      void this.auditLogger.log({
-        action: 'auth.oauth.login',
-        actorId: existingOAuthIdentity.userId,
-        actorEmail: profile.email,
-        detail: { provider: profile.provider },
-      })
+      void this.eventPublisher.publish(
+        new UserLoggedInViaOAuthEvent(existingOAuthIdentity.userId, profile.email, profile.provider, false),
+      )
       return tokens
     }
 
@@ -91,12 +89,9 @@ export class OAuthService {
       )
       await this.authIdentityRepo.save(linkedIdentity)
 
-      void this.auditLogger.log({
-        action: 'auth.oauth.login',
-        actorId: userId,
-        actorEmail: profile.email,
-        detail: { provider: profile.provider, linked: true },
-      })
+      void this.eventPublisher.publish(
+        new UserLoggedInViaOAuthEvent(userId, profile.email, profile.provider, true),
+      )
     } else {
       // Step 3: create new user + OAuth identity
       userId = randomUUID()
@@ -114,12 +109,9 @@ export class OAuthService {
       )
       await this.authIdentityRepo.save(newIdentity)
 
-      void this.auditLogger.log({
-        action: 'auth.oauth.register',
-        actorId: userId,
-        actorEmail: profile.email,
-        detail: { provider: profile.provider },
-      })
+      void this.eventPublisher.publish(
+        new UserRegisteredViaOAuthEvent(userId, profile.email, profile.provider),
+      )
     }
 
     const role = await this.userRoleRepo.getRole(userId)

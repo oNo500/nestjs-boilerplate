@@ -1,4 +1,4 @@
-import { Controller, Get, UseGuards } from '@nestjs/common'
+import { Controller, Get } from '@nestjs/common'
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
 
 import { AnalyticsService } from '@/modules/analytics/application/services/analytics.service'
@@ -6,11 +6,9 @@ import { AnalyticsSummaryDto } from '@/modules/analytics/presentation/dtos/analy
 import { ArticleCategoryStatsDto } from '@/modules/analytics/presentation/dtos/article-category-stats.dto'
 import { MonthlyOverviewDto } from '@/modules/analytics/presentation/dtos/monthly-overview.dto'
 import { Roles } from '@/shared-kernel/infrastructure/decorators/roles.decorator'
-import { JwtAuthGuard, RolesGuard } from '@/shared-kernel/infrastructure/guards'
 
 @ApiTags('Dashboard')
 @Controller('dashboard')
-@UseGuards(JwtAuthGuard, RolesGuard)
 @Roles('ADMIN')
 @ApiBearerAuth()
 export class AnalyticsController {

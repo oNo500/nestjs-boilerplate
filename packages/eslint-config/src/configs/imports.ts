@@ -10,7 +10,7 @@ import type { ImportsOptions } from '../types'
 import type { ESLint, Linter } from 'eslint'
 
 export function imports(options: ImportsOptions = {}): Linter.Config[] {
-  const { overrides = {}, stylistic = true, typescript = false, noRelativeParentImports = false, tsconfigRootDir } = options
+  const { overrides = {}, typescript = false, noRelativeParentImports = false, tsconfigRootDir } = options
 
   const files = [GLOB_SRC]
 
@@ -37,8 +37,17 @@ export function imports(options: ImportsOptions = {}): Linter.Config[] {
       }
     : {}
 
-  const rulesForStylistic: Record<string, Linter.RuleEntry> = stylistic
-    ? {
+  return defineConfig([
+    {
+      name: 'imports/rules',
+      files,
+      plugins: {
+        'import-x': importX as unknown as ESLint.Plugin,
+      },
+      settings: settingsForTypescript,
+      rules: {
+        ...importX.configs['flat/recommended'].rules,
+        ...rulesForTypescript,
         'import-x/newline-after-import': ['error', { count: 1 }],
         'import-x/order': [
           'error',
@@ -67,25 +76,10 @@ export function imports(options: ImportsOptions = {}): Linter.Config[] {
             'distinctGroup': true,
           },
         ],
-      }
-    : {}
-
-  return defineConfig([
-    {
-      name: 'imports/rules',
-      files,
-      plugins: {
-        'import-x': importX as unknown as ESLint.Plugin,
-      },
-      settings: settingsForTypescript,
-      rules: {
-        ...importX.configs['flat/recommended'].rules,
-        ...rulesForTypescript,
-        ...rulesForStylistic,
         'import-x/consistent-type-specifier-style': 'error',
         'import-x/no-named-as-default': 'warn',
-        'import-x/no-cycle': 'error',
-        'import-x/no-unused-modules': 'error',
+        // maxDepth prevents full-graph traversal for performance
+        'import-x/no-cycle': ['error', { maxDepth: 5 }],
         'import-x/no-deprecated': 'warn',
         'import-x/no-extraneous-dependencies': 'error',
         'import-x/no-relative-parent-imports': noRelativeParentImports ? 'error' : 'off',

@@ -1,17 +1,15 @@
-import { Controller, Get, Inject, Query, UseGuards } from '@nestjs/common'
+import { Controller, Get, Inject, Query } from '@nestjs/common'
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
 
 import { LOGIN_LOG_REPOSITORY } from '@/modules/auth/application/ports/login-log.repository.port'
 import { LoginLogQueryDto } from '@/modules/auth/presentation/dtos/login-log-query.dto'
 import { LoginLogListResponseDto } from '@/modules/auth/presentation/dtos/login-log-response.dto'
 import { Roles } from '@/shared-kernel/infrastructure/decorators/roles.decorator'
-import { JwtAuthGuard, RolesGuard } from '@/shared-kernel/infrastructure/guards'
 
 import type { LoginLogRepository } from '@/modules/auth/application/ports/login-log.repository.port'
 
 @ApiTags('auth')
 @Controller('auth')
-@UseGuards(JwtAuthGuard, RolesGuard)
 @ApiBearerAuth()
 export class LoginLogController {
   constructor(

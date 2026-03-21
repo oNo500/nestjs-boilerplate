@@ -31,17 +31,18 @@
     "postgres": "^3.4.8"
   },
   "devDependencies": {
+    "@infra-x/eslint-config": "^0.1.12",
     "@infra-x/typescript-config": "latest",
     "@types/bcrypt": "^6.0.0",
     "@types/pg": "8.15.6",
-    "@workspace/eslint-config": "workspace:*",
     "bcrypt": "^6.0.0",
+    "dotenv": "^17.3.1",
     "drizzle-kit": "0.31.6",
     "drizzle-orm": "0.44.7",
-    "eslint": "^10.0.3",
+    "eslint": "^10.1.0",
     "pg": "8.16.3",
     "postgres": "^3.4.8",
-    "tsdown": "^0.21.0",
+    "tsdown": "^0.21.4",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3"
   }

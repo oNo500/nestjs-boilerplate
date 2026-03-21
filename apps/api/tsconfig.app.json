@@ -4,6 +4,6 @@
     "baseUrl": "./",
     "paths": { "@/*": ["src/*"] }
   },
-  "include": ["src/**/*", "scripts/seed.ts"],
+  "include": ["src/**/*", "scripts/seed.ts","*.ts","*.mts"],
   "exclude": ["**/*.test.ts", "**/*.spec.ts", "**/__tests__/**/*"]
 }

@@ -6,9 +6,9 @@ import { OrderCancelledEvent } from '@/modules/order/domain/events/order-cancell
 import { OrderCreatedEvent } from '@/modules/order/domain/events/order-created.event'
 import { OrderPaidEvent } from '@/modules/order/domain/events/order-paid.event'
 import { OrderShipRequestedEvent } from '@/modules/order/domain/events/order-ship-requested.event'
-import { AUDIT_LOGGER } from '@/shared-kernel/infrastructure/audit/audit-logger.port'
+import { AUDIT_LOGGER } from '@/shared-kernel/application/ports/audit-logger.port'
 
-import type { AuditLogger } from '@/shared-kernel/infrastructure/audit/audit-logger.port'
+import type { AuditLogger } from '@/shared-kernel/application/ports/audit-logger.port'
 
 @Injectable()
 export class OrderEventsListener {

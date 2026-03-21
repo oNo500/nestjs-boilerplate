@@ -2,17 +2,17 @@ import { Inject, Injectable } from '@nestjs/common'
 import { articlesTable } from '@workspace/database'
 import { and, count, eq, gt, or, sql } from 'drizzle-orm'
 
+import { DB_TOKEN } from '@/app/database/db.port'
 import { Article } from '@/modules/article/domain/aggregates/article.aggregate'
 import { ArticleStatus } from '@/modules/article/domain/enums/article-status.enum'
 import { Content } from '@/modules/article/domain/value-objects/content.vo'
 import { Slug } from '@/modules/article/domain/value-objects/slug.vo'
 import { Tags } from '@/modules/article/domain/value-objects/tags.vo'
 import { Title } from '@/modules/article/domain/value-objects/title.vo'
-import { DB_TOKEN } from '@/shared-kernel/infrastructure/db/db.port'
 
+import type { DrizzleDb } from '@/app/database/db.port'
 import type { ArticleCursorQuery, ArticleCursorResult, ArticleListQuery, ArticleListResult, ArticleRepository } from '@/modules/article/application/ports/article.repository.port'
 import type { ArticleCategory } from '@/modules/article/domain/aggregates/article.aggregate'
-import type { DrizzleDb } from '@/shared-kernel/infrastructure/db/db.port'
 import type { ArticleDatabase, InsertArticleDatabase } from '@workspace/database'
 
 /**

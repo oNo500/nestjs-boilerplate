@@ -1,6 +1,0 @@
-export * from './users.schema'
-export * from './profiles.schema'
-export * from './accounts.schema'
-export * from './sessions.schema'
-export * from './verifications.schema'
-export * from './login-logs.schema'

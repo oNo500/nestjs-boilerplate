@@ -4,9 +4,10 @@ import { TODO_REPOSITORY } from '@/modules/todo/application/ports/todo.repositor
 import { ErrorCode } from '@/shared-kernel/infrastructure/enums/error-code'
 
 import type { TodoRepository } from '@/modules/todo/application/ports/todo.repository.port'
-import type { CreateTodoDto } from '@/modules/todo/presentation/dtos/create-todo.dto'
-import type { UpdateTodoDto } from '@/modules/todo/presentation/dtos/update-todo.dto'
-import type { Todo } from '@workspace/database'
+import type { InsertTodo, Todo } from '@workspace/database'
+
+type CreateTodoInput = Omit<InsertTodo, 'id' | 'createdAt' | 'updatedAt'>
+type UpdateTodoInput = Partial<CreateTodoInput>
 
 /**
  * TodoService — reference implementation for the simplest CRUD pattern.
@@ -40,12 +41,12 @@ export class TodoService {
     return todo
   }
 
-  async create(createTodoDto: CreateTodoDto): Promise<Todo> {
-    return this.todoRepository.create(createTodoDto)
+  async create(input: CreateTodoInput): Promise<Todo> {
+    return this.todoRepository.create(input)
   }
 
-  async update(id: string, updateTodoDto: UpdateTodoDto): Promise<Todo> {
-    const todo = await this.todoRepository.update(id, updateTodoDto)
+  async update(id: string, input: UpdateTodoInput): Promise<Todo> {
+    const todo = await this.todoRepository.update(id, input)
 
     if (!todo) {
       throw new NotFoundException({ code: ErrorCode.TODO_NOT_FOUND, message: `Todo with ID ${id} not found` })

@@ -2,19 +2,19 @@ import { createHash } from 'node:crypto'
 
 import { ConflictException, Inject, Injectable, NotFoundException, UnprocessableEntityException } from '@nestjs/common'
 
-import { CACHE_PORT } from '@/modules/cache/application/ports/cache.port'
+import { DomainEventPublisher } from '@/app/events/domain-event-publisher'
 import { JOB_REPOSITORY, JobStatus } from '@/modules/order/application/ports/job.repository.port'
 import { ORDER_REPOSITORY } from '@/modules/order/application/ports/order.repository.port'
 import { Order } from '@/modules/order/domain/aggregates/order.aggregate'
 import { OrderShipRequestedEvent } from '@/modules/order/domain/events/order-ship-requested.event'
 import { Money } from '@/modules/order/domain/value-objects/money.vo'
 import { OrderItem } from '@/modules/order/domain/value-objects/order-item.vo'
+import { CACHE_PORT } from '@/shared-kernel/application/ports/cache.port'
 import { ErrorCode } from '@/shared-kernel/infrastructure/enums/error-code'
-import { DomainEventPublisher } from '@/shared-kernel/infrastructure/events/domain-event-publisher'
 
-import type { CachePort } from '@/modules/cache/application/ports/cache.port'
 import type { JobRepository, Job } from '@/modules/order/application/ports/job.repository.port'
 import type { OrderRepository } from '@/modules/order/application/ports/order.repository.port'
+import type { CachePort } from '@/shared-kernel/application/ports/cache.port'
 
 interface IdempotencyRecord {
   /** SHA-256 hash of the request body */

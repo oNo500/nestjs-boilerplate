@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common'
 
-import { CACHE_PORT } from '@/modules/cache/application/ports/cache.port'
 import { CacheModule } from '@/modules/cache/cache.module'
+import { CACHE_PORT } from '@/shared-kernel/application/ports/cache.port'
 
 import { createTestApp } from './helpers/create-app'
 import { createRequest } from './helpers/create-request'
 
-import type { CachePort } from '@/modules/cache/application/ports/cache.port'
+import type { CachePort } from '@/shared-kernel/application/ports/cache.port'
 import type { INestApplication } from '@nestjs/common'
 
 /**

@@ -25,7 +25,7 @@ export function boundaries(options: BoundariesOptions = {}): Linter.Config[] {
         'boundaries/elements': elements,
       },
       rules: {
-        'boundaries/element-types': [
+        'boundaries/dependencies': [
           'error',
           {
             default: 'disallow',

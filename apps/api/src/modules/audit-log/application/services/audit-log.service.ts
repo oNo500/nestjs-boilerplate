@@ -4,6 +4,7 @@ import { ClsService } from 'nestjs-cls'
 import { AUDIT_LOG_REPOSITORY } from '@/modules/audit-log/application/ports/audit-log.repository.port'
 
 import type { AuditLogListQuery, AuditLogListResult, AuditLogRepository } from '@/modules/audit-log/application/ports/audit-log.repository.port'
+import type { AuditLogInput } from '@/shared-kernel/application/ports/audit-logger.port'
 
 @Injectable()
 export class AuditLogService {
@@ -15,14 +16,7 @@ export class AuditLogService {
     private readonly cls: ClsService,
   ) {}
 
-  async log(data: {
-    action: string
-    actorId?: string
-    actorEmail?: string
-    resourceId?: string
-    resourceType?: string
-    detail?: Record<string, unknown>
-  }): Promise<void> {
+  async log(data: AuditLogInput): Promise<void> {
     try {
       await this.repo.create({
         ...data,

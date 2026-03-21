@@ -5,17 +5,7 @@ import { ClsService } from 'nestjs-cls'
 import { ExtractJwt, Strategy } from 'passport-jwt'
 
 import type { Env } from '@/app/config/env.schema'
-import type { RoleType } from '@/shared-kernel/domain/value-objects/role.vo'
-
-/**
- * JWT payload
- */
-export interface JwtPayload {
-  sub: string // User ID
-  email: string
-  roles: RoleType[]
-  sessionId: string // Session ID
-}
+import type { JwtPayload } from '@/modules/auth/application/ports/jwt.port'
 
 /**
  * JWT strategy

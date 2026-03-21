@@ -2,8 +2,9 @@ import { Inject, Injectable } from '@nestjs/common'
 import { articlesTable, loginLogsTable, ordersTable, usersTable } from '@workspace/database'
 import { and, count, eq, gte, lt, sql, sum } from 'drizzle-orm'
 
-import { DB_TOKEN } from '@/shared-kernel/infrastructure/db/db.port'
+import { DB_TOKEN } from '@/app/database/db.port'
 
+import type { DrizzleDb } from '@/app/database/db.port'
 import type {
   AnalyticsSummary,
   ArticleCategoryStatItem,
@@ -12,7 +13,6 @@ import type {
   MonthlyOverview,
   MonthlyOverviewItem,
 } from '@/modules/analytics/application/ports/analytics.query.port'
-import type { DrizzleDb } from '@/shared-kernel/infrastructure/db/db.port'
 
 const ARTICLE_CATEGORIES = ['tech', 'design', 'product', 'other'] as const
 

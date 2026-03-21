@@ -4,10 +4,10 @@ import { Inject, Injectable } from '@nestjs/common'
 import { loginLogsTable } from '@workspace/database'
 import { count, eq, ilike, and } from 'drizzle-orm'
 
-import { DB_TOKEN } from '@/shared-kernel/infrastructure/db/db.port'
+import { DB_TOKEN } from '@/app/database/db.port'
 
+import type { DrizzleDb } from '@/app/database/db.port'
 import type { LoginLogEntry, LoginLogRecord, LoginLogQueryParams, LoginLogRepository } from '@/modules/auth/application/ports/login-log.repository.port'
-import type { DrizzleDb } from '@/shared-kernel/infrastructure/db/db.port'
 import type { SQL } from 'drizzle-orm'
 
 @Injectable()

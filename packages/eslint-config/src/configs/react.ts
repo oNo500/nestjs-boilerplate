@@ -3,7 +3,7 @@
  */
 import reactPlugin from '@eslint-react/eslint-plugin'
 import { defineConfig } from 'eslint/config'
-import reactHooksPlugin from 'eslint-plugin-react-hooks'
+// import reactHooksPlugin from 'eslint-plugin-react-hooks' // reactPlugin already includes reactHooksPlugin in newer versions
 import reactRefresh from 'eslint-plugin-react-refresh'
 
 import { GLOB_JSX } from '../utils'
@@ -21,11 +21,20 @@ export function react(options: ReactOptions = {}): Linter.Config[] {
     name: 'react/rules',
     files,
     extends: [
-      reactPlugin.configs['recommended-typescript'],
-      reactHooksPlugin.configs.flat['recommended-latest'],
+      reactPlugin.configs['recommended-type-checked'],
+      // reactHooksPlugin.configs.flat['recommended-latest'],
       ...(vite ? [reactRefresh.configs.recommended] : []),
     ],
     rules: {
+      // attributes: false allows passing async functions to JSX event attributes (e.g. onClick), which is valid in React
+      '@typescript-eslint/no-misused-promises': [
+        'error',
+        {
+          checksVoidReturn: {
+            attributes: false,
+          },
+        },
+      ],
       ...overrides,
     },
   })
