@@ -17,8 +17,6 @@ jobs:
           ref: ${{ github.head_ref }}
 
       - uses: pnpm/action-setup@v4
-        with:
-          version: 10.31.0
 
       - uses: actions/setup-node@v4
         with:
@@ -77,8 +75,6 @@ jobs:
           ref: ${{ github.head_ref }}
 
       - uses: pnpm/action-setup@v4
-        with:
-          version: 10.31.0
 
       - uses: actions/setup-node@v4
         with:
