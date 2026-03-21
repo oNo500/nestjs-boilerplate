@@ -26,7 +26,7 @@ import { apiClient } from './api-client'
 export const $api = createQueryClient(apiClient)
 
 // Re-export types for use in features
-export type { paths, components } from '@/types/openapi'
+export type { paths, components } from '@workspace/api-types'
 
 // Re-export the API client (for non-React usage)
 export { apiClient } from './api-client'

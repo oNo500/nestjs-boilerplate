@@ -1,4 +1,4 @@
-import type { components } from '@/types/openapi'
+import type { components } from '@workspace/api-types'
 
 export interface QueryParams {
   current?: number

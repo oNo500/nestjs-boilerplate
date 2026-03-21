@@ -1,6 +1,6 @@
 import { http, HttpResponse } from 'msw'
 
-import type { components } from '@/types/openapi'
+import type { components } from '@workspace/api-types'
 
 type LoginDto = components['schemas']['LoginDto']
 type LoginResponseDto = components['schemas']['LoginResponseDto']

@@ -9,13 +9,13 @@
     "preview": "vite preview",
     "lint": "eslint",
     "lint:fix": "eslint --fix",
-    "typecheck": "tsc -b",
-    "api:gen": "openapi-typescript http://localhost:3000/openapi.yaml -o src/types/openapi.d.ts"
+    "typecheck": "tsc -b"
   },
   "dependencies": {
     "@ant-design/cssinjs": "^2.1.2",
     "@ant-design/pro-components": "^2.8.10",
     "@tanstack/react-query": "^5.91.3",
+    "@workspace/api-types": "workspace:*",
     "@workspace/eslint-config": "workspace:*",
     "@workspace/icons": "workspace:*",
     "antd": "^6.3.3",
@@ -42,7 +42,6 @@
     "jiti": "2.6.1",
     "msw": "^2.12.14",
     "openapi-msw": "^2.0.0",
-    "openapi-typescript": "^7.13.0",
     "typescript": "^5.9.3",
     "vite": "^8.0.1"
   },

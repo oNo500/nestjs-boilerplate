@@ -5,7 +5,7 @@ import { createOpenApiHttp } from 'openapi-msw'
 import { env } from '@/config/env'
 
 import type { User, CreateUserDto, UpdateUserDto, UserListResponse, GetUsersParams } from '@/features/users/types'
-import type { paths } from '@/types/openapi'
+import type { paths } from '@workspace/api-types'
 
 const MOCK_USERS: User[] = Array.from({ length: 30 }, (_, i) => {
   const past = faker.date.between({ from: '2025-01-01', to: '2025-02-01' })

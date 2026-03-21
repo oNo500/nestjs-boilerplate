@@ -12,7 +12,7 @@ import { ApiClientError } from '@/lib/api-error'
 import { notification } from '@/lib/notification'
 import { getToken, setToken, setRefreshToken, getRefreshToken } from '@/lib/token'
 
-import type { paths } from '@/types/openapi'
+import type { paths } from '@workspace/api-types'
 
 /**
  * Create the openapi-fetch client

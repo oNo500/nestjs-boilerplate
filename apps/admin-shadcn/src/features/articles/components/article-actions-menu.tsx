@@ -24,7 +24,7 @@ import { useState } from 'react'
 import { ArticleFormSheet } from '@/features/articles/components/article-form-sheet'
 import { useDeleteArticle, usePublishArticle, useArchiveArticle } from '@/features/articles/hooks/use-article-mutations'
 
-import type { components } from '@/types/openapi'
+import type { components } from '@workspace/api-types'
 
 type ArticleRow = components['schemas']['ArticleResponseDto']
 

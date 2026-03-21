@@ -9,8 +9,7 @@
     "lint": "eslint",
     "lint:fix": "eslint --fix",
     "typecheck": "tsc -b --noEmit",
-    "test": "vitest",
-    "api:gen": "openapi-typescript http://localhost:3000/openapi.yaml -o src/types/openapi.d.ts"
+    "test": "vitest"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
@@ -18,6 +17,7 @@
     "@t3-oss/env-nextjs": "^0.13.10",
     "@tanstack/react-query": "^5.91.3",
     "@tanstack/react-table": "^8.21.3",
+    "@workspace/api-types": "workspace:*",
     "@workspace/icons": "workspace:*",
     "@workspace/ui": "workspace:*",
     "lucide-react": "^0.577.0",
@@ -50,7 +50,6 @@
     "eslint": "^10.1.0",
     "jsdom": "^29.0.1",
     "msw": "^2.12.14",
-    "openapi-typescript": "^7.13.0",
     "tailwindcss": "^4.2.2",
     "typescript": "^5.9.3",
     "vite-tsconfig-paths": "^6.1.1",

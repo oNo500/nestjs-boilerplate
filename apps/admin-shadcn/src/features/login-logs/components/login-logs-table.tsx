@@ -9,8 +9,8 @@ import {
 import { DataTable } from '@/components/data-table/data-table'
 import { LoginStatusBadge } from '@/features/login-logs/components/login-status-badge'
 
-import type { components } from '@/types/openapi'
 import type { ColumnDef } from '@tanstack/react-table'
+import type { components } from '@workspace/api-types'
 
 type LoginLogRow = components['schemas']['LoginLogItemDto']
 

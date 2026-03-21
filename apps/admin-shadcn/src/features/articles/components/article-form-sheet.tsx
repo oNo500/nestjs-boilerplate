@@ -34,7 +34,7 @@ import { z } from 'zod'
 
 import { useCreateArticle, useUpdateArticle, useAddTag, useRemoveTag } from '@/features/articles/hooks/use-article-mutations'
 
-import type { components } from '@/types/openapi'
+import type { components } from '@workspace/api-types'
 import type { KeyboardEvent } from 'react'
 
 type ArticleRow = components['schemas']['ArticleResponseDto']

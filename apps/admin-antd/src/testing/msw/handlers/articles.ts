@@ -4,7 +4,7 @@ import { HttpResponse, http } from 'msw'
 import { env } from '@/config/env'
 
 import type { QueryParams } from '@/features/scaffold/types'
-import type { components } from '@/types/openapi'
+import type { components } from '@workspace/api-types'
 
 type Article = components['schemas']['ArticleResponseDto']
 type CreateArticleDto = components['schemas']['CreateArticleDto']

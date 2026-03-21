@@ -21,7 +21,7 @@ import {
 } from '@/lib/token'
 
 import type { FieldError } from '@/lib/api-error'
-import type { paths } from '@/types/openapi'
+import type { paths } from '@workspace/api-types'
 
 export const apiClient = createClient<paths>({
   baseUrl: env.NEXT_PUBLIC_API_URL,
