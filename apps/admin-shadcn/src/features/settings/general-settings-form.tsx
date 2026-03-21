@@ -38,7 +38,6 @@ import { $api } from '@/lib/api'
 const profileSchema = z.object({
   displayName: z.string().max(50, 'Maximum 50 characters').optional(),
   bio: z.string().max(500, 'Maximum 500 characters').optional(),
-  website: z.url('Must be a valid URL').optional().or(z.literal('')),
 })
 
 type ProfileValues = z.infer<typeof profileSchema>
@@ -54,7 +53,7 @@ function ProfileCard() {
     formState: { errors, isDirty, isSubmitting },
   } = useForm<ProfileValues>({
     resolver: zodResolver(profileSchema),
-    defaultValues: { displayName: '', bio: '', website: '' },
+    defaultValues: { displayName: '', bio: '' },
   })
 
   useEffect(() => {
@@ -62,7 +61,6 @@ function ProfileCard() {
       reset({
         displayName: profile.displayName ?? '',
         bio: profile.bio ?? '',
-        website: '',
       })
     }
   }, [profile, reset])
@@ -70,9 +68,9 @@ function ProfileCard() {
   async function onSubmit(values: ProfileValues) {
     await updateProfile.mutateAsync({
       body: {
-        displayName: values.displayName ?? null,
-        bio: values.bio ?? null,
-      } as Parameters<typeof updateProfile.mutateAsync>[0]['body'],
+        displayName: values.displayName ?? undefined,
+        bio: values.bio ?? undefined,
+      },
     })
     toast.success('Profile saved')
     reset(values)
@@ -92,7 +90,7 @@ function ProfileCard() {
           <FieldSet>
             <FieldLegend variant="label">Avatar</FieldLegend>
             <div className="flex items-center gap-4">
-              <AvatarUpload currentAvatarUrl={avatarUrl} fallbackText={displayName || 'U'} />
+              <AvatarUpload currentAvatarUrl={avatarUrl} fallbackText={displayName === '' ? 'U' : displayName} />
               <FieldDescription>
                 Click the avatar to upload a new photo. Supports JPG, PNG, WebP up to 10MB.
               </FieldDescription>
@@ -125,18 +123,6 @@ function ProfileCard() {
                 <FieldError errors={errors.bio ? [errors.bio] : []} />
               </Field>
 
-              <Field data-invalid={!!errors.website}>
-                <FieldLabel htmlFor="website">Website</FieldLabel>
-                <Input
-                  id="website"
-                  type="url"
-                  placeholder="https://example.com"
-                  aria-invalid={!!errors.website}
-                  {...register('website')}
-                />
-                <FieldDescription>Your personal or professional website.</FieldDescription>
-                <FieldError errors={errors.website ? [errors.website] : []} />
-              </Field>
             </FieldGroup>
           </div>
         </CardContent>

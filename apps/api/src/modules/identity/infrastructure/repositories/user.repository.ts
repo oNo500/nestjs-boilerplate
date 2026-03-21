@@ -219,7 +219,7 @@ implements IdentityRepository {
       displayName: user.displayName ?? null,
       email: user.email,
       emailVerified: user.emailVerified,
-      image: user.image,
+      image: user.image ?? null,
       role: user.role,
       banned: user.banned ?? false,
       banReason: user.banReason,
