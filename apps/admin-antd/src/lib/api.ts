@@ -30,7 +30,7 @@ import { fetchClient } from './api-client'
 export const $api = createQueryClient(fetchClient)
 
 // Re-export types for use in features
-export type { paths, components } from '@/types/openapi'
+export type { paths, components } from '@workspace/api-types'
 
 // Re-export the fetch client (for non-React usage)
 export { fetchClient } from './api-client'

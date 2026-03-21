@@ -18,8 +18,8 @@ import {
 import { ArticleActionsMenu } from '@/features/articles/components/article-actions-menu'
 import { ArticleStatusBadge } from '@/features/articles/components/article-status-badge'
 
-import type { components } from '@/types/openapi'
 import type { ColumnDef } from '@tanstack/react-table'
+import type { components } from '@workspace/api-types'
 
 type ArticleRow = components['schemas']['ArticleResponseDto']
 

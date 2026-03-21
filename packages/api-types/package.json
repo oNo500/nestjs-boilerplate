@@ -1,0 +1,19 @@
+{
+  "name": "@workspace/api-types",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "types": "./src/openapi.d.ts",
+  "exports": {
+    ".": {
+      "types": "./src/openapi.d.ts"
+    }
+  },
+  "scripts": {
+    "api:gen": "openapi-typescript http://localhost:3000/openapi.yaml -o src/openapi.d.ts"
+  },
+  "devDependencies": {
+    "openapi-typescript": "^7.13.0",
+    "typescript": "^5.9.3"
+  }
+}

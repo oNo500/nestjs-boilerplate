@@ -78,24 +78,6 @@ export interface paths {
         patch: operations["TodoController_update"];
         trace?: never;
     };
-    "/api/profile": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get current user profile */
-        get: operations["ProfileController_getProfile"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        /** Update current user profile */
-        patch: operations["ProfileController_updateProfile"];
-        trace?: never;
-    };
     "/api/articles": {
         parameters: {
             query?: never;
@@ -563,6 +545,24 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/profile": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get current user profile */
+        get: operations["ProfileController_getProfile"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Update current user profile */
+        patch: operations["ProfileController_updateProfile"];
+        trace?: never;
+    };
     "/api/orders": {
         parameters: {
             query?: never;
@@ -843,40 +843,6 @@ export interface components {
             description?: string;
             /** @example true */
             isCompleted?: boolean;
-        };
-        UserPreferencesDto: {
-            /** @enum {string} */
-            theme?: "light" | "dark" | "system";
-            lang?: string;
-            timezone?: string;
-            notifications?: boolean;
-        };
-        ProfileResponseDto: {
-            userId: string;
-            displayName?: string | null;
-            avatarUrl?: string | null;
-            bio?: string | null;
-            preferences: components["schemas"]["UserPreferencesDto"];
-            /** Format: date-time */
-            createdAt: string;
-            /** Format: date-time */
-            updatedAt: string;
-        };
-        UpdatePreferencesDto: {
-            /** @enum {string} */
-            theme?: "light" | "dark" | "system";
-            /** @example zh-CN */
-            lang?: string;
-            /** @example Asia/Shanghai */
-            timezone?: string;
-            /** @example true */
-            notifications?: boolean;
-        };
-        UpdateProfileDto: {
-            displayName?: string | null;
-            avatarUrl?: string | null;
-            bio?: string | null;
-            preferences?: components["schemas"]["UpdatePreferencesDto"];
         };
         CreateArticleDto: {
             /** @example Getting Started with NestJS */
@@ -1253,6 +1219,28 @@ export interface components {
              */
             role: "ADMIN" | "USER" | "EDITOR" | "MODERATOR";
         };
+        ProfileResponseDto: {
+            /** @example usr_01HXYZ */
+            id: string;
+            /** @example john@example.com */
+            email: string;
+            /** @example John Doe */
+            name: string;
+            /** @example Johnny */
+            displayName: string | null;
+            /** @example Software engineer and open source enthusiast. */
+            bio: string | null;
+            /** @example https://example.com/avatar.png */
+            avatarUrl: string | null;
+        };
+        UpdateProfileDto: {
+            /** @example Johnny */
+            displayName?: string | null;
+            /** @example Software engineer and open source enthusiast. */
+            bio?: string | null;
+            /** @example https://example.com/avatar.png */
+            avatarUrl?: string | null;
+        };
         OrderItemDto: {
             /** @example prod_01HXYZ */
             productId: string;
@@ -1367,39 +1355,6 @@ export interface components {
             createdAt: string;
             /** Format: date-time */
             updatedAt: string;
-        };
-        AnalyticsSummaryDto: {
-            /** @description Number of articles published today */
-            publishedToday: number;
-            /** @description Number of completed orders */
-            completedOrders: number;
-        };
-        MonthlyOverviewItemDto: {
-            /**
-             * @description Month in YYYY-MM format
-             * @example 2025-03
-             */
-            month: string;
-            /** @description Number of new registered users */
-            newUsers: number;
-            /** @description Number of published articles */
-            publishedArticles: number;
-            /** @description Number of login attempts */
-            loginAttempts: number;
-        };
-        MonthlyOverviewDto: {
-            months: components["schemas"]["MonthlyOverviewItemDto"][];
-        };
-        ArticleCategoryStatItemDto: {
-            /** @enum {string} */
-            category: "tech" | "design" | "product" | "other";
-            /** @description Total article count in this category */
-            count: number;
-            /** @description Total view count for this category */
-            viewCount: number;
-        };
-        ArticleCategoryStatsDto: {
-            categories: components["schemas"]["ArticleCategoryStatItemDto"][];
         };
         AnalyticsSummaryDto: {
             /** @description Number of articles published today */
@@ -1883,66 +1838,6 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
-            };
-            /** @description Error response (includes 400/401/403/404/422/429/500, etc.) */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ProblemDetailsDto"];
-                };
-            };
-        };
-    };
-    ProfileController_getProfile: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ProfileResponseDto"];
-                };
-            };
-            /** @description Error response (includes 400/401/403/404/422/429/500, etc.) */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ProblemDetailsDto"];
-                };
-            };
-        };
-    };
-    ProfileController_updateProfile: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["UpdateProfileDto"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ProfileResponseDto"];
-                };
             };
             /** @description Error response (includes 400/401/403/404/422/429/500, etc.) */
             default: {
@@ -3078,6 +2973,66 @@ export interface operations {
             };
         };
     };
+    ProfileController_getProfile: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProfileResponseDto"];
+                };
+            };
+            /** @description Error response (includes 400/401/403/404/422/429/500, etc.) */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetailsDto"];
+                };
+            };
+        };
+    };
+    ProfileController_updateProfile: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateProfileDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProfileResponseDto"];
+                };
+            };
+            /** @description Error response (includes 400/401/403/404/422/429/500, etc.) */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetailsDto"];
+                };
+            };
+        };
+    };
     OrderController_create: {
         parameters: {
             query?: never;
@@ -3424,90 +3379,6 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
-            };
-            /** @description Error response (includes 400/401/403/404/422/429/500, etc.) */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ProblemDetailsDto"];
-                };
-            };
-        };
-    };
-    AnalyticsController_getAnalyticsSummary: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AnalyticsSummaryDto"];
-                };
-            };
-            /** @description Error response (includes 400/401/403/404/422/429/500, etc.) */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ProblemDetailsDto"];
-                };
-            };
-        };
-    };
-    AnalyticsController_getMonthlyOverview: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["MonthlyOverviewDto"];
-                };
-            };
-            /** @description Error response (includes 400/401/403/404/422/429/500, etc.) */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ProblemDetailsDto"];
-                };
-            };
-        };
-    };
-    AnalyticsController_getArticleCategoryStats: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ArticleCategoryStatsDto"];
-                };
             };
             /** @description Error response (includes 400/401/403/404/422/429/500, etc.) */
             default: {
