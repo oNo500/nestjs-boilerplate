@@ -8,6 +8,7 @@ NestJS monorepo — DDD backend, Drizzle ORM + PostgreSQL, JWT/OAuth2, two admin
 - **`admin-antd`** (`apps/admin-antd`, :8081) — Feature reference panel, Ant Design Pro, i18n
 - **`admin-shadcn`** (`apps/admin-shadcn`, :8080) — Tech demo panel, Next.js App Router, shadcn/ui
 - **`@workspace/database`** (`packages/database`) — Schema definitions & migrations, Drizzle ORM
+- **`@workspace/api-types`** (`packages/api-types`) — Shared OpenAPI type definitions, openapi-typescript
 - **`@workspace/ui`** (`packages/ui`) — Shared UI component library, @base-ui/react
 - **`@workspace/icons`** (`packages/icons`) — Shared icon set
 
