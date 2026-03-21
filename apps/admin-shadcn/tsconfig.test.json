@@ -6,7 +6,8 @@
     "paths": {
       "@/*": ["./src/*"],
       "@workspace/ui/*": ["../../packages/ui/src/*"]
-    }
+    },
+    "types": ["vitest/globals", "node"]
   },
   "include": ["__tests__/**/*", "src/**/*.test.{ts,tsx}"]
 }
