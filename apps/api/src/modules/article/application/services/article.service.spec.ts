@@ -10,13 +10,13 @@ import { Slug } from '@/modules/article/domain/value-objects/slug.vo'
 import type { DomainEventPublisher } from '@/app/events/domain-event-publisher'
 import type { ArticleRepository } from '@/modules/article/application/ports/article.repository.port'
 import type { SlugGenerator } from '@/modules/article/application/ports/slug-generator.port'
-import type { Mocked } from 'vitest'
+import type { DeepMocked } from '@golevelup/ts-vitest'
 
 describe('articleService', () => {
   let service: ArticleService
-  let articleRepository: Mocked<ArticleRepository>
-  let slugGenerator: Mocked<SlugGenerator>
-  let domainEventPublisher: Mocked<DomainEventPublisher>
+  let articleRepository: DeepMocked<ArticleRepository>
+  let slugGenerator: DeepMocked<SlugGenerator>
+  let domainEventPublisher: DeepMocked<DomainEventPublisher>
 
   beforeEach(() => {
     articleRepository = createMock<ArticleRepository>()

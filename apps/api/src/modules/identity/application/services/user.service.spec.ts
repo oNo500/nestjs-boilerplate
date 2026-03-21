@@ -7,12 +7,12 @@ import { UserService } from '@/modules/identity/application/services/user.servic
 
 import type { DomainEventPublisher } from '@/app/events/domain-event-publisher'
 import type { IdentityRepository } from '@/modules/identity/application/ports/user.repository.port'
-import type { Mocked } from 'vitest'
+import type { DeepMocked } from '@golevelup/ts-vitest'
 
 describe('userService', () => {
   let service: UserService
-  let userRepository: Mocked<IdentityRepository>
-  let eventPublisher: Mocked<DomainEventPublisher>
+  let userRepository: DeepMocked<IdentityRepository>
+  let eventPublisher: DeepMocked<DomainEventPublisher>
 
   beforeEach(() => {
     userRepository = createMock<IdentityRepository>()
