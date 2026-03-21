@@ -22,7 +22,7 @@
     "@infra-x/typescript-config": "0.1.6",
     "@types/eslint-plugin-jsx-a11y": "^6.10.1",
     "@types/node": "^25.5.0",
-    "eslint": "^10.1.0",
+    "eslint": "^9.39.4",
     "globals": "16.5.0",
     "jiti": "2.6.1",
     "prettier": "^3.8.1",
@@ -30,7 +30,7 @@
     "vitest": "^4.1.0"
   },
   "dependencies": {
-    "@eslint-react/eslint-plugin": "^3.0.0",
+    "@eslint-react/eslint-plugin": "^2.13.0",
     "@eslint/compat": "2.0.3",
     "@eslint/core": "1.1.1",
     "@eslint/js": "^10.0.1",
