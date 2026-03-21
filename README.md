@@ -14,9 +14,14 @@ NestJS monorepo — DDD backend, Drizzle ORM + PostgreSQL, JWT/OAuth2, two admin
 
 ## Quick Start
 
+> [!NOTE]
+> `pnpm install` automatically copies `.env.example` → `.env` for all packages via the `prepare` script. Run `pnpm setup:env` to force-reset them.
+
+> [!IMPORTANT]
+> PostgreSQL and Redis must be running before starting the API. Use the provided Docker Compose file.
+
 ```bash
 pnpm install
-pnpm setup:env                                      # copy .env files
 docker compose -f docker/docker-compose.yml up -d  # PostgreSQL + Redis
 pnpm dev
 ```
@@ -39,9 +44,10 @@ pnpm --filter @workspace/database db:push # dev: push directly
 
 ### Regenerate API Types
 
+> [!WARNING]
+> API types are auto-generated from the OpenAPI spec. Never hand-write them.
+
 ```bash
 # After any backend endpoint change (API must be running on :3000)
 pnpm --filter @workspace/api-types api:gen
 ```
-
-> Never hand-write API types — always regenerate from the OpenAPI spec.

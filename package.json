@@ -7,7 +7,8 @@
     "lint": "turbo run lint",
     "lint:fix": "turbo run lint:fix",
     "typecheck": "turbo run typecheck",
-    "setup:env": "cp .env.example .env && pnpm --filter api --filter admin-antd --filter admin-shadcn --filter @workspace/database exec cp .env.example .env"
+    "prepare": "pnpm run setup:env",
+    "setup:env": "pnpm --filter api --filter admin-antd --filter admin-shadcn --filter @workspace/database exec cp .env.example .env"
   },
   "devDependencies": {
     "turbo": "^2.8.20"
