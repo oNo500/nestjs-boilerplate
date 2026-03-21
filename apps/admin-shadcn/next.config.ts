@@ -1,10 +1,11 @@
 import path from 'node:path'
-import type { NextConfig } from "next";
+
+import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
   /* config options here */
   reactCompiler: true,
-  transpilePackages: ["@workspace/ui"],
+  transpilePackages: ['@workspace/ui'],
   images: {
     remotePatterns: [
       { hostname: 'images.shadcnspace.com' },
@@ -13,7 +14,7 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: path.resolve(__dirname, '../..'),
   },
-  async headers() {
+  headers() {
     return [
       {
         source: '/(.*)',
@@ -26,6 +27,6 @@ const nextConfig: NextConfig = {
       },
     ]
   },
-};
+}
 
-export default nextConfig;
+export default nextConfig
