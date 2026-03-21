@@ -1,9 +1,10 @@
-import { Module } from '@nestjs/common'
+import { Global, Module } from '@nestjs/common'
 
 import { CacheModule } from '@/modules/cache/cache.module'
 import { CACHE_PORT } from '@/shared-kernel/application/ports/cache.port'
 
 import { createTestApp } from './helpers/create-app'
+import { registerAndLogin } from './helpers/create-authenticated-request'
 import { createRequest } from './helpers/create-request'
 
 import type { CachePort } from '@/shared-kernel/application/ports/cache.port'
@@ -53,6 +54,7 @@ class InMemoryCacheService implements CachePort {
 /**
  * Test CacheModule: replaces Redis with an in-memory cache
  */
+@Global()
 @Module({
   providers: [
     { provide: CACHE_PORT, useClass: InMemoryCacheService },
@@ -101,9 +103,10 @@ interface BulkCancelResponse {
 // ============================================================
 
 /** Create a test order in pending_payment status */
-async function createTestOrder(app: INestApplication, userId = 'test-user'): Promise<OrderResponse> {
+async function createTestOrder(app: INestApplication, token: string, userId = 'test-user'): Promise<OrderResponse> {
   const res = await createRequest(app)
     .post('/api/orders')
+    .set('Authorization', `Bearer ${token}`)
     .set('Idempotency-Key', crypto.randomUUID())
     .send({
       userId,
@@ -122,12 +125,16 @@ async function createTestOrder(app: INestApplication, userId = 'test-user'): Pro
  * Pay for an order (wraps the GET ETag -> PATCH If-Match flow)
  * Returns the paid order
  */
-async function payTestOrder(app: INestApplication, orderId: string): Promise<OrderResponse> {
-  const getRes = await createRequest(app).get(`/api/orders/${orderId}`).expect(200)
+async function payTestOrder(app: INestApplication, token: string, orderId: string): Promise<OrderResponse> {
+  const getRes = await createRequest(app)
+    .get(`/api/orders/${orderId}`)
+    .set('Authorization', `Bearer ${token}`)
+    .expect(200)
   const etag = getRes.headers.etag!
 
   const payRes = await createRequest(app)
     .patch(`/api/orders/${orderId}/pay`)
+    .set('Authorization', `Bearer ${token}`)
     .set('If-Match', etag)
     .expect(200)
 
@@ -139,12 +146,16 @@ async function payTestOrder(app: INestApplication, orderId: string): Promise<Ord
  */
 async function waitForJob(
   app: INestApplication,
+  token: string,
   jobId: string,
   timeoutMs = 10_000,
 ): Promise<JobResponse> {
   const deadline = Date.now() + timeoutMs
   while (Date.now() < deadline) {
-    const res = await createRequest(app).get(`/api/jobs/${jobId}`).expect(200)
+    const res = await createRequest(app)
+      .get(`/api/jobs/${jobId}`)
+      .set('Authorization', `Bearer ${token}`)
+      .expect(200)
     const job = res.body as JobResponse
     if (job.status === 'succeeded' || job.status === 'failed' || job.status === 'cancelled') {
       return job
@@ -160,18 +171,21 @@ async function waitForJob(
 
 describe('order E2E Tests', () => {
   let app: INestApplication
+  let token: string
   const createdOrderIds: string[] = []
 
   beforeAll(async () => {
     app = await createTestApp({
       moduleOverrides: [{ original: CacheModule, replacement: InMemoryCacheModule }],
     })
+    const prefix = globalThis.e2ePrefix ?? `e2e-${Date.now()}`
+    token = await registerAndLogin(app, `${prefix}-order@test.com`, 'Password123', 'orderuser')
   })
 
   afterAll(async () => {
     // Cleanup: delete all orders created during tests
     for (const id of createdOrderIds) {
-      await createRequest(app).delete(`/api/orders/${id}`)
+      await createRequest(app).delete(`/api/orders/${id}`).set('Authorization', `Bearer ${token}`)
     }
     await app.close()
   })
@@ -190,6 +204,7 @@ describe('order E2E Tests', () => {
 
       const res = await createRequest(app)
         .post('/api/orders')
+        .set('Authorization', `Bearer ${token}`)
         .set('Idempotency-Key', key)
         .send(body)
         .expect(201)
@@ -212,6 +227,7 @@ describe('order E2E Tests', () => {
       // First request
       const first = await createRequest(app)
         .post('/api/orders')
+        .set('Authorization', `Bearer ${token}`)
         .set('Idempotency-Key', key)
         .send(body)
         .expect(201)
@@ -222,6 +238,7 @@ describe('order E2E Tests', () => {
       // Replay
       const second = await createRequest(app)
         .post('/api/orders')
+        .set('Authorization', `Bearer ${token}`)
         .set('Idempotency-Key', key)
         .send(body)
         .expect(200)
@@ -237,6 +254,7 @@ describe('order E2E Tests', () => {
       // First order
       const first = await createRequest(app)
         .post('/api/orders')
+        .set('Authorization', `Bearer ${token}`)
         .set('Idempotency-Key', key)
         .send({
           userId: 'user-idempotent-3',
@@ -249,6 +267,7 @@ describe('order E2E Tests', () => {
       // Same key, different body
       const res = await createRequest(app)
         .post('/api/orders')
+        .set('Authorization', `Bearer ${token}`)
         .set('Idempotency-Key', key)
         .send({
           userId: 'user-idempotent-3',
@@ -263,6 +282,7 @@ describe('order E2E Tests', () => {
     it('missing Idempotency-Key: returns 400', async () => {
       const res = await createRequest(app)
         .post('/api/orders')
+        .set('Authorization', `Bearer ${token}`)
         .send({
           userId: 'user-no-key',
           items: [{ productId: 'prod-001', quantity: 1, unitPrice: '50.00' }],
@@ -281,6 +301,7 @@ describe('order E2E Tests', () => {
 
       const first = await createRequest(app)
         .post('/api/orders')
+        .set('Authorization', `Bearer ${token}`)
         .set('Idempotency-Key', key)
         .send(body)
         .expect(201)
@@ -292,6 +313,7 @@ describe('order E2E Tests', () => {
       for (let i = 0; i < 3; i++) {
         const rep = await createRequest(app)
           .post('/api/orders')
+          .set('Authorization', `Bearer ${token}`)
           .set('Idempotency-Key', key)
           .send(body)
           .expect(200)
@@ -308,10 +330,10 @@ describe('order E2E Tests', () => {
 
   describe('pATCH /orders/:id/pay — optimistic lock payment', () => {
     it('gET /orders/:id response header contains ETag', async () => {
-      const order = await createTestOrder(app)
+      const order = await createTestOrder(app, token)
       createdOrderIds.push(order.id)
 
-      const res = await createRequest(app).get(`/api/orders/${order.id}`).expect(200)
+      const res = await createRequest(app).get(`/api/orders/${order.id}`).set('Authorization', `Bearer ${token}`).expect(200)
 
       expect(res.headers.etag).toBeDefined()
       // ETag format: quoted integer, e.g. "0"
@@ -319,14 +341,15 @@ describe('order E2E Tests', () => {
     })
 
     it('correct If-Match -> 200, response includes updated ETag', async () => {
-      const order = await createTestOrder(app)
+      const order = await createTestOrder(app, token)
       createdOrderIds.push(order.id)
 
-      const getRes = await createRequest(app).get(`/api/orders/${order.id}`).expect(200)
+      const getRes = await createRequest(app).get(`/api/orders/${order.id}`).set('Authorization', `Bearer ${token}`).expect(200)
       const etag = getRes.headers.etag! // "0"
 
       const payRes = await createRequest(app)
         .patch(`/api/orders/${order.id}/pay`)
+        .set('Authorization', `Bearer ${token}`)
         .set('If-Match', etag)
         .expect(200)
 
@@ -339,13 +362,14 @@ describe('order E2E Tests', () => {
     })
 
     it('stale If-Match -> 412 Precondition Failed', async () => {
-      const order = await createTestOrder(app)
+      const order = await createTestOrder(app, token)
       createdOrderIds.push(order.id)
 
       // Use a non-matching version number (e.g. "999") to trigger payment -> 412 version conflict
       // Order is still in pending_payment but version does not match, triggering optimistic lock failure
       const res = await createRequest(app)
         .patch(`/api/orders/${order.id}/pay`)
+        .set('Authorization', `Bearer ${token}`)
         .set('If-Match', '"999"')
         .expect(412)
 
@@ -354,11 +378,12 @@ describe('order E2E Tests', () => {
     })
 
     it('missing If-Match -> 412 (PRECONDITION_REQUIRED)', async () => {
-      const order = await createTestOrder(app)
+      const order = await createTestOrder(app, token)
       createdOrderIds.push(order.id)
 
       const res = await createRequest(app)
         .patch(`/api/orders/${order.id}/pay`)
+        .set('Authorization', `Bearer ${token}`)
         .expect(412)
 
       const body = res.body as { code: string }
@@ -366,11 +391,12 @@ describe('order E2E Tests', () => {
     })
 
     it('invalid If-Match format -> 400', async () => {
-      const order = await createTestOrder(app)
+      const order = await createTestOrder(app, token)
       createdOrderIds.push(order.id)
 
       const res = await createRequest(app)
         .patch(`/api/orders/${order.id}/pay`)
+        .set('Authorization', `Bearer ${token}`)
         .set('If-Match', 'not-a-number')
         .expect(400)
 
@@ -380,6 +406,7 @@ describe('order E2E Tests', () => {
     it('order not found -> 404', async () => {
       const res = await createRequest(app)
         .patch(`/api/orders/00000000-0000-0000-0000-000000000000/pay`)
+        .set('Authorization', `Bearer ${token}`)
         .set('If-Match', '"0"')
         .expect(404)
 
@@ -387,16 +414,17 @@ describe('order E2E Tests', () => {
     })
 
     it('paying an already-paid order -> 409 ORDER_ALREADY_PAID', async () => {
-      const order = await createTestOrder(app)
+      const order = await createTestOrder(app, token)
       createdOrderIds.push(order.id)
 
-      await payTestOrder(app, order.id)
+      await payTestOrder(app, token, order.id)
 
       // Pay again (with updated ETag)
-      const getRes = await createRequest(app).get(`/api/orders/${order.id}`).expect(200)
+      const getRes = await createRequest(app).get(`/api/orders/${order.id}`).set('Authorization', `Bearer ${token}`).expect(200)
 
       const res = await createRequest(app)
         .patch(`/api/orders/${order.id}/pay`)
+        .set('Authorization', `Bearer ${token}`)
         .set('If-Match', getRes.headers.etag!)
         .expect(409)
 
@@ -411,12 +439,13 @@ describe('order E2E Tests', () => {
 
   describe('pOST /orders/:id/ship — async shipping', () => {
     it('returns 202 Accepted, response header contains Location pointing to Job', async () => {
-      const order = await createTestOrder(app)
+      const order = await createTestOrder(app, token)
       createdOrderIds.push(order.id)
-      await payTestOrder(app, order.id)
+      await payTestOrder(app, token, order.id)
 
       const res = await createRequest(app)
         .post(`/api/orders/${order.id}/ship`)
+        .set('Authorization', `Bearer ${token}`)
         .expect(202)
 
       const body = res.body as { jobId: string }
@@ -425,17 +454,18 @@ describe('order E2E Tests', () => {
     })
 
     it('gET /jobs/:id returns initial status pending or running', async () => {
-      const order = await createTestOrder(app)
+      const order = await createTestOrder(app, token)
       createdOrderIds.push(order.id)
-      await payTestOrder(app, order.id)
+      await payTestOrder(app, token, order.id)
 
       const shipRes = await createRequest(app)
         .post(`/api/orders/${order.id}/ship`)
+        .set('Authorization', `Bearer ${token}`)
         .expect(202)
 
       const { jobId } = shipRes.body as { jobId: string }
 
-      const jobRes = await createRequest(app).get(`/api/jobs/${jobId}`).expect(200)
+      const jobRes = await createRequest(app).get(`/api/jobs/${jobId}`).set('Authorization', `Bearer ${token}`).expect(200)
 
       const job = jobRes.body as JobResponse
       expect(['pending', 'running', 'succeeded']).toContain(job.status)
@@ -444,17 +474,18 @@ describe('order E2E Tests', () => {
     })
 
     it('poll until Job completes: status becomes succeeded, result contains trackingNumber', async () => {
-      const order = await createTestOrder(app)
+      const order = await createTestOrder(app, token)
       createdOrderIds.push(order.id)
-      await payTestOrder(app, order.id)
+      await payTestOrder(app, token, order.id)
 
       const shipRes = await createRequest(app)
         .post(`/api/orders/${order.id}/ship`)
+        .set('Authorization', `Bearer ${token}`)
         .expect(202)
 
       const { jobId } = shipRes.body as { jobId: string }
 
-      const job = await waitForJob(app, jobId)
+      const job = await waitForJob(app, token, jobId)
 
       expect(job.status).toBe('succeeded')
       expect(job.result).toHaveProperty('trackingNumber')
@@ -463,12 +494,13 @@ describe('order E2E Tests', () => {
     }, 15_000) // allow enough timeout for async processing
 
     it('shipping an unpaid order -> 400', async () => {
-      const order = await createTestOrder(app)
+      const order = await createTestOrder(app, token)
       createdOrderIds.push(order.id)
 
       // Ship without paying
       const res = await createRequest(app)
         .post(`/api/orders/${order.id}/ship`)
+        .set('Authorization', `Bearer ${token}`)
         .expect(400)
 
       expect(res.body).toBeDefined()
@@ -477,6 +509,7 @@ describe('order E2E Tests', () => {
     it('gET /jobs/:id not found -> 404', async () => {
       const res = await createRequest(app)
         .get('/api/jobs/00000000-0000-0000-0000-000000000000')
+        .set('Authorization', `Bearer ${token}`)
         .expect(404)
 
       expect(res.body).toHaveProperty('status', 404)
@@ -489,12 +522,13 @@ describe('order E2E Tests', () => {
 
   describe('dELETE /orders/bulk-cancel — bulk cancellation', () => {
     it('all succeed: returns 200, summary.failed === 0', async () => {
-      const o1 = await createTestOrder(app)
-      const o2 = await createTestOrder(app)
+      const o1 = await createTestOrder(app, token)
+      const o2 = await createTestOrder(app, token)
       // Not added to createdOrderIds because these two will be cancelled
 
       const res = await createRequest(app)
         .delete('/api/orders/bulk-cancel')
+        .set('Authorization', `Bearer ${token}`)
         .send({ ids: [o1.id, o2.id] })
         .expect(200)
 
@@ -508,16 +542,17 @@ describe('order E2E Tests', () => {
 
     it('partial success (mix of valid/paid/non-existent): returns 207', async () => {
       // o1: valid pending_payment, can be cancelled
-      const o1 = await createTestOrder(app)
+      const o1 = await createTestOrder(app, token)
       // o2: already paid, cannot be cancelled
-      const o2 = await createTestOrder(app)
-      await payTestOrder(app, o2.id)
+      const o2 = await createTestOrder(app, token)
+      await payTestOrder(app, token, o2.id)
       createdOrderIds.push(o2.id) // paid order needs manual tracking
 
       const nonExistentId = 'a0000000-0000-4000-8000-000000000001'
 
       const res = await createRequest(app)
         .delete('/api/orders/bulk-cancel')
+        .set('Authorization', `Bearer ${token}`)
         .send({ ids: [o1.id, o2.id, nonExistentId] })
         .expect(207)
 
@@ -545,6 +580,7 @@ describe('order E2E Tests', () => {
 
       const res = await createRequest(app)
         .delete('/api/orders/bulk-cancel')
+        .set('Authorization', `Bearer ${token}`)
         .send({ ids })
         .expect(207)
 
@@ -555,10 +591,11 @@ describe('order E2E Tests', () => {
     })
 
     it('response structure contains object, data, and summary fields', async () => {
-      const order = await createTestOrder(app)
+      const order = await createTestOrder(app, token)
 
       const res = await createRequest(app)
         .delete('/api/orders/bulk-cancel')
+        .set('Authorization', `Bearer ${token}`)
         .send({ ids: [order.id] })
 
       const body = res.body as BulkCancelResponse
@@ -573,6 +610,7 @@ describe('order E2E Tests', () => {
     it('invalid UUID in ids field -> 422 validation error', async () => {
       const res = await createRequest(app)
         .delete('/api/orders/bulk-cancel')
+        .set('Authorization', `Bearer ${token}`)
         .send({ ids: ['not-a-uuid'] })
         .expect(422)
 
@@ -591,6 +629,7 @@ describe('order E2E Tests', () => {
       // 1. Idempotent order creation
       const createRes = await createRequest(app)
         .post('/api/orders')
+        .set('Authorization', `Bearer ${token}`)
         .set('Idempotency-Key', key)
         .send({
           userId: 'user-flow-test',
@@ -607,25 +646,26 @@ describe('order E2E Tests', () => {
       createdOrderIds.push(order.id)
 
       // 2. Pay (optimistic lock)
-      const paid = await payTestOrder(app, order.id)
+      const paid = await payTestOrder(app, token, order.id)
       expect(paid.status).toBe('paid')
       expect(paid.version).toBe(1)
 
       // 3. Ship (async)
       const shipRes = await createRequest(app)
         .post(`/api/orders/${order.id}/ship`)
+        .set('Authorization', `Bearer ${token}`)
         .expect(202)
 
       const { jobId } = shipRes.body as { jobId: string }
       expect(shipRes.headers.location).toBe(`/api/jobs/${jobId}`)
 
       // 4. Verify order status has changed to shipping
-      const shippingRes = await createRequest(app).get(`/api/orders/${order.id}`).expect(200)
+      const shippingRes = await createRequest(app).get(`/api/orders/${order.id}`).set('Authorization', `Bearer ${token}`).expect(200)
       const shippingOrder = shippingRes.body as OrderResponse
       expect(shippingOrder.status).toBe('shipping')
 
       // 5. Wait for Job to complete
-      const job = await waitForJob(app, jobId)
+      const job = await waitForJob(app, token, jobId)
       expect(job.status).toBe('succeeded')
       expect(job.result).toHaveProperty('trackingNumber')
     }, 15_000)
