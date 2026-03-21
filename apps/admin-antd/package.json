@@ -33,7 +33,7 @@
   "devDependencies": {
     "@faker-js/faker": "^10.3.0",
     "@infra-x/typescript-config": "latest",
-    "@types/node": "^25.3.5",
+    "@types/node": "^25.5.0",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react-swc": "^4.2.3",
