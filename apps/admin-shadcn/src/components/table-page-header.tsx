@@ -17,7 +17,7 @@ export function TablePageHeader({ title, description, actions, hint }: TablePage
             <p className="text-sm text-muted-foreground">{description}</p>
           )}
         </div>
-        {actions && <div>{actions}</div>}
+        {actions ? <div>{actions}</div> : null}
       </div>
       {hint && <p className="text-xs text-muted-foreground">{hint}</p>}
     </div>
