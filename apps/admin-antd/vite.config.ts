@@ -27,7 +27,7 @@ export default defineConfig({
           if (id.includes('antd') || id.includes('@ant-design')) return 'antd-vendor'
           if (id.includes('@tanstack/react-query')) return 'query-vendor'
           if (id.includes('recharts')) return 'chart-vendor'
-          return undefined
+          return
         },
       },
     },

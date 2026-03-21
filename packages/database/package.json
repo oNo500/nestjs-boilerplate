@@ -31,7 +31,7 @@
     "postgres": "^3.4.8"
   },
   "devDependencies": {
-    "@infra-x/eslint-config": "^0.1.12",
+    "@infra-x/eslint-config": "^0.1.13",
     "@infra-x/typescript-config": "latest",
     "@types/bcrypt": "^6.0.0",
     "@types/pg": "8.15.6",

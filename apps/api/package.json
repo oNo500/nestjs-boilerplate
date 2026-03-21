@@ -60,8 +60,8 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
-    "@golevelup/ts-vitest": "^2.2.0",
-    "@infra-x/eslint-config": "^0.1.12",
+    "@golevelup/ts-vitest": "^4.0.0",
+    "@infra-x/eslint-config": "^0.1.13",
     "@infra-x/typescript-config": "latest",
     "@nestjs/cli": "^11.0.16",
     "@nestjs/schematics": "^11.0.9",

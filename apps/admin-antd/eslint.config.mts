@@ -4,6 +4,8 @@ import { defineConfig } from 'eslint/config'
 import type { Linter } from 'eslint'
 
 const appConfig: Linter.Config[] = defineConfig({
+  // ignores: GLOB_TESTS,
+
   extends: composeConfig({
     typescript: { tsconfigRootDir: import.meta.dirname },
     imports: {
