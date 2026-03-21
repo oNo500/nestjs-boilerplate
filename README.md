@@ -1,5 +1,10 @@
 # NestJS Boilerplate
 
+[![CI](https://github.com/oNo500/nestjs-boilerplate/actions/workflows/ci.yml/badge.svg)](https://github.com/oNo500/nestjs-boilerplate/actions/workflows/ci.yml)
+[![Node.js](https://img.shields.io/badge/node-22-brightgreen)](https://nodejs.org)
+[![pnpm](https://img.shields.io/badge/pnpm-10-orange)](https://pnpm.io)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue)](./LICENSE)
+
 NestJS monorepo — DDD backend, Drizzle ORM + PostgreSQL, JWT/OAuth2, two admin frontends (Ant Design Pro, Next.js App Router).
 
 ## Workspace
