@@ -63,7 +63,7 @@
   },
   "devDependencies": {
     "@golevelup/ts-vitest": "^4.0.0",
-    "@infra-x/code-quality": "file:/Users/xiu/code/infra-code/packages/code-quality",
+    "@infra-x/code-quality": "^0.1.0",
     "@infra-x/eslint-config": "^0.1.13",
     "@infra-x/typescript-config": "latest",
     "@nestjs/cli": "^11.0.16",
