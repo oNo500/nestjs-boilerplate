@@ -1,12 +1,12 @@
 import fs from 'node:fs'
 
 import { Injectable } from '@nestjs/common'
-import { ConfigService } from '@nestjs/config'
 
 import { UPLOAD_DIR } from '@/modules/upload/upload.constants'
 
 import type { Env } from '@/app/config/env.schema'
 import type { OnModuleInit } from '@nestjs/common'
+import type { ConfigService } from '@nestjs/config'
 
 export interface UploadResult {
   fileUrl: string

@@ -86,9 +86,7 @@ export class Article extends BaseAggregateRoot {
       null,
     )
 
-    article.addDomainEvent(
-      new ArticleCreatedEvent(id, title.value),
-    )
+    article.addDomainEvent(new ArticleCreatedEvent(id, title.value))
 
     return article
   }
@@ -195,13 +193,7 @@ export class Article extends BaseAggregateRoot {
     this.#publishedAt = new Date()
     this.#updatedAt = new Date()
 
-    this.addDomainEvent(
-      new ArticlePublishedEvent(
-        this.#id,
-        this.#title.value,
-        this.#slug.value,
-      ),
-    )
+    this.addDomainEvent(new ArticlePublishedEvent(this.#id, this.#title.value, this.#slug.value))
   }
 
   /** Only PUBLISHED articles can be archived */
@@ -213,9 +205,7 @@ export class Article extends BaseAggregateRoot {
     this.#status = ArticleStatus.ARCHIVED
     this.#updatedAt = new Date()
 
-    this.addDomainEvent(
-      new ArticleArchivedEvent(this.#id),
-    )
+    this.addDomainEvent(new ArticleArchivedEvent(this.#id))
   }
 
   /** Only DRAFT articles can be edited */
@@ -228,9 +218,7 @@ export class Article extends BaseAggregateRoot {
     this.#content = content
     this.#updatedAt = new Date()
 
-    this.addDomainEvent(
-      new ArticleUpdatedEvent(this.#id),
-    )
+    this.addDomainEvent(new ArticleUpdatedEvent(this.#id))
   }
 
   addTag(tag: string): void {

@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common'
 import { OnEvent } from '@nestjs/event-emitter'
 
-import { AuditLogService } from '@/modules/audit-log/application/services/audit-log.service'
 import { UserLoggedInViaOAuthEvent } from '@/modules/auth/domain/events/user-logged-in-via-oauth.event'
 import { UserLoggedInEvent } from '@/modules/auth/domain/events/user-logged-in.event'
 import { UserRegisteredViaOAuthEvent } from '@/modules/auth/domain/events/user-registered-via-oauth.event'
+
+import type { AuditLogService } from '@/modules/audit-log/application/services/audit-log.service'
 
 @Injectable()
 export class AuthAuditListener {

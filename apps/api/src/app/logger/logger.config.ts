@@ -40,7 +40,7 @@ export function createLoggerConfig(config: ConfigService<Env, true>): Params {
 
       // Serializers: control which fields are included in log output
       serializers: {
-        req: (req: IncomingMessage & { id?: string, query?: unknown, params?: unknown }) => ({
+        req: (req: IncomingMessage & { id?: string; query?: unknown; params?: unknown }) => ({
           id: req.id,
           method: req.method,
           url: req.url,

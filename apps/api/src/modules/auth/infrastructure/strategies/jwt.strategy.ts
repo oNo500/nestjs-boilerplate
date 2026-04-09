@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common'
-import { ConfigService } from '@nestjs/config'
 import { PassportStrategy } from '@nestjs/passport'
-import { ClsService } from 'nestjs-cls'
 import { ExtractJwt, Strategy } from 'passport-jwt'
 
 import type { Env } from '@/app/config/env.schema'
 import type { JwtPayload } from '@/modules/auth/application/ports/jwt.port'
+import type { ConfigService } from '@nestjs/config'
+import type { ClsService } from 'nestjs-cls'
 
 /**
  * JWT strategy

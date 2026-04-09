@@ -121,11 +121,7 @@ export class AuthIdentity extends BaseAggregateRoot {
   /**
    * Create a phone number auth identity
    */
-  static createPhoneIdentity(
-    id: string,
-    userId: string,
-    phone: string,
-  ): AuthIdentity {
+  static createPhoneIdentity(id: string, userId: string, phone: string): AuthIdentity {
     const now = new Date()
 
     return new AuthIdentity(

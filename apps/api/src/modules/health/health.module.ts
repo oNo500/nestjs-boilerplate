@@ -12,9 +12,7 @@ import { HealthController } from '@/modules/health/presentation/controllers/heal
  * Note: DB and Cache are provided by global modules (DrizzleModule, CacheModule).
  */
 @Module({
-  imports: [
-    TerminusModule,
-  ],
+  imports: [TerminusModule],
   controllers: [HealthController],
   providers: [
     DrizzleHealthIndicator, // database health indicator

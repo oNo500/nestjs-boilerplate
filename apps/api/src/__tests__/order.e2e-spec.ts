@@ -14,7 +14,7 @@ import type { INestApplication } from '@nestjs/common'
  * In-memory cache implementation for E2E tests (replaces Redis)
  */
 class InMemoryCacheService implements CachePort {
-  private readonly store = new Map<string, { value: unknown, expiresAt?: number }>()
+  private readonly store = new Map<string, { value: unknown; expiresAt?: number }>()
 
   get<T>(key: string): Promise<T | undefined> {
     const entry = this.store.get(key)
@@ -56,9 +56,7 @@ class InMemoryCacheService implements CachePort {
  */
 @Global()
 @Module({
-  providers: [
-    { provide: CACHE_PORT, useClass: InMemoryCacheService },
-  ],
+  providers: [{ provide: CACHE_PORT, useClass: InMemoryCacheService }],
   exports: [CACHE_PORT],
 })
 class InMemoryCacheModule {}
@@ -71,7 +69,7 @@ interface OrderResponse {
   id: string
   userId: string
   status: 'pending_payment' | 'paid' | 'shipping' | 'completed' | 'cancelled'
-  items: { productId: string, quantity: number, unitPrice: string }[]
+  items: { productId: string; quantity: number; unitPrice: string }[]
   totalAmount: string
   currency: string
   version: number
@@ -85,7 +83,7 @@ interface JobResponse {
   status: 'pending' | 'running' | 'succeeded' | 'failed' | 'cancelled'
   payload: Record<string, unknown>
   result: unknown
-  error: { code: string, message: string } | null
+  error: { code: string; message: string } | null
 }
 
 interface BulkCancelResponse {
@@ -93,9 +91,9 @@ interface BulkCancelResponse {
   data: {
     id: string
     status: 204 | 404 | 409 | 422
-    error?: { code: string, message: string }
+    error?: { code: string; message: string }
   }[]
-  summary: { succeeded: number, failed: number }
+  summary: { succeeded: number; failed: number }
 }
 
 // ============================================================
@@ -103,7 +101,11 @@ interface BulkCancelResponse {
 // ============================================================
 
 /** Create a test order in pending_payment status */
-async function createTestOrder(app: INestApplication, token: string, userId = 'test-user'): Promise<OrderResponse> {
+async function createTestOrder(
+  app: INestApplication,
+  token: string,
+  userId = 'test-user',
+): Promise<OrderResponse> {
   const res = await createRequest(app)
     .post('/api/orders')
     .set('Authorization', `Bearer ${token}`)
@@ -125,7 +127,11 @@ async function createTestOrder(app: INestApplication, token: string, userId = 't
  * Pay for an order (wraps the GET ETag -> PATCH If-Match flow)
  * Returns the paid order
  */
-async function payTestOrder(app: INestApplication, token: string, orderId: string): Promise<OrderResponse> {
+async function payTestOrder(
+  app: INestApplication,
+  token: string,
+  orderId: string,
+): Promise<OrderResponse> {
   const getRes = await createRequest(app)
     .get(`/api/orders/${orderId}`)
     .set('Authorization', `Bearer ${token}`)
@@ -333,7 +339,10 @@ describe('order E2E Tests', () => {
       const order = await createTestOrder(app, token)
       createdOrderIds.push(order.id)
 
-      const res = await createRequest(app).get(`/api/orders/${order.id}`).set('Authorization', `Bearer ${token}`).expect(200)
+      const res = await createRequest(app)
+        .get(`/api/orders/${order.id}`)
+        .set('Authorization', `Bearer ${token}`)
+        .expect(200)
 
       expect(res.headers.etag).toBeDefined()
       // ETag format: quoted integer, e.g. "0"
@@ -344,7 +353,10 @@ describe('order E2E Tests', () => {
       const order = await createTestOrder(app, token)
       createdOrderIds.push(order.id)
 
-      const getRes = await createRequest(app).get(`/api/orders/${order.id}`).set('Authorization', `Bearer ${token}`).expect(200)
+      const getRes = await createRequest(app)
+        .get(`/api/orders/${order.id}`)
+        .set('Authorization', `Bearer ${token}`)
+        .expect(200)
       const etag = getRes.headers.etag! // "0"
 
       const payRes = await createRequest(app)
@@ -420,7 +432,10 @@ describe('order E2E Tests', () => {
       await payTestOrder(app, token, order.id)
 
       // Pay again (with updated ETag)
-      const getRes = await createRequest(app).get(`/api/orders/${order.id}`).set('Authorization', `Bearer ${token}`).expect(200)
+      const getRes = await createRequest(app)
+        .get(`/api/orders/${order.id}`)
+        .set('Authorization', `Bearer ${token}`)
+        .expect(200)
 
       const res = await createRequest(app)
         .patch(`/api/orders/${order.id}/pay`)
@@ -465,7 +480,10 @@ describe('order E2E Tests', () => {
 
       const { jobId } = shipRes.body as { jobId: string }
 
-      const jobRes = await createRequest(app).get(`/api/jobs/${jobId}`).set('Authorization', `Bearer ${token}`).expect(200)
+      const jobRes = await createRequest(app)
+        .get(`/api/jobs/${jobId}`)
+        .set('Authorization', `Bearer ${token}`)
+        .expect(200)
 
       const job = jobRes.body as JobResponse
       expect(['pending', 'running', 'succeeded']).toContain(job.status)
@@ -573,10 +591,7 @@ describe('order E2E Tests', () => {
     })
 
     it('all fail (all non-existent IDs): still returns 207, not 4xx', async () => {
-      const ids = [
-        'a0000000-0000-4000-8000-000000000001',
-        'a0000000-0000-4000-8000-000000000002',
-      ]
+      const ids = ['a0000000-0000-4000-8000-000000000001', 'a0000000-0000-4000-8000-000000000002']
 
       const res = await createRequest(app)
         .delete('/api/orders/bulk-cancel')
@@ -660,7 +675,10 @@ describe('order E2E Tests', () => {
       expect(shipRes.headers.location).toBe(`/api/jobs/${jobId}`)
 
       // 4. Verify order status has changed to shipping
-      const shippingRes = await createRequest(app).get(`/api/orders/${order.id}`).set('Authorization', `Bearer ${token}`).expect(200)
+      const shippingRes = await createRequest(app)
+        .get(`/api/orders/${order.id}`)
+        .set('Authorization', `Bearer ${token}`)
+        .expect(200)
       const shippingOrder = shippingRes.body as OrderResponse
       expect(shippingOrder.status).toBe('shipping')
 

@@ -1,12 +1,11 @@
 import { Controller, Get, Req, Res, UnauthorizedException, UseGuards } from '@nestjs/common'
-import { ConfigService } from '@nestjs/config'
 import { AuthGuard } from '@nestjs/passport'
 import { ApiOperation, ApiTags } from '@nestjs/swagger'
 
-import { OAuthService } from '@/modules/auth/application/services/oauth.service'
-
 import type { Env } from '@/app/config/env.schema'
 import type { OAuthUserProfile } from '@/modules/auth/application/ports/oauth.port'
+import type { OAuthService } from '@/modules/auth/application/services/oauth.service'
+import type { ConfigService } from '@nestjs/config'
 import type { Request, Response } from 'express'
 
 type OAuthRequest = Request & { user?: OAuthUserProfile }
@@ -31,10 +30,7 @@ export class OAuthController {
   @Get('google/callback')
   @UseGuards(AuthGuard('google'))
   @ApiOperation({ summary: 'Google OAuth callback' })
-  async googleCallback(
-    @Req() req: OAuthRequest,
-    @Res() res: Response,
-  ) {
+  async googleCallback(@Req() req: OAuthRequest, @Res() res: Response) {
     await this.handleCallback(req, res)
   }
 
@@ -50,10 +46,7 @@ export class OAuthController {
   @Get('github/callback')
   @UseGuards(AuthGuard('github'))
   @ApiOperation({ summary: 'GitHub OAuth callback' })
-  async githubCallback(
-    @Req() req: OAuthRequest,
-    @Res() res: Response,
-  ) {
+  async githubCallback(@Req() req: OAuthRequest, @Res() res: Response) {
     await this.handleCallback(req, res)
   }
 

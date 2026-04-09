@@ -1,12 +1,13 @@
 import { Injectable } from '@nestjs/common'
 import { OnEvent } from '@nestjs/event-emitter'
 
-import { AuditLogService } from '@/modules/audit-log/application/services/audit-log.service'
 import { UserBannedEvent } from '@/modules/identity/domain/events/user-banned.event'
 import { UserCreatedEvent } from '@/modules/identity/domain/events/user-created.event'
 import { UserDeletedEvent } from '@/modules/identity/domain/events/user-deleted.event'
 import { UserRoleAssignedEvent } from '@/modules/identity/domain/events/user-role-assigned.event'
 import { UserUnbannedEvent } from '@/modules/identity/domain/events/user-unbanned.event'
+
+import type { AuditLogService } from '@/modules/audit-log/application/services/audit-log.service'
 
 @Injectable()
 export class IdentityAuditListener {

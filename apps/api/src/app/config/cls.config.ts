@@ -42,8 +42,7 @@ function setupClsContext(cls: ClsService, request: Request) {
   cls.set('url', request.url)
 
   // Parse and store Correlation ID (business tracing)
-  const correlationId
-    = (request.headers['x-correlation-id'] as string) || randomUUID()
+  const correlationId = (request.headers['x-correlation-id'] as string) || randomUUID()
   cls.set('correlationId', correlationId)
 
   // Parse W3C Trace Context (distributed tracing)

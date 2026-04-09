@@ -21,10 +21,7 @@ export interface SlugGenerator {
    * @param checkExists Function that checks whether a slug already exists
    * @returns Unique slug
    */
-  generateUnique(
-    baseSlug: string,
-    checkExists: (slug: string) => Promise<boolean>,
-  ): Promise<Slug>
+  generateUnique(baseSlug: string, checkExists: (slug: string) => Promise<boolean>): Promise<Slug>
 }
 
 /**

@@ -17,8 +17,6 @@ import {
 import { ApiHeader, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger'
 
 import { OrderService } from '@/modules/order/application/services/order.service'
-import { BulkCancelDto } from '@/modules/order/presentation/dtos/bulk-cancel.dto'
-import { CreateOrderDto } from '@/modules/order/presentation/dtos/create-order.dto'
 import {
   BulkCancelResponseDto,
   OrderResponseDto,
@@ -26,6 +24,8 @@ import {
 } from '@/modules/order/presentation/dtos/order-response.dto'
 import { ErrorCode } from '@/shared-kernel/infrastructure/enums/error-code'
 
+import type { BulkCancelDto } from '@/modules/order/presentation/dtos/bulk-cancel.dto'
+import type { CreateOrderDto } from '@/modules/order/presentation/dtos/create-order.dto'
 import type { Response } from 'express'
 
 /**
@@ -49,7 +49,11 @@ export class OrderController {
     example: 'a1b2c3d4-e5f6-7890-abcd-ef1234567890',
   })
   @ApiResponse({ status: 201, description: 'Order created successfully', type: OrderResponseDto })
-  @ApiResponse({ status: 200, description: 'Idempotent replay (response header contains Idempotent-Replayed: true)', type: OrderResponseDto })
+  @ApiResponse({
+    status: 200,
+    description: 'Idempotent replay (response header contains Idempotent-Replayed: true)',
+    type: OrderResponseDto,
+  })
   @ApiResponse({ status: 422, description: 'Same Idempotency-Key but different request body' })
   async create(
     @Headers('idempotency-key') idempotencyKey: string,
@@ -90,7 +94,10 @@ export class OrderController {
     example: '"0"',
   })
   @ApiResponse({ status: 200, description: 'Payment successful', type: OrderResponseDto })
-  @ApiResponse({ status: 412, description: 'Version conflict (order was modified by another request)' })
+  @ApiResponse({
+    status: 412,
+    description: 'Version conflict (order was modified by another request)',
+  })
   @ApiResponse({ status: 428, description: 'Missing If-Match request header' })
   @ApiResponse({ status: 404, description: 'Order not found' })
   @ApiResponse({ status: 409, description: 'Order already paid' })
@@ -102,7 +109,8 @@ export class OrderController {
     if (!ifMatch) {
       throw new PreconditionFailedException({
         code: ErrorCode.PRECONDITION_REQUIRED,
-        message: 'The If-Match request header (order version number) is required to prevent concurrent conflicts',
+        message:
+          'The If-Match request header (order version number) is required to prevent concurrent conflicts',
       })
     }
 
@@ -157,8 +165,16 @@ export class OrderController {
 
   @Delete('bulk-cancel')
   @ApiOperation({ summary: 'Bulk cancel orders (207 Multi-Status)' })
-  @ApiResponse({ status: 200, description: 'All orders cancelled successfully', type: BulkCancelResponseDto })
-  @ApiResponse({ status: 207, description: 'Partial success (includes per-item error details)', type: BulkCancelResponseDto })
+  @ApiResponse({
+    status: 200,
+    description: 'All orders cancelled successfully',
+    type: BulkCancelResponseDto,
+  })
+  @ApiResponse({
+    status: 207,
+    description: 'Partial success (includes per-item error details)',
+    type: BulkCancelResponseDto,
+  })
   async bulkCancel(
     @Body() dto: BulkCancelDto,
     @Res({ passthrough: true }) res: Response,

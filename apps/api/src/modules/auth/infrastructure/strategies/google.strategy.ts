@@ -9,9 +9,7 @@ import type { VerifyCallback } from 'passport-oauth2'
 
 @Injectable()
 export class GoogleStrategy extends PassportStrategy(GoogleOAuth2Strategy, 'google') {
-  constructor(
-    @Inject(ConfigService) configService: ConfigService<Env, true>,
-  ) {
+  constructor(@Inject(ConfigService) configService: ConfigService<Env, true>) {
     super({
       clientID: configService.get('GOOGLE_CLIENT_ID', { infer: true }) ?? 'placeholder',
       clientSecret: configService.get('GOOGLE_CLIENT_SECRET', { infer: true }) ?? 'placeholder',

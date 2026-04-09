@@ -1,16 +1,11 @@
-import {
-  Controller,
-  Post,
-  UploadedFile,
-  UploadedFiles,
-  UseInterceptors,
-} from '@nestjs/common'
+import { Controller, Post, UploadedFile, UploadedFiles, UseInterceptors } from '@nestjs/common'
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express'
 import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger'
 
-import { UploadService } from '@/modules/upload/application/services/upload.service'
 import { multerConfig } from '@/modules/upload/infrastructure/multer.config'
-import { UploadResponseDto } from '@/modules/upload/presentation/dtos/upload-response.dto'
+
+import type { UploadService } from '@/modules/upload/application/services/upload.service'
+import type { UploadResponseDto } from '@/modules/upload/presentation/dtos/upload-response.dto'
 
 @ApiTags('upload')
 @Controller('upload')

@@ -137,7 +137,8 @@ export class ProblemDetailsDto {
   // ========== Validation error details (validation errors only) ==========
 
   @ApiPropertyOptional({
-    description: 'Field-level error details (validation errors only; absent for business/system errors)',
+    description:
+      'Field-level error details (validation errors only; absent for business/system errors)',
     type: [FieldError],
     example: [
       {

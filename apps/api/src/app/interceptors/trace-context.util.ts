@@ -48,10 +48,10 @@ export function parseTraceparent(traceparent: string): TraceContext | null {
 
   // Validate format
   if (
-    version?.length !== 2
-    || traceId?.length !== 32
-    || parentId?.length !== 16
-    || traceFlags?.length !== 2
+    version?.length !== 2 ||
+    traceId?.length !== 32 ||
+    parentId?.length !== 16 ||
+    traceFlags?.length !== 2
   ) {
     return null
   }
@@ -59,10 +59,10 @@ export function parseTraceparent(traceparent: string): TraceContext | null {
   // Validate that all parts are valid hexadecimal
   const hexRegex = /^[0-9a-f]+$/i
   if (
-    !hexRegex.test(version)
-    || !hexRegex.test(traceId)
-    || !hexRegex.test(parentId)
-    || !hexRegex.test(traceFlags)
+    !hexRegex.test(version) ||
+    !hexRegex.test(traceId) ||
+    !hexRegex.test(parentId) ||
+    !hexRegex.test(traceFlags)
   ) {
     return null
   }
@@ -86,10 +86,7 @@ export function parseTraceparent(traceparent: string): TraceContext | null {
  * const traceparent = generateTraceparent('4bf92f3577b34da6a3ce929d0e0e4736');
  * // '00-4bf92f3577b34da6a3ce929d0e0e4736-{newly generated spanId}-01'
  */
-export function generateTraceparent(
-  traceId: string,
-  parentId?: string,
-): string {
+export function generateTraceparent(traceId: string, parentId?: string): string {
   const newParentId = parentId ?? generateSpanId()
   return `00-${traceId}-${newParentId}-01`
 }
@@ -100,9 +97,7 @@ export function generateTraceparent(
  * @returns A 16-character hexadecimal string
  */
 export function generateSpanId(): string {
-  return Array.from({ length: 16 }, () =>
-    Math.floor(Math.random() * 16).toString(16),
-  ).join('')
+  return Array.from({ length: 16 }, () => Math.floor(Math.random() * 16).toString(16)).join('')
 }
 
 /**
@@ -111,9 +106,7 @@ export function generateSpanId(): string {
  * @returns A 32-character hexadecimal string
  */
 export function generateTraceId(): string {
-  return Array.from({ length: 32 }, () =>
-    Math.floor(Math.random() * 16).toString(16),
-  ).join('')
+  return Array.from({ length: 32 }, () => Math.floor(Math.random() * 16).toString(16)).join('')
 }
 
 /**

@@ -1,5 +1,4 @@
 import { ForbiddenException, Injectable } from '@nestjs/common'
-import { Reflector } from '@nestjs/core'
 
 import { hasRequiredRole } from '@/shared-kernel/domain/value-objects/role.vo'
 import { ROLES_KEY } from '@/shared-kernel/infrastructure/decorators/roles.decorator'
@@ -7,6 +6,7 @@ import { ErrorCode } from '@/shared-kernel/infrastructure/enums/error-code'
 
 import type { RoleType } from '@/shared-kernel/domain/value-objects/role.vo'
 import type { CanActivate, ExecutionContext } from '@nestjs/common'
+import type { Reflector } from '@nestjs/core'
 
 /**
  * Role-based authorization guard
@@ -31,13 +31,19 @@ export class RolesGuard implements CanActivate {
     const actorRole = request.user?.roles?.[0]
 
     if (!actorRole) {
-      throw new ForbiddenException({ code: ErrorCode.FORBIDDEN, message: 'Insufficient permissions' })
+      throw new ForbiddenException({
+        code: ErrorCode.FORBIDDEN,
+        message: 'Insufficient permissions',
+      })
     }
 
     const hasAccess = requiredRoles.some((required) => hasRequiredRole(actorRole, required))
 
     if (!hasAccess) {
-      throw new ForbiddenException({ code: ErrorCode.INSUFFICIENT_SCOPE, message: 'Insufficient permissions' })
+      throw new ForbiddenException({
+        code: ErrorCode.INSUFFICIENT_SCOPE,
+        message: 'Insufficient permissions',
+      })
     }
 
     return true

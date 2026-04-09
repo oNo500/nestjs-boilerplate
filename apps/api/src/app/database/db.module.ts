@@ -40,10 +40,9 @@ export class DrizzleModule {
                 idleTimeoutMillis: configService.get('DB_POOL_IDLE_TIMEOUT', {
                   infer: true,
                 }),
-                connectionTimeoutMillis: configService.get(
-                  'DB_POOL_CONNECTION_TIMEOUT',
-                  { infer: true },
-                ),
+                connectionTimeoutMillis: configService.get('DB_POOL_CONNECTION_TIMEOUT', {
+                  infer: true,
+                }),
               },
             })
           },

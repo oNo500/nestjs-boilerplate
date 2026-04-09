@@ -35,11 +35,7 @@ export interface VerificationTokenRepository {
   /**
    * Create a verification token (overwrites any existing token for the same identifier)
    */
-  create(data: {
-    identifier: string
-    value: string
-    expiresAt: Date
-  }): Promise<VerificationToken>
+  create(data: { identifier: string; value: string; expiresAt: Date }): Promise<VerificationToken>
 
   /**
    * Find by token value

@@ -33,10 +33,7 @@ export interface AuthIdentityRepository {
   /**
    * Find by user ID and provider
    */
-  findByUserIdAndProvider(
-    userId: string,
-    provider: AuthProvider,
-  ): Promise<AuthIdentity | null>
+  findByUserIdAndProvider(userId: string, provider: AuthProvider): Promise<AuthIdentity | null>
 
   /**
    * Find by provider and account identifier (used for login)

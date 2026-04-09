@@ -40,18 +40,22 @@ export class Order extends BaseAggregateRoot {
   }
 
   /** Initial status is PENDING_PAYMENT */
-  static create(
-    id: string,
-    userId: string,
-    items: OrderItem[],
-    totalAmount: Money,
-  ): Order {
+  static create(id: string, userId: string, items: OrderItem[], totalAmount: Money): Order {
     if (items.length === 0) {
       throw new Error('An order must contain at least one item')
     }
 
     const now = new Date()
-    const order = new Order(id, userId, OrderStatus.PENDING_PAYMENT, items, totalAmount, 0, now, now)
+    const order = new Order(
+      id,
+      userId,
+      OrderStatus.PENDING_PAYMENT,
+      items,
+      totalAmount,
+      0,
+      now,
+      now,
+    )
 
     order.addDomainEvent(new OrderCreatedEvent(id, userId))
 
@@ -110,7 +114,9 @@ export class Order extends BaseAggregateRoot {
   /** Only orders in PENDING_PAYMENT status can be paid */
   pay(): void {
     if (this.#status !== OrderStatus.PENDING_PAYMENT) {
-      throw new Error(`Payment is not allowed in the current status ${this.#status}; the order must be in pending_payment status`)
+      throw new Error(
+        `Payment is not allowed in the current status ${this.#status}; the order must be in pending_payment status`,
+      )
     }
 
     this.#status = OrderStatus.PAID
@@ -123,7 +129,9 @@ export class Order extends BaseAggregateRoot {
   /** Only orders in PAID status can be shipped */
   markShipping(): void {
     if (this.#status !== OrderStatus.PAID) {
-      throw new Error(`Shipping is not allowed in the current status ${this.#status}; the order must be in paid status`)
+      throw new Error(
+        `Shipping is not allowed in the current status ${this.#status}; the order must be in paid status`,
+      )
     }
 
     this.#status = OrderStatus.SHIPPING
@@ -134,7 +142,9 @@ export class Order extends BaseAggregateRoot {
   /** Only orders in SHIPPING status can be completed */
   complete(): void {
     if (this.#status !== OrderStatus.SHIPPING) {
-      throw new Error(`Completion is not allowed in the current status ${this.#status}; the order must be in shipping status`)
+      throw new Error(
+        `Completion is not allowed in the current status ${this.#status}; the order must be in shipping status`,
+      )
     }
 
     this.#status = OrderStatus.COMPLETED
@@ -145,9 +155,9 @@ export class Order extends BaseAggregateRoot {
   /** Orders in PAID status or beyond cannot be cancelled */
   cancel(): void {
     if (
-      this.#status === OrderStatus.PAID
-      || this.#status === OrderStatus.SHIPPING
-      || this.#status === OrderStatus.COMPLETED
+      this.#status === OrderStatus.PAID ||
+      this.#status === OrderStatus.SHIPPING ||
+      this.#status === OrderStatus.COMPLETED
     ) {
       throw new Error(`Cancellation is not allowed in the current status ${this.#status}`)
     }

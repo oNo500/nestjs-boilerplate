@@ -1,10 +1,7 @@
 import { randomUUID } from 'node:crypto'
 
 import { Inject, Injectable } from '@nestjs/common'
-import { ConfigService } from '@nestjs/config'
-import { JwtService } from '@nestjs/jwt'
 
-import { DomainEventPublisher } from '@/app/events/domain-event-publisher'
 import { AUTH_IDENTITY_REPOSITORY } from '@/modules/auth/application/ports/auth-identity.repository.port'
 import { AUTH_SESSION_REPOSITORY } from '@/modules/auth/application/ports/auth-session.repository.port'
 import { USER_ROLE_REPOSITORY } from '@/modules/auth/application/ports/user-role.repository.port'
@@ -15,6 +12,7 @@ import { UserLoggedInViaOAuthEvent } from '@/modules/auth/domain/events/user-log
 import { UserRegisteredViaOAuthEvent } from '@/modules/auth/domain/events/user-registered-via-oauth.event'
 
 import type { Env } from '@/app/config/env.schema'
+import type { DomainEventPublisher } from '@/app/events/domain-event-publisher'
 import type { AuthIdentityRepository } from '@/modules/auth/application/ports/auth-identity.repository.port'
 import type { AuthSessionRepository } from '@/modules/auth/application/ports/auth-session.repository.port'
 import type { JwtPayload } from '@/modules/auth/application/ports/jwt.port'
@@ -22,6 +20,8 @@ import type { OAuthUserProfile } from '@/modules/auth/application/ports/oauth.po
 import type { UserRoleRepository } from '@/modules/auth/application/ports/user-role.repository.port'
 import type { UserRepository } from '@/modules/auth/application/ports/user.repository.port'
 import type { RoleType } from '@/shared-kernel/domain/value-objects/role.vo'
+import type { ConfigService } from '@nestjs/config'
+import type { JwtService } from '@nestjs/jwt'
 
 @Injectable()
 export class OAuthService {
@@ -52,7 +52,7 @@ export class OAuthService {
   async findOrCreateUser(profile: OAuthUserProfile): Promise<{
     accessToken: string
     refreshToken: string
-    user: { id: string, email: string, role: RoleType | null }
+    user: { id: string; email: string; role: RoleType | null }
   }> {
     // Step 1: look for existing OAuth identity
     const existingOAuthIdentity = await this.authIdentityRepo.findByProviderAndIdentifier(
@@ -64,13 +64,21 @@ export class OAuthService {
       const role = await this.userRoleRepo.getRole(existingOAuthIdentity.userId)
       const tokens = await this.generateTokens(existingOAuthIdentity.userId, profile.email, role)
       void this.eventPublisher.publish(
-        new UserLoggedInViaOAuthEvent(existingOAuthIdentity.userId, profile.email, profile.provider, false),
+        new UserLoggedInViaOAuthEvent(
+          existingOAuthIdentity.userId,
+          profile.email,
+          profile.provider,
+          false,
+        ),
       )
       return tokens
     }
 
     // Step 2: look for same-email user via email identity
-    const emailIdentity = await this.authIdentityRepo.findByProviderAndIdentifier('email', profile.email)
+    const emailIdentity = await this.authIdentityRepo.findByProviderAndIdentifier(
+      'email',
+      profile.email,
+    )
 
     let userId: string
 
@@ -118,13 +126,10 @@ export class OAuthService {
     return this.generateTokens(userId, profile.email, role)
   }
 
-  private async generateTokens(
-    userId: string,
-    email: string,
-    role: RoleType | null,
-  ) {
+  private async generateTokens(userId: string, email: string, role: RoleType | null) {
     const refreshToken = randomUUID()
-    const refreshExpiresIn = this.configService.get('JWT_REFRESH_EXPIRES_IN', { infer: true }) ?? '7d'
+    const refreshExpiresIn =
+      this.configService.get('JWT_REFRESH_EXPIRES_IN', { infer: true }) ?? '7d'
     const expiresAt = this.parseExpiration(refreshExpiresIn)
 
     const sessionId = randomUUID()

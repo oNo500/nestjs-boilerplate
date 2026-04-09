@@ -22,17 +22,12 @@ export class TodoRepositoryImpl implements TodoRepository {
   }
 
   async findById(id: string): Promise<Todo | null> {
-    const [todo] = await this.db
-      .select()
-      .from(todosTable)
-      .where(eq(todosTable.id, id))
+    const [todo] = await this.db.select().from(todosTable).where(eq(todosTable.id, id))
 
     return todo ?? null
   }
 
-  async create(
-    data: Omit<InsertTodo, 'id' | 'createdAt' | 'updatedAt'>,
-  ): Promise<Todo> {
+  async create(data: Omit<InsertTodo, 'id' | 'createdAt' | 'updatedAt'>): Promise<Todo> {
     const [todo] = await this.db.insert(todosTable).values(data).returning()
 
     if (!todo) {
@@ -56,10 +51,7 @@ export class TodoRepositoryImpl implements TodoRepository {
   }
 
   async delete(id: string): Promise<boolean> {
-    const result = await this.db
-      .delete(todosTable)
-      .where(eq(todosTable.id, id))
-      .returning()
+    const result = await this.db.delete(todosTable).where(eq(todosTable.id, id)).returning()
 
     return result.length > 0
   }

@@ -1,11 +1,12 @@
 import { Controller, Get, Query } from '@nestjs/common'
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
 
-import { AuditLogService } from '@/modules/audit-log/application/services/audit-log.service'
-import { AuditLogQueryDto } from '@/modules/audit-log/presentation/dtos/audit-log-query.dto'
 import { AuditLogListResponseDto } from '@/modules/audit-log/presentation/dtos/audit-log-response.dto'
 import { Roles } from '@/shared-kernel/infrastructure/decorators/roles.decorator'
 import { UseEnvelope } from '@/shared-kernel/infrastructure/decorators/use-envelope.decorator'
+
+import type { AuditLogService } from '@/modules/audit-log/application/services/audit-log.service'
+import type { AuditLogQueryDto } from '@/modules/audit-log/presentation/dtos/audit-log-query.dto'
 
 @ApiTags('Audit Logs')
 @Controller('audit-logs')

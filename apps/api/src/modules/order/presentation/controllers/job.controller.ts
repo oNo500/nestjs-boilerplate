@@ -1,9 +1,10 @@
 import { Controller, Get, NotFoundException, Param } from '@nestjs/common'
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger'
 
-import { OrderService } from '@/modules/order/application/services/order.service'
 import { JobResponseDto } from '@/modules/order/presentation/dtos/order-response.dto'
 import { ErrorCode } from '@/shared-kernel/infrastructure/enums/error-code'
+
+import type { OrderService } from '@/modules/order/application/services/order.service'
 
 @ApiTags('jobs')
 @Controller('jobs')

@@ -1,12 +1,12 @@
 import { Catch, Logger } from '@nestjs/common'
-import { ConfigService } from '@nestjs/config'
 import { ThrottlerException } from '@nestjs/throttler'
-import { ClsService } from 'nestjs-cls'
 
 import type { Env } from '@/app/config/env.schema'
 import type { ProblemDetailsDto } from '@/shared-kernel/infrastructure/dtos/problem-details.dto'
 import type { ExceptionFilter, ArgumentsHost } from '@nestjs/common'
+import type { ConfigService } from '@nestjs/config'
 import type { Response, Request } from 'express'
+import type { ClsService } from 'nestjs-cls'
 
 /**
  * Throttler exception filter
@@ -61,21 +61,21 @@ export class ThrottlerExceptionFilter implements ExceptionFilter {
       correlation_id: this.cls.get('correlationId'),
       trace_id: this.cls.get('traceId'),
       timestamp: new Date().toISOString(),
-      errors: [{
-        code: 'RATE_LIMIT_EXCEEDED',
-        message: `You have sent ${limit} requests within ${ttl} seconds. Please try again later.`,
-        constraints: {
-          limit,
-          remaining: 0,
-          reset: resetTime,
+      errors: [
+        {
+          code: 'RATE_LIMIT_EXCEEDED',
+          message: `You have sent ${limit} requests within ${ttl} seconds. Please try again later.`,
+          constraints: {
+            limit,
+            remaining: 0,
+            reset: resetTime,
+          },
         },
-      }],
+      ],
     }
 
     // Log warning
-    this.logger.warn(
-      `Rate limit exceeded: ${request.method} ${request.url} - ${request.ip}`,
-    )
+    this.logger.warn(`Rate limit exceeded: ${request.method} ${request.url} - ${request.ip}`)
 
     response.status(429).json(problemDetails)
   }

@@ -1,21 +1,21 @@
 import { Controller, Get, ServiceUnavailableException } from '@nestjs/common'
-import { ConfigService } from '@nestjs/config'
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger'
-import {
-  HealthCheck,
+import { HealthCheck } from '@nestjs/terminus'
+import { SkipThrottle } from '@nestjs/throttler'
+
+import { Public } from '@/shared-kernel/infrastructure/decorators/public.decorator'
+
+import type { Env } from '@/app/config/env.schema'
+import type { DrizzleHealthIndicator } from '@/modules/health/infrastructure/drizzle.health'
+import type { RedisHealthIndicator } from '@/modules/health/infrastructure/redis.health'
+import type { ConfigService } from '@nestjs/config'
+import type {
   HealthCheckService,
   MemoryHealthIndicator,
   DiskHealthIndicator,
 } from '@nestjs/terminus'
-import { SkipThrottle } from '@nestjs/throttler'
 
-import { DrizzleHealthIndicator } from '@/modules/health/infrastructure/drizzle.health'
-import { RedisHealthIndicator } from '@/modules/health/infrastructure/redis.health'
-import { Public } from '@/shared-kernel/infrastructure/decorators/public.decorator'
-
-import type { Env } from '@/app/config/env.schema'
-
-type HealthEntry = { status: 'up' | 'down', message: string }
+type HealthEntry = { status: 'up' | 'down'; message: string }
 
 /**
  * Health check controller
@@ -105,9 +105,8 @@ export class HealthController {
       const details: Record<string, HealthEntry> = {}
       for (const [key, value] of Object.entries(result.details)) {
         const status = value.status as 'up' | 'down'
-        const message = typeof value.message === 'string'
-          ? value.message
-          : (defaultMessages[key] ?? 'OK')
+        const message =
+          typeof value.message === 'string' ? value.message : (defaultMessages[key] ?? 'OK')
         details[key] = { status, message }
       }
 
@@ -140,9 +139,7 @@ export class HealthController {
       if (typeof value === 'object' && value !== null) {
         const info = value as Record<string, unknown>
         const rawMessage = info.message ?? info.error ?? 'check failed'
-        const message = typeof rawMessage === 'string'
-          ? rawMessage
-          : JSON.stringify(rawMessage)
+        const message = typeof rawMessage === 'string' ? rawMessage : JSON.stringify(rawMessage)
         details.push(`${key}: ${message}`)
       }
     }

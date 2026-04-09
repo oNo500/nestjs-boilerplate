@@ -62,7 +62,9 @@ describe('oAuthService', () => {
     it('email identity exists (no OAuth) → links OAuth identity, publishes UserLoggedInViaOAuthEvent with linked=true', async () => {
       mocks.authIdentityRepo.findByProviderAndIdentifier
         .mockResolvedValueOnce(null)
-        .mockResolvedValueOnce(AuthFixtures.emailIdentity({ userId: 'user-id-2', email: 'oauth@example.com' }))
+        .mockResolvedValueOnce(
+          AuthFixtures.emailIdentity({ userId: 'user-id-2', email: 'oauth@example.com' }),
+        )
       mocks.authIdentityRepo.save.mockResolvedValue(undefined)
       mocks.userRoleRepo.getRole.mockResolvedValue('USER')
 

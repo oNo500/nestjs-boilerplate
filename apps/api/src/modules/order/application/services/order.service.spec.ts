@@ -39,7 +39,10 @@ describe('orderService', () => {
       const idempotencyKey = 'key-001'
       const bodyHash = OrderService.computeBodyHash({ userId: TEST_USER_ID, items: TEST_ITEMS })
 
-      const result = await service.createOrder(idempotencyKey, bodyHash, { userId: TEST_USER_ID, items: TEST_ITEMS })
+      const result = await service.createOrder(idempotencyKey, bodyHash, {
+        userId: TEST_USER_ID,
+        items: TEST_ITEMS,
+      })
 
       expect(result.replayed).toBe(false)
       expect(result.order.userId).toBe(TEST_USER_ID)
@@ -58,7 +61,10 @@ describe('orderService', () => {
       mocks.cache.get.mockResolvedValue({ hash: bodyHash, response: { id: 'cached-order-id' } })
       mocks.orderRepository.findById.mockResolvedValue(cachedOrder)
 
-      const result = await service.createOrder('key-001', bodyHash, { userId: TEST_USER_ID, items: TEST_ITEMS })
+      const result = await service.createOrder('key-001', bodyHash, {
+        userId: TEST_USER_ID,
+        items: TEST_ITEMS,
+      })
 
       expect(result.replayed).toBe(true)
       expect(result.order.id).toBe('cached-order-id')
@@ -66,10 +72,16 @@ describe('orderService', () => {
     })
 
     it('cache hit + hash mismatch → UnprocessableEntityException(IDEMPOTENCY_KEY_REUSE_CONFLICT)', async () => {
-      mocks.cache.get.mockResolvedValue({ hash: 'original-hash', response: { id: 'original-order-id' } })
+      mocks.cache.get.mockResolvedValue({
+        hash: 'original-hash',
+        response: { id: 'original-order-id' },
+      })
 
       await expect(
-        service.createOrder('key-001', 'different-hash', { userId: TEST_USER_ID, items: TEST_ITEMS }),
+        service.createOrder('key-001', 'different-hash', {
+          userId: TEST_USER_ID,
+          items: TEST_ITEMS,
+        }),
       ).rejects.toThrow(UnprocessableEntityException)
     })
   })

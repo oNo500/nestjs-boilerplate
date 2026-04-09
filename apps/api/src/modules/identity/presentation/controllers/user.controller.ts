@@ -15,11 +15,6 @@ import {
 } from '@nestjs/common'
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
 
-import { UserService } from '@/modules/identity/application/services/user.service'
-import { AssignRoleDto } from '@/modules/identity/presentation/dtos/assign-role.dto'
-import { CreateUserDto } from '@/modules/identity/presentation/dtos/create-user.dto'
-import { UpdateUserDto } from '@/modules/identity/presentation/dtos/update-user.dto'
-import { UserQueryDto } from '@/modules/identity/presentation/dtos/user-query.dto'
 import {
   UserListResponseDto,
   UserResponseDto,
@@ -28,6 +23,11 @@ import { UserSummaryDto } from '@/modules/identity/presentation/dtos/user-summar
 import { Roles } from '@/shared-kernel/infrastructure/decorators/roles.decorator'
 import { UseEnvelope } from '@/shared-kernel/infrastructure/decorators/use-envelope.decorator'
 
+import type { UserService } from '@/modules/identity/application/services/user.service'
+import type { AssignRoleDto } from '@/modules/identity/presentation/dtos/assign-role.dto'
+import type { CreateUserDto } from '@/modules/identity/presentation/dtos/create-user.dto'
+import type { UpdateUserDto } from '@/modules/identity/presentation/dtos/update-user.dto'
+import type { UserQueryDto } from '@/modules/identity/presentation/dtos/user-query.dto'
 import type { RoleType } from '@/shared-kernel/domain/value-objects/role.vo'
 
 /**
@@ -79,9 +79,7 @@ export class UserController {
   @ApiOperation({ summary: 'Get user details' })
   @ApiResponse({ status: 200, type: UserResponseDto })
   @ApiResponse({ status: 404, description: 'User not found' })
-  async findById(
-    @Param('id', ParseUUIDPipe) id: string,
-  ): Promise<UserResponseDto> {
+  async findById(@Param('id', ParseUUIDPipe) id: string): Promise<UserResponseDto> {
     return this.userService.findById(id)
   }
 
@@ -109,12 +107,16 @@ export class UserController {
     @Body() dto: UpdateUserDto,
     @Request() req: { user: { id: string } },
   ): Promise<UserResponseDto> {
-    return this.userService.update(id, {
-      name: dto.name,
-      displayName: dto.displayName,
-      banned: dto.banned,
-      banReason: dto.banReason,
-    }, req.user.id)
+    return this.userService.update(
+      id,
+      {
+        name: dto.name,
+        displayName: dto.displayName,
+        banned: dto.banned,
+        banReason: dto.banReason,
+      },
+      req.user.id,
+    )
   }
 
   @Put(':id/role')
@@ -127,7 +129,7 @@ export class UserController {
   async assignRole(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() dto: AssignRoleDto,
-    @Request() req: { user: { id: string, roles: RoleType[] } },
+    @Request() req: { user: { id: string; roles: RoleType[] } },
   ): Promise<UserResponseDto> {
     return this.userService.assignRole(id, dto.role, req.user.id, req.user.roles[0]!)
   }

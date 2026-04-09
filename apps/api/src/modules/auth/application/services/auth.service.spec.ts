@@ -38,7 +38,9 @@ describe('authService', () => {
     it('user_not_found → UnauthorizedException, records failed login log', async () => {
       mocks.authIdentityRepo.findByProviderAndIdentifier.mockResolvedValue(null)
 
-      await expect(service.login('unknown@example.com', 'password')).rejects.toThrow(UnauthorizedException)
+      await expect(service.login('unknown@example.com', 'password')).rejects.toThrow(
+        UnauthorizedException,
+      )
 
       await vi.waitFor(() => {
         expect(mocks.loginLogRepo.create).toHaveBeenCalledWith(
@@ -48,9 +50,13 @@ describe('authService', () => {
     })
 
     it('no_password_auth → UnauthorizedException, records failed login log', async () => {
-      mocks.authIdentityRepo.findByProviderAndIdentifier.mockResolvedValue(AuthFixtures.identityWithNoPassword())
+      mocks.authIdentityRepo.findByProviderAndIdentifier.mockResolvedValue(
+        AuthFixtures.identityWithNoPassword(),
+      )
 
-      await expect(service.login('test@example.com', 'password')).rejects.toThrow(UnauthorizedException)
+      await expect(service.login('test@example.com', 'password')).rejects.toThrow(
+        UnauthorizedException,
+      )
 
       await vi.waitFor(() => {
         expect(mocks.loginLogRepo.create).toHaveBeenCalledWith(
@@ -60,10 +66,14 @@ describe('authService', () => {
     })
 
     it('invalid_password → UnauthorizedException, records failed login log', async () => {
-      mocks.authIdentityRepo.findByProviderAndIdentifier.mockResolvedValue(AuthFixtures.emailIdentity())
+      mocks.authIdentityRepo.findByProviderAndIdentifier.mockResolvedValue(
+        AuthFixtures.emailIdentity(),
+      )
       mocks.passwordHasher.verify.mockResolvedValue(false)
 
-      await expect(service.login('test@example.com', 'wrong-password')).rejects.toThrow(UnauthorizedException)
+      await expect(service.login('test@example.com', 'wrong-password')).rejects.toThrow(
+        UnauthorizedException,
+      )
 
       await vi.waitFor(() => {
         expect(mocks.loginLogRepo.create).toHaveBeenCalledWith(
@@ -100,7 +110,9 @@ describe('authService', () => {
     it('email exists → ConflictException, no user created', async () => {
       mocks.authIdentityRepo.existsByIdentifier.mockResolvedValue(true)
 
-      await expect(service.register('existing@example.com', 'password', 'Name')).rejects.toThrow(ConflictException)
+      await expect(service.register('existing@example.com', 'password', 'Name')).rejects.toThrow(
+        ConflictException,
+      )
       expect(mocks.userRepo.create).not.toHaveBeenCalled()
     })
 
@@ -201,14 +213,18 @@ describe('authService', () => {
     it('no email identity → UnauthorizedException', async () => {
       mocks.authIdentityRepo.findByUserIdAndProvider.mockResolvedValue(null)
 
-      await expect(service.changePassword('user-id-1', 'current', 'new')).rejects.toThrow(UnauthorizedException)
+      await expect(service.changePassword('user-id-1', 'current', 'new')).rejects.toThrow(
+        UnauthorizedException,
+      )
     })
 
     it('wrong current password → UnauthorizedException', async () => {
       mocks.authIdentityRepo.findByUserIdAndProvider.mockResolvedValue(AuthFixtures.emailIdentity())
       mocks.passwordHasher.verify.mockResolvedValue(false)
 
-      await expect(service.changePassword('user-id-1', 'wrong', 'new')).rejects.toThrow(UnauthorizedException)
+      await expect(service.changePassword('user-id-1', 'wrong', 'new')).rejects.toThrow(
+        UnauthorizedException,
+      )
     })
 
     it('success → updates password hash, clears all sessions', async () => {

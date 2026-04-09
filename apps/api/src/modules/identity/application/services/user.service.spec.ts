@@ -41,7 +41,11 @@ describe('userService', () => {
       userRepository.existsByEmail.mockResolvedValue(false)
       userRepository.create.mockResolvedValue(newUser)
 
-      const result = await service.create({ name: 'New User', email: 'new@example.com', password: 'password' })
+      const result = await service.create({
+        name: 'New User',
+        email: 'new@example.com',
+        password: 'password',
+      })
 
       expect(result).toEqual(newUser)
       expect(userRepository.create).toHaveBeenCalledWith(
@@ -53,17 +57,23 @@ describe('userService', () => {
 
   describe('assignRole', () => {
     it('actor === target → ForbiddenException', async () => {
-      await expect(service.assignRole('user-id-1', 'ADMIN', 'user-id-1', 'ADMIN')).rejects.toThrow(ForbiddenException)
+      await expect(service.assignRole('user-id-1', 'ADMIN', 'user-id-1', 'ADMIN')).rejects.toThrow(
+        ForbiddenException,
+      )
     })
 
     it('actor is not ADMIN → ForbiddenException', async () => {
-      await expect(service.assignRole('target-id', 'ADMIN', 'actor-id', 'USER')).rejects.toThrow(ForbiddenException)
+      await expect(service.assignRole('target-id', 'ADMIN', 'actor-id', 'USER')).rejects.toThrow(
+        ForbiddenException,
+      )
     })
 
     it('target not found → NotFoundException', async () => {
       userRepository.findById.mockResolvedValue(null)
 
-      await expect(service.assignRole('non-existent-id', 'ADMIN', 'admin-id', 'ADMIN')).rejects.toThrow(NotFoundException)
+      await expect(
+        service.assignRole('non-existent-id', 'ADMIN', 'admin-id', 'ADMIN'),
+      ).rejects.toThrow(NotFoundException)
     })
 
     it('success → updates role, publishes UserRoleAssignedEvent, returns updated UserInfo', async () => {

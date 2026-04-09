@@ -20,8 +20,7 @@ import type {
  * Characteristic: only one valid token per identifier.
  */
 @Injectable()
-export class VerificationTokenRepositoryImpl
-implements VerificationTokenRepository {
+export class VerificationTokenRepositoryImpl implements VerificationTokenRepository {
   constructor(
     @Inject(DB_TOKEN)
     private readonly db: DrizzleDb,
@@ -81,9 +80,7 @@ implements VerificationTokenRepository {
   }
 
   async delete(id: string): Promise<boolean> {
-    const result = await this.db
-      .delete(verificationsTable)
-      .where(eq(verificationsTable.id, id))
+    const result = await this.db.delete(verificationsTable).where(eq(verificationsTable.id, id))
 
     return (result.rowCount ?? 0) > 0
   }
@@ -112,9 +109,7 @@ implements VerificationTokenRepository {
     return record.expiresAt > new Date()
   }
 
-  private toEntity(
-    record: typeof verificationsTable.$inferSelect,
-  ): VerificationToken {
+  private toEntity(record: typeof verificationsTable.$inferSelect): VerificationToken {
     return {
       id: record.id,
       identifier: record.identifier,

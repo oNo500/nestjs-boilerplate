@@ -46,11 +46,7 @@ export class UserRepositoryImpl implements UserRepository {
   }
 
   async findById(id: string): Promise<User | null> {
-    const result = await this.db
-      .select()
-      .from(usersTable)
-      .where(eq(usersTable.id, id))
-      .limit(1)
+    const result = await this.db.select().from(usersTable).where(eq(usersTable.id, id)).limit(1)
 
     if (result.length === 0) {
       return null
@@ -73,12 +69,7 @@ export class UserRepositoryImpl implements UserRepository {
     const result = await this.db
       .select({ id: usersTable.id })
       .from(usersTable)
-      .where(
-        and(
-          eq(usersTable.id, id),
-          eq(usersTable.banned, false),
-        ),
-      )
+      .where(and(eq(usersTable.id, id), eq(usersTable.banned, false)))
       .limit(1)
 
     return result.length > 0
