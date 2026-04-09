@@ -258,8 +258,8 @@ importers:
         specifier: ^4.0.0
         version: 4.0.0
       '@infra-x/code-quality':
-        specifier: 0.3.1
-        version: 0.3.1(@typescript-eslint/parser@8.57.1(eslint@10.2.0(jiti@2.6.1))(typescript@5.9.3))(class-validator@0.14.2)(eslint@10.2.0(jiti@2.6.1))(storybook@10.2.13(@testing-library/dom@10.4.1)(prettier@3.8.1)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(tailwindcss@4.2.2)(typescript@5.9.3)
+        specifier: 0.3.2
+        version: 0.3.2(@typescript-eslint/parser@8.57.1(eslint@10.2.0(jiti@2.6.1))(typescript@5.9.3))(class-validator@0.14.2)(eslint@10.2.0(jiti@2.6.1))(storybook@10.2.13(@testing-library/dom@10.4.1)(prettier@3.8.1)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(tailwindcss@4.2.2)(typescript@5.9.3)
       '@infra-x/typescript-config':
         specifier: latest
         version: 0.1.6
@@ -317,9 +317,6 @@ importers:
       dotenv:
         specifier: ^17.3.1
         version: 17.3.1
-      eslint:
-        specifier: ^10.2.0
-        version: 10.2.0(jiti@2.6.1)
       pino-pretty:
         specifier: ^13.1.3
         version: 13.1.3
@@ -1723,8 +1720,8 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@infra-x/code-quality@0.3.1':
-    resolution: {integrity: sha512-BnUBNiwUT3xDaT4wHRUyZPNH2DoLSRE35fowyrSAmvaFGmFW6hbfmn+iyxHXHWCbQ0Nd58HPJdi4UCw2K4d6NQ==}
+  '@infra-x/code-quality@0.3.2':
+    resolution: {integrity: sha512-xwIeCOEenXKkZz6VN9bCH3HE4sT8RB4CCwZiC+gvCKMLXyIohjRADs+iBTYJ/oyCw3sOSl7peH8tQJsA/X/Hdw==}
     peerDependencies:
       class-validator: '*'
       storybook: '>=10.0.0'
@@ -9803,7 +9800,7 @@ snapshots:
   '@img/sharp-win32-x64@0.34.5':
     optional: true
 
-  '@infra-x/code-quality@0.3.1(@typescript-eslint/parser@8.57.1(eslint@10.2.0(jiti@2.6.1))(typescript@5.9.3))(class-validator@0.14.2)(eslint@10.2.0(jiti@2.6.1))(storybook@10.2.13(@testing-library/dom@10.4.1)(prettier@3.8.1)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(tailwindcss@4.2.2)(typescript@5.9.3)':
+  '@infra-x/code-quality@0.3.2(@typescript-eslint/parser@8.57.1(eslint@10.2.0(jiti@2.6.1))(typescript@5.9.3))(class-validator@0.14.2)(eslint@10.2.0(jiti@2.6.1))(storybook@10.2.13(@testing-library/dom@10.4.1)(prettier@3.8.1)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(tailwindcss@4.2.2)(typescript@5.9.3)':
     dependencies:
       '@darraghor/eslint-plugin-nestjs-typed': 7.1.28(@typescript-eslint/parser@8.57.1(eslint@10.2.0(jiti@2.6.1))(typescript@5.9.3))(class-validator@0.14.2)(eslint@10.2.0(jiti@2.6.1))(typescript@5.9.3)
       defu: 6.1.7
