@@ -1,8 +1,0 @@
-/* Global style reset - ensure layout fills the entire viewport */
-html,
-body,
-#root {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-}

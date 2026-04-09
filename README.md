@@ -5,12 +5,14 @@
 [![pnpm](https://img.shields.io/badge/pnpm-10-orange)](https://pnpm.io)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](./LICENSE)
 
-NestJS monorepo — DDD backend, Drizzle ORM + PostgreSQL, JWT/OAuth2, two admin frontends (Ant Design Pro, Next.js App Router).
+NestJS monorepo — DDD backend, Drizzle ORM + PostgreSQL, JWT/OAuth2, Next.js App Router admin frontend.
+
+> [!NOTE]
+> Looking for the Ant Design Pro integration? It has been archived due to maintenance cost. See the [`archive/admin-antd`](https://github.com/oNo500/nestjs-boilerplate/tree/archive/admin-antd) branch for the last working snapshot.
 
 ## Workspace
 
 - **`api`** (`apps/api`, :3000) — NestJS backend, DDD, Drizzle ORM, Passport
-- **`admin-antd`** (`apps/admin-antd`, :8081) — Feature reference panel, Ant Design Pro, i18n
 - **`admin-shadcn`** (`apps/admin-shadcn`, :8080) — Tech demo panel, Next.js App Router, shadcn/ui
 - **`@workspace/database`** (`packages/database`) — Schema definitions & migrations, Drizzle ORM
 - **`@workspace/api-types`** (`packages/api-types`) — Shared OpenAPI type definitions, openapi-typescript

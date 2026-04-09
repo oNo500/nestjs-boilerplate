@@ -8,7 +8,7 @@
     "lint:fix": "turbo run lint:fix",
     "typecheck": "turbo run typecheck",
     "prepare": "pnpm run setup:env",
-    "setup:env": "pnpm --filter api --filter admin-antd --filter admin-shadcn --filter @workspace/database exec cp .env.example .env"
+    "setup:env": "pnpm --filter api --filter admin-shadcn --filter @workspace/database exec cp .env.example .env"
   },
   "devDependencies": {
     "turbo": "^2.8.20"
@@ -17,7 +17,6 @@
   "pnpm": {
     "peerDependencyRules": {
       "allowAny": [
-        "antd",
         "openapi-fetch",
         "storybook"
       ]
