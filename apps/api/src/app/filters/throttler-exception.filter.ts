@@ -1,12 +1,12 @@
 import { Catch, Logger } from '@nestjs/common'
+import { ConfigService } from '@nestjs/config'
 import { ThrottlerException } from '@nestjs/throttler'
+import { ClsService } from 'nestjs-cls'
 
 import type { Env } from '@/app/config/env.schema'
 import type { ProblemDetailsDto } from '@/shared-kernel/infrastructure/dtos/problem-details.dto'
 import type { ExceptionFilter, ArgumentsHost } from '@nestjs/common'
-import type { ConfigService } from '@nestjs/config'
 import type { Response, Request } from 'express'
-import type { ClsService } from 'nestjs-cls'
 
 /**
  * Throttler exception filter

@@ -1,5 +1,6 @@
 import { Inject, Injectable, Logger } from '@nestjs/common'
 import { OnEvent } from '@nestjs/event-emitter'
+import { ClsService } from 'nestjs-cls'
 
 import { ArticleArchivedEvent } from '@/modules/article/domain/events/article-archived.event'
 import { ArticleCreatedEvent } from '@/modules/article/domain/events/article-created.event'
@@ -8,7 +9,6 @@ import { ArticleUpdatedEvent } from '@/modules/article/domain/events/article-upd
 import { AUDIT_LOGGER } from '@/shared-kernel/application/ports/audit-logger.port'
 
 import type { AuditLogger } from '@/shared-kernel/application/ports/audit-logger.port'
-import type { ClsService } from 'nestjs-cls'
 
 @Injectable()
 export class ArticleEventsListener {

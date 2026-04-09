@@ -1,4 +1,5 @@
 import { Inject, Injectable, Logger } from '@nestjs/common'
+import { ClsService } from 'nestjs-cls'
 
 import { AUDIT_LOG_REPOSITORY } from '@/modules/audit-log/application/ports/audit-log.repository.port'
 
@@ -8,7 +9,6 @@ import type {
   AuditLogRepository,
 } from '@/modules/audit-log/application/ports/audit-log.repository.port'
 import type { AuditLogInput } from '@/shared-kernel/application/ports/audit-logger.port'
-import type { ClsService } from 'nestjs-cls'
 
 @Injectable()
 export class AuditLogService {

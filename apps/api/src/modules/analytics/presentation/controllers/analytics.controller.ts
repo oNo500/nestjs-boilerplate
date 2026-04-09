@@ -1,12 +1,11 @@
 import { Controller, Get } from '@nestjs/common'
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
 
+import { AnalyticsService } from '@/modules/analytics/application/services/analytics.service'
 import { AnalyticsSummaryDto } from '@/modules/analytics/presentation/dtos/analytics-summary.dto'
 import { ArticleCategoryStatsDto } from '@/modules/analytics/presentation/dtos/article-category-stats.dto'
 import { MonthlyOverviewDto } from '@/modules/analytics/presentation/dtos/monthly-overview.dto'
 import { Roles } from '@/shared-kernel/infrastructure/decorators/roles.decorator'
-
-import type { AnalyticsService } from '@/modules/analytics/application/services/analytics.service'
 
 @ApiTags('Dashboard')
 @Controller('dashboard')

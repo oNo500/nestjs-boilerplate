@@ -1,11 +1,12 @@
 import { Controller, Get, Req, Res, UnauthorizedException, UseGuards } from '@nestjs/common'
+import { ConfigService } from '@nestjs/config'
 import { AuthGuard } from '@nestjs/passport'
 import { ApiOperation, ApiTags } from '@nestjs/swagger'
 
+import { OAuthService } from '@/modules/auth/application/services/oauth.service'
+
 import type { Env } from '@/app/config/env.schema'
 import type { OAuthUserProfile } from '@/modules/auth/application/ports/oauth.port'
-import type { OAuthService } from '@/modules/auth/application/services/oauth.service'
-import type { ConfigService } from '@nestjs/config'
 import type { Request, Response } from 'express'
 
 type OAuthRequest = Request & { user?: OAuthUserProfile }

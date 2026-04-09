@@ -72,10 +72,20 @@ export default defineConfig({
     'drizzle/enforce-delete-with-where': ['error', { drizzleObjectName: 'db' }],
     'drizzle/enforce-update-with-where': ['error', { drizzleObjectName: 'db' }],
 
-    // NestJS empty decorated classes are valid (modules, controllers)
-    'typescript/no-extraneous-class': ['error', { allowWithDecorator: true }],
-
     // Promise.catch false positive — NestJS exception filter .catch() is not Promise.catch()
     'promise/valid-params': 'off',
   },
+  overrides: [
+    {
+      files: ['**/*.{ts,mts,cts,tsx}'],
+      rules: {
+        // NestJS empty decorated classes are valid (modules, controllers)
+        'typescript/no-extraneous-class': ['error', { allowWithDecorator: true }],
+
+        // NestJS DI requires runtime class references in constructor params.
+        // Without type-aware linting, this rule incorrectly converts DI imports to type-only.
+        'typescript/consistent-type-imports': 'off',
+      },
+    },
+  ],
 })

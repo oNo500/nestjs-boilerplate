@@ -2,11 +2,13 @@ import { Body, Controller, Get, Inject, NotFoundException, Patch, Request } from
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
 
 import { PROFILE_REPOSITORY } from '@/modules/identity/application/ports/profile.repository.port'
-import { ProfileResponseDto } from '@/modules/identity/presentation/dtos/profile.dto'
+import {
+  ProfileResponseDto,
+  UpdateProfileDto,
+} from '@/modules/identity/presentation/dtos/profile.dto'
 import { ErrorCode } from '@/shared-kernel/infrastructure/enums/error-code'
 
 import type { ProfileRepository } from '@/modules/identity/application/ports/profile.repository.port'
-import type { UpdateProfileDto } from '@/modules/identity/presentation/dtos/profile.dto'
 
 @ApiTags('Profile')
 @Controller('profile')

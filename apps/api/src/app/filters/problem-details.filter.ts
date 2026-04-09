@@ -1,4 +1,6 @@
 import { Catch, HttpException, Logger } from '@nestjs/common'
+import { ConfigService } from '@nestjs/config'
+import { ClsService } from 'nestjs-cls'
 
 import type { Env } from '@/app/config/env.schema'
 import type {
@@ -7,9 +9,7 @@ import type {
 } from '@/shared-kernel/infrastructure/dtos/problem-details.dto'
 import type { ValidationErrorItem } from '@/shared-kernel/infrastructure/types/validation-error'
 import type { ExceptionFilter, ArgumentsHost } from '@nestjs/common'
-import type { ConfigService } from '@nestjs/config'
 import type { Request, Response } from 'express'
-import type { ClsService } from 'nestjs-cls'
 
 /**
  * RFC 9457 Problem Details exception filter

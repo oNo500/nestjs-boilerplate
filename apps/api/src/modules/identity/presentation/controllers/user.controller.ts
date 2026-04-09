@@ -15,6 +15,11 @@ import {
 } from '@nestjs/common'
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
 
+import { UserService } from '@/modules/identity/application/services/user.service'
+import { AssignRoleDto } from '@/modules/identity/presentation/dtos/assign-role.dto'
+import { CreateUserDto } from '@/modules/identity/presentation/dtos/create-user.dto'
+import { UpdateUserDto } from '@/modules/identity/presentation/dtos/update-user.dto'
+import { UserQueryDto } from '@/modules/identity/presentation/dtos/user-query.dto'
 import {
   UserListResponseDto,
   UserResponseDto,
@@ -23,11 +28,6 @@ import { UserSummaryDto } from '@/modules/identity/presentation/dtos/user-summar
 import { Roles } from '@/shared-kernel/infrastructure/decorators/roles.decorator'
 import { UseEnvelope } from '@/shared-kernel/infrastructure/decorators/use-envelope.decorator'
 
-import type { UserService } from '@/modules/identity/application/services/user.service'
-import type { AssignRoleDto } from '@/modules/identity/presentation/dtos/assign-role.dto'
-import type { CreateUserDto } from '@/modules/identity/presentation/dtos/create-user.dto'
-import type { UpdateUserDto } from '@/modules/identity/presentation/dtos/update-user.dto'
-import type { UserQueryDto } from '@/modules/identity/presentation/dtos/user-query.dto'
 import type { RoleType } from '@/shared-kernel/domain/value-objects/role.vo'
 
 /**

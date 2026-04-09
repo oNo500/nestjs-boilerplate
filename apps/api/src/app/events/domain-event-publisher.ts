@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common'
+import { EventEmitter2 } from '@nestjs/event-emitter'
 
 import type { BaseAggregateRoot } from '@/shared-kernel/domain/base-aggregate-root'
 import type { DomainEvent } from '@/shared-kernel/domain/events/domain-event.base'
-import type { EventEmitter2 } from '@nestjs/event-emitter'
 
 /**
  * Domain event publisher

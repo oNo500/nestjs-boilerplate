@@ -1,7 +1,10 @@
 import { randomUUID } from 'node:crypto'
 
 import { Inject, Injectable } from '@nestjs/common'
+import { ConfigService } from '@nestjs/config'
+import { JwtService } from '@nestjs/jwt'
 
+import { DomainEventPublisher } from '@/app/events/domain-event-publisher'
 import { AUTH_IDENTITY_REPOSITORY } from '@/modules/auth/application/ports/auth-identity.repository.port'
 import { AUTH_SESSION_REPOSITORY } from '@/modules/auth/application/ports/auth-session.repository.port'
 import { USER_ROLE_REPOSITORY } from '@/modules/auth/application/ports/user-role.repository.port'
@@ -12,7 +15,6 @@ import { UserLoggedInViaOAuthEvent } from '@/modules/auth/domain/events/user-log
 import { UserRegisteredViaOAuthEvent } from '@/modules/auth/domain/events/user-registered-via-oauth.event'
 
 import type { Env } from '@/app/config/env.schema'
-import type { DomainEventPublisher } from '@/app/events/domain-event-publisher'
 import type { AuthIdentityRepository } from '@/modules/auth/application/ports/auth-identity.repository.port'
 import type { AuthSessionRepository } from '@/modules/auth/application/ports/auth-session.repository.port'
 import type { JwtPayload } from '@/modules/auth/application/ports/jwt.port'
@@ -20,8 +22,6 @@ import type { OAuthUserProfile } from '@/modules/auth/application/ports/oauth.po
 import type { UserRoleRepository } from '@/modules/auth/application/ports/user-role.repository.port'
 import type { UserRepository } from '@/modules/auth/application/ports/user.repository.port'
 import type { RoleType } from '@/shared-kernel/domain/value-objects/role.vo'
-import type { ConfigService } from '@nestjs/config'
-import type { JwtService } from '@nestjs/jwt'
 
 @Injectable()
 export class OAuthService {

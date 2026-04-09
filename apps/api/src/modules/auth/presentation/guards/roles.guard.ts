@@ -1,4 +1,5 @@
 import { ForbiddenException, Injectable } from '@nestjs/common'
+import { Reflector } from '@nestjs/core'
 
 import { hasRequiredRole } from '@/shared-kernel/domain/value-objects/role.vo'
 import { ROLES_KEY } from '@/shared-kernel/infrastructure/decorators/roles.decorator'
@@ -6,7 +7,6 @@ import { ErrorCode } from '@/shared-kernel/infrastructure/enums/error-code'
 
 import type { RoleType } from '@/shared-kernel/domain/value-objects/role.vo'
 import type { CanActivate, ExecutionContext } from '@nestjs/common'
-import type { Reflector } from '@nestjs/core'
 
 /**
  * Role-based authorization guard

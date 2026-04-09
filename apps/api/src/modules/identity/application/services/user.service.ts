@@ -6,6 +6,7 @@ import {
   NotFoundException,
 } from '@nestjs/common'
 
+import { DomainEventPublisher } from '@/app/events/domain-event-publisher'
 import { IDENTITY_REPOSITORY } from '@/modules/identity/application/ports/user.repository.port'
 import { UserBannedEvent } from '@/modules/identity/domain/events/user-banned.event'
 import { UserCreatedEvent } from '@/modules/identity/domain/events/user-created.event'
@@ -15,7 +16,6 @@ import { UserUnbannedEvent } from '@/modules/identity/domain/events/user-unbanne
 import { hasRequiredRole } from '@/shared-kernel/domain/value-objects/role.vo'
 import { ErrorCode } from '@/shared-kernel/infrastructure/enums/error-code'
 
-import type { DomainEventPublisher } from '@/app/events/domain-event-publisher'
 import type {
   CreateUserData,
   UpdateUserData,

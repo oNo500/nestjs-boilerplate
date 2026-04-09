@@ -1,7 +1,10 @@
 import { randomUUID } from 'node:crypto'
 
 import { ConflictException, Inject, Injectable, UnauthorizedException } from '@nestjs/common'
+import { ConfigService } from '@nestjs/config'
+import { JwtService } from '@nestjs/jwt'
 
+import { DomainEventPublisher } from '@/app/events/domain-event-publisher'
 import { AUTH_IDENTITY_REPOSITORY } from '@/modules/auth/application/ports/auth-identity.repository.port'
 import { AUTH_SESSION_REPOSITORY } from '@/modules/auth/application/ports/auth-session.repository.port'
 import { LOGIN_LOG_REPOSITORY } from '@/modules/auth/application/ports/login-log.repository.port'
@@ -14,7 +17,6 @@ import { UserLoggedInEvent } from '@/modules/auth/domain/events/user-logged-in.e
 import { ErrorCode } from '@/shared-kernel/infrastructure/enums/error-code'
 
 import type { Env } from '@/app/config/env.schema'
-import type { DomainEventPublisher } from '@/app/events/domain-event-publisher'
 import type { AuthIdentityRepository } from '@/modules/auth/application/ports/auth-identity.repository.port'
 import type { AuthSessionRepository } from '@/modules/auth/application/ports/auth-session.repository.port'
 import type { JwtPayload } from '@/modules/auth/application/ports/jwt.port'
@@ -23,8 +25,6 @@ import type { PasswordHasher } from '@/modules/auth/application/ports/password-h
 import type { UserRoleRepository } from '@/modules/auth/application/ports/user-role.repository.port'
 import type { UserRepository } from '@/modules/auth/application/ports/user.repository.port'
 import type { RoleType } from '@/shared-kernel/domain/value-objects/role.vo'
-import type { ConfigService } from '@nestjs/config'
-import type { JwtService } from '@nestjs/jwt'
 
 interface DeviceContext {
   ipAddress?: string

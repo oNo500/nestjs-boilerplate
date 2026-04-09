@@ -1,5 +1,6 @@
 import { Inject, Injectable, Logger } from '@nestjs/common'
 import { OnEvent } from '@nestjs/event-emitter'
+import { ClsService } from 'nestjs-cls'
 
 import { OrderCancelledEvent } from '@/modules/order/domain/events/order-cancelled.event'
 import { OrderCreatedEvent } from '@/modules/order/domain/events/order-created.event'
@@ -8,7 +9,6 @@ import { OrderShipRequestedEvent } from '@/modules/order/domain/events/order-shi
 import { AUDIT_LOGGER } from '@/shared-kernel/application/ports/audit-logger.port'
 
 import type { AuditLogger } from '@/shared-kernel/application/ports/audit-logger.port'
-import type { ClsService } from 'nestjs-cls'
 
 @Injectable()
 export class OrderEventsListener {

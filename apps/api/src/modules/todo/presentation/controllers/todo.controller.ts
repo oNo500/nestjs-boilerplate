@@ -11,15 +11,15 @@ import {
 } from '@nestjs/common'
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
 
+import { TodoService } from '@/modules/todo/application/services/todo.service'
+import { CreateTodoDto } from '@/modules/todo/presentation/dtos/create-todo.dto'
 import {
   TodoListResponseDto,
   TodoResponseDto,
 } from '@/modules/todo/presentation/dtos/todo-response.dto'
+import { UpdateTodoDto } from '@/modules/todo/presentation/dtos/update-todo.dto'
 import { UseEnvelope } from '@/shared-kernel/infrastructure/decorators/use-envelope.decorator'
 
-import type { TodoService } from '@/modules/todo/application/services/todo.service'
-import type { CreateTodoDto } from '@/modules/todo/presentation/dtos/create-todo.dto'
-import type { UpdateTodoDto } from '@/modules/todo/presentation/dtos/update-todo.dto'
 import type { Todo } from '@workspace/database'
 
 @ApiTags('todos')

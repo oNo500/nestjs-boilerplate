@@ -1,24 +1,25 @@
 import { Body, Controller, Get, HttpCode, Post, Request } from '@nestjs/common'
 import { ApiTags, ApiOperation, ApiBearerAuth, ApiResponse } from '@nestjs/swagger'
 
-import { LoginResponseDto } from '@/modules/auth/presentation/dtos/login.dto'
+import { AuthService } from '@/modules/auth/application/services/auth.service'
+import { LoginDto, LoginResponseDto } from '@/modules/auth/presentation/dtos/login.dto'
 import {
+  LogoutDto,
   LogoutResponseDto,
   LogoutAllResponseDto,
 } from '@/modules/auth/presentation/dtos/logout.dto'
-import { RefreshTokenResponseDto } from '@/modules/auth/presentation/dtos/refresh-token.dto'
-import { RegisterResponseDto } from '@/modules/auth/presentation/dtos/register.dto'
-import { RevokeSessionResponseDto } from '@/modules/auth/presentation/dtos/revoke-session.dto'
+import {
+  RefreshTokenDto,
+  RefreshTokenResponseDto,
+} from '@/modules/auth/presentation/dtos/refresh-token.dto'
+import { RegisterDto, RegisterResponseDto } from '@/modules/auth/presentation/dtos/register.dto'
+import {
+  RevokeSessionDto,
+  RevokeSessionResponseDto,
+} from '@/modules/auth/presentation/dtos/revoke-session.dto'
 import { SessionResponseDto } from '@/modules/auth/presentation/dtos/session-response.dto'
 import { SessionsListResponseDto } from '@/modules/auth/presentation/dtos/sessions-list-response.dto'
 import { Public } from '@/shared-kernel/infrastructure/decorators/public.decorator'
-
-import type { AuthService } from '@/modules/auth/application/services/auth.service'
-import type { LoginDto } from '@/modules/auth/presentation/dtos/login.dto'
-import type { LogoutDto } from '@/modules/auth/presentation/dtos/logout.dto'
-import type { RefreshTokenDto } from '@/modules/auth/presentation/dtos/refresh-token.dto'
-import type { RegisterDto } from '@/modules/auth/presentation/dtos/register.dto'
-import type { RevokeSessionDto } from '@/modules/auth/presentation/dtos/revoke-session.dto'
 
 @ApiTags('auth')
 @Controller('auth')
