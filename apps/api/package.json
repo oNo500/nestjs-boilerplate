@@ -9,8 +9,10 @@
   "scripts": {
     "build": "nest build",
     "dev": "pnpm start:dev",
-    "lint": "eslint . --fix",
-    "lint:fix": "eslint . --fix",
+    "lint": "oxlint",
+    "lint:fix": "oxlint --fix",
+    "format": "oxfmt --write .",
+    "format:check": "oxfmt --check .",
     "start": "nest start",
     "start:debug": "nest start --debug --watch",
     "start:dev": "nest build && nest start --watch",
@@ -61,6 +63,7 @@
   },
   "devDependencies": {
     "@golevelup/ts-vitest": "^4.0.0",
+    "@infra-x/code-quality": "file:/Users/xiu/code/infra-code/packages/code-quality",
     "@infra-x/eslint-config": "^0.1.13",
     "@infra-x/typescript-config": "latest",
     "@nestjs/cli": "^11.0.16",
