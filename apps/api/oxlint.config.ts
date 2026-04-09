@@ -1,8 +1,6 @@
 import {
   base,
   boundaries,
-  drizzle,
-  jsdoc,
   node,
   promise,
   unicorn,
@@ -16,8 +14,6 @@ export default defineConfig({
     unicorn,
     node,
     promise,
-    jsdoc,
-    drizzle,
     vitest,
     boundaries({
       elements: [
@@ -70,4 +66,16 @@ export default defineConfig({
       ],
     }),
   ],
+  jsPlugins: ['eslint-plugin-drizzle'],
+  rules: {
+    // Drizzle: only check direct db calls, not service wrappers
+    'drizzle/enforce-delete-with-where': ['error', { drizzleObjectName: 'db' }],
+    'drizzle/enforce-update-with-where': ['error', { drizzleObjectName: 'db' }],
+
+    // NestJS empty decorated classes are valid (modules, controllers)
+    'typescript/no-extraneous-class': ['error', { allowWithDecorator: true }],
+
+    // Promise.catch false positive — NestJS exception filter .catch() is not Promise.catch()
+    'promise/valid-params': 'off',
+  },
 })
