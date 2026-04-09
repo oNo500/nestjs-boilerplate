@@ -1,9 +1,0 @@
-{
-  "extends": "@infra-x/typescript-config/tsconfig.vite.json",
-  "compilerOptions": {
-    "noUncheckedIndexedAccess": true, // openapi-fetch 建议开启
-    "paths": { "@/*": ["./src/*"] }
-  },
-  "include": ["src","*.mts","*.ts"],
-  "exclude": ["node_modules", "__tests__","src/**/*.test.ts", "src/**/*.test.tsx"]
-}
