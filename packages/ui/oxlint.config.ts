@@ -11,11 +11,6 @@ export default defineConfig({
     }),
     unicorn(),
     depend(),
-    react({
-      rules: {
-        // React components use the automatic JSX runtime
-        'react/react-in-jsx-scope': 'off',
-      },
-    }),
+    react(),
   ],
 })

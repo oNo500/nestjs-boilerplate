@@ -28,7 +28,7 @@
     "db:local": "tsx scripts/local-db.ts"
   },
   "devDependencies": {
-    "@infra-x/code-quality": "0.3.2",
+    "@infra-x/code-quality": "0.4.0",
     "@infra-x/typescript-config": "latest",
     "@types/bcrypt": "^6.0.0",
     "@types/pg": "8.15.6",

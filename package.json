@@ -13,7 +13,7 @@
     "setup:env": "pnpm --filter api --filter admin-shadcn --filter @workspace/database exec cp .env.example .env"
   },
   "devDependencies": {
-    "@infra-x/code-quality": "0.3.2",
+    "@infra-x/code-quality": "0.4.0",
     "oxfmt": "^0.44.0",
     "oxlint": "^1.59.0",
     "turbo": "^2.8.20"
