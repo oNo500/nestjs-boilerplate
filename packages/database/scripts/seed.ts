@@ -13,7 +13,7 @@ import { config } from 'dotenv'
 import { eq, or } from 'drizzle-orm'
 import { drizzle } from 'drizzle-orm/node-postgres'
 import { boolean, index, pgTable, text, timestamp, uniqueIndex } from 'drizzle-orm/pg-core'
-import pg from 'pg'
+import { Pool } from 'pg'
 
 // Load environment variables
 config({ path: '../../.env' })
@@ -92,7 +92,7 @@ async function seed() {
 
   console.log('🔄 Connecting to database...')
 
-  const pool = new pg.Pool({ connectionString: databaseUrl })
+  const pool = new Pool({ connectionString: databaseUrl })
   const db = drizzle(pool)
 
   try {
