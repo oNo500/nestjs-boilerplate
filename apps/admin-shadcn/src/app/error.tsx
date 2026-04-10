@@ -22,15 +22,15 @@ export default function ErrorPage({
       <div className="max-w-md space-y-8">
         {/* Large decorative background number */}
         <div className="relative select-none">
-          <span className="text-[160px] font-black leading-none tracking-tighter text-muted-foreground/10">
+          <span className="text-[160px] leading-none font-black tracking-tighter text-muted-foreground/10">
             500
           </span>
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="space-y-2">
-              <p className="text-sm font-semibold uppercase tracking-widest text-destructive">
+              <p className="text-sm font-semibold tracking-widest text-destructive uppercase">
                 Something went wrong
               </p>
-              <h1 className="text-balance text-2xl font-bold tracking-tight text-foreground">
+              <h1 className="text-2xl font-bold tracking-tight text-balance text-foreground">
                 Unexpected error
               </h1>
             </div>
@@ -39,15 +39,12 @@ export default function ErrorPage({
 
         {/* Error details */}
         <div className="space-y-2">
-          <p className="text-pretty text-sm text-muted-foreground">
-            {error.message || 'An unexpected error occurred. Please try again or return to the homepage.'}
+          <p className="text-sm text-pretty text-muted-foreground">
+            {error.message ||
+              'An unexpected error occurred. Please try again or return to the homepage.'}
           </p>
           {error.digest && (
-            <p className="font-mono text-xs text-muted-foreground/60">
-              Error ID:
-              {' '}
-              {error.digest}
-            </p>
+            <p className="font-mono text-xs text-muted-foreground/60">Error ID: {error.digest}</p>
           )}
         </div>
 

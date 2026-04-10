@@ -13,9 +13,7 @@ export function TablePageHeader({ title, description, actions, hint }: TablePage
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold">{title}</h1>
-          {description && (
-            <p className="text-sm text-muted-foreground">{description}</p>
-          )}
+          {description && <p className="text-sm text-muted-foreground">{description}</p>}
         </div>
         {actions ? <div>{actions}</div> : null}
       </div>

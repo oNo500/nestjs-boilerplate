@@ -43,30 +43,19 @@ export function CursorPaginationPanel() {
   return (
     <div className="space-y-4">
       <div className="rounded-md bg-muted/50 p-3 text-sm text-muted-foreground">
-        <strong>Cursor Pagination</strong>
-        {' '}
-        — Uses an opaque
-        {' '}
-        <code>cursor</code>
-        {' '}
-        token (Base64).
-        No total count. Consistent performance on large tables — DB seeks directly to the cursor position.
-        Ideal for infinite scroll or real-time feeds.
+        <strong>Cursor Pagination</strong> — Uses an opaque <code>cursor</code> token (Base64). No
+        total count. Consistent performance on large tables — DB seeks directly to the cursor
+        position. Ideal for infinite scroll or real-time feeds.
       </div>
 
       <ArticlesTable data={articles} isLoading={isLoading} />
 
       <div className="flex items-center justify-between">
         <p className="text-sm text-muted-foreground">
-          Page
-          {' '}
-          {page}
+          Page {page}
           {currentCursor && (
             <span className="ml-2 font-mono text-xs" title={currentCursor}>
-              cursor:
-              {' '}
-              {currentCursor.slice(0, 16)}
-              …
+              cursor: {currentCursor.slice(0, 16)}…
             </span>
           )}
         </p>

@@ -27,9 +27,7 @@ export const auditLogsTable = pgTable(
     // When the domain event actually occurred (may differ from DB write time)
     occurredAt: timestamp('occurred_at', { withTimezone: true }),
 
-    createdAt: timestamp('created_at', { withTimezone: true })
-      .notNull()
-      .defaultNow(),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   },
   (table) => [
     index('audit_logs_actor_id_idx').on(table.actorId),

@@ -3,12 +3,7 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Badge } from '@workspace/ui/components/badge'
 import { Button } from '@workspace/ui/components/button'
-import {
-  Field,
-  FieldError,
-  FieldGroup,
-  FieldLabel,
-} from '@workspace/ui/components/field'
+import { Field, FieldError, FieldGroup, FieldLabel } from '@workspace/ui/components/field'
 import { Input } from '@workspace/ui/components/input'
 import {
   Select,
@@ -32,7 +27,12 @@ import { useState, useEffect, startTransition } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { z } from 'zod'
 
-import { useCreateArticle, useUpdateArticle, useAddTag, useRemoveTag } from '@/features/articles/hooks/use-article-mutations'
+import {
+  useCreateArticle,
+  useUpdateArticle,
+  useAddTag,
+  useRemoveTag,
+} from '@/features/articles/hooks/use-article-mutations'
 
 import type { components } from '@workspace/api-types'
 import type { KeyboardEvent } from 'react'
@@ -105,13 +105,25 @@ export function ArticleFormSheet({ article, trigger }: ArticleFormSheetProps) {
       updateArticle.mutate(
         {
           params: { path: { id: article.id } },
-          body: { title: values.title, content: values.content, category: values.category, author: values.author },
+          body: {
+            title: values.title,
+            content: values.content,
+            category: values.category,
+            author: values.author,
+          },
         },
         { onSuccess: () => setOpen(false) },
       )
     } else {
       createArticle.mutate(
-        { body: { title: values.title, content: values.content, category: values.category, author: values.author } },
+        {
+          body: {
+            title: values.title,
+            content: values.content,
+            category: values.category,
+            author: values.author,
+          },
+        },
         {
           onSuccess: () => {
             setOpen(false)
@@ -155,7 +167,7 @@ export function ArticleFormSheet({ article, trigger }: ArticleFormSheetProps) {
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger nativeButton={false} render={<span>{trigger}</span>} />
-      <SheetContent side="right" className="w-full sm:max-w-md! lg:max-w-xl! overflow-y-auto">
+      <SheetContent side="right" className="w-full overflow-y-auto sm:max-w-md! lg:max-w-xl!">
         <SheetHeader>
           <SheetTitle>{isEdit ? 'Edit Article' : 'Create Article'}</SheetTitle>
         </SheetHeader>
@@ -191,7 +203,9 @@ export function ArticleFormSheet({ article, trigger }: ArticleFormSheetProps) {
                     </SelectTrigger>
                     <SelectContent>
                       {CATEGORIES.map((c) => (
-                        <SelectItem key={c} value={c} className="capitalize">{c}</SelectItem>
+                        <SelectItem key={c} value={c} className="capitalize">
+                          {c}
+                        </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
@@ -214,7 +228,7 @@ export function ArticleFormSheet({ article, trigger }: ArticleFormSheetProps) {
                 onKeyDown={handleTagKeyDown}
               />
               {localTags.length > 0 && (
-                <div className="flex flex-wrap gap-1 mt-1">
+                <div className="mt-1 flex flex-wrap gap-1">
                   {localTags.map((tag) => (
                     <Badge key={tag} variant="secondary" className="gap-1">
                       {tag}
@@ -234,11 +248,9 @@ export function ArticleFormSheet({ article, trigger }: ArticleFormSheetProps) {
           </FieldGroup>
 
           <SheetFooter>
-            <SheetClose render={<Button type="button" variant="outline" />}>
-              Cancel
-            </SheetClose>
+            <SheetClose render={<Button type="button" variant="outline" />}>Cancel</SheetClose>
             <Button type="submit" disabled={isSubmitting || isPending}>
-              {isPending ? 'Saving...' : (isEdit ? 'Save' : 'Create')}
+              {isPending ? 'Saving...' : isEdit ? 'Save' : 'Create'}
             </Button>
           </SheetFooter>
         </form>

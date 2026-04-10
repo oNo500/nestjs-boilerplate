@@ -1,10 +1,6 @@
 'use client'
 
-import {
-  flexRender,
-  getCoreRowModel,
-  useReactTable,
-} from '@tanstack/react-table'
+import { flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { Skeleton } from '@workspace/ui/components/skeleton'
 import {
   Table,
@@ -27,9 +23,7 @@ const columns: ColumnDef<ArticleRow>[] = [
   {
     accessorKey: 'title',
     header: 'Title',
-    cell: ({ row }) => (
-      <span className="font-medium">{row.original.title}</span>
-    ),
+    cell: ({ row }) => <span className="font-medium">{row.original.title}</span>,
   },
   {
     accessorKey: 'author',
@@ -38,9 +32,7 @@ const columns: ColumnDef<ArticleRow>[] = [
   {
     accessorKey: 'category',
     header: 'Category',
-    cell: ({ row }) => (
-      <span className="capitalize">{row.original.category}</span>
-    ),
+    cell: ({ row }) => <span className="capitalize">{row.original.category}</span>,
   },
   {
     accessorKey: 'status',
@@ -51,9 +43,11 @@ const columns: ColumnDef<ArticleRow>[] = [
     accessorKey: 'tags',
     header: 'Tags',
     cell: ({ row }) =>
-      row.original.tags.length > 0
-        ? row.original.tags.join(', ')
-        : <span className="text-muted-foreground">—</span>,
+      row.original.tags.length > 0 ? (
+        row.original.tags.join(', ')
+      ) : (
+        <span className="text-muted-foreground">—</span>
+      ),
   },
   {
     accessorKey: 'viewCount',
@@ -112,23 +106,26 @@ export function ArticlesTable({ data, isLoading }: ArticlesTableProps) {
           ))}
         </TableHeader>
         <TableBody>
-          {table.getRowModel().rows.length > 0
-            ? table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id}>
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
-            : (
-                <TableRow>
-                  <TableCell colSpan={columns.length} className="h-24 text-center text-muted-foreground">
-                    No articles found.
+          {table.getRowModel().rows.length > 0 ? (
+            table.getRowModel().rows.map((row) => (
+              <TableRow key={row.id}>
+                {row.getVisibleCells().map((cell) => (
+                  <TableCell key={cell.id}>
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
-                </TableRow>
-              )}
+                ))}
+              </TableRow>
+            ))
+          ) : (
+            <TableRow>
+              <TableCell
+                colSpan={columns.length}
+                className="h-24 text-center text-muted-foreground"
+              >
+                No articles found.
+              </TableCell>
+            </TableRow>
+          )}
         </TableBody>
       </Table>
     </div>

@@ -5,7 +5,11 @@ interface LoginStatusBadgeProps {
 }
 
 export function LoginStatusBadge({ status }: LoginStatusBadgeProps) {
-  return status === 'success'
-    ? <Badge variant="outline" className="text-green-600 border-green-600">Success</Badge>
-    : <Badge variant="destructive">Failed</Badge>
+  return status === 'success' ? (
+    <Badge variant="outline" className="border-green-600 text-green-600">
+      Success
+    </Badge>
+  ) : (
+    <Badge variant="destructive">Failed</Badge>
+  )
 }

@@ -38,14 +38,14 @@ export function AuditLogsPage() {
       <TablePageHeader
         title="Audit Logs"
         description={total > 0 ? `${total} record${total === 1 ? '' : 's'} total` : undefined}
-        actions={(
+        actions={
           <Input
             placeholder="Filter by action..."
             value={action}
             onChange={handleActionChange}
             className="w-[200px]"
           />
-        )}
+        }
         hint="Click a row to expand before/after details."
       />
 

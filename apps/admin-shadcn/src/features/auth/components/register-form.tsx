@@ -2,7 +2,13 @@
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button } from '@workspace/ui/components/button'
-import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from '@workspace/ui/components/field'
+import {
+  Field,
+  FieldDescription,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from '@workspace/ui/components/field'
 import { Input } from '@workspace/ui/components/input'
 import { cn } from '@workspace/ui/lib/utils'
 import { GalleryVerticalEndIcon } from 'lucide-react'
@@ -69,9 +75,7 @@ export function RegisterForm({ className, ...props }: React.ComponentProps<'div'
             </a>
             <h1 className="text-xl font-bold">Create an account</h1>
             <FieldDescription>
-              Already have an account?
-              {' '}
-              <Link href={appPaths.auth.login.getHref()}>Sign in</Link>
+              Already have an account? <Link href={appPaths.auth.login.getHref()}>Sign in</Link>
             </FieldDescription>
           </div>
 
@@ -138,14 +142,8 @@ export function RegisterForm({ className, ...props }: React.ComponentProps<'div'
         </FieldGroup>
       </form>
       <FieldDescription className="px-6 text-center">
-        By clicking continue, you agree to our
-        {' '}
-        <a href="#">Terms of Service</a>
-        {' '}
-        and
-        {' '}
-        <a href="#">Privacy Policy</a>
-        .
+        By clicking continue, you agree to our <a href="#">Terms of Service</a> and{' '}
+        <a href="#">Privacy Policy</a>.
       </FieldDescription>
     </div>
   )

@@ -56,7 +56,7 @@ export function UserActionsMenu({ user }: UserActionsMenuProps) {
     )
   }
 
-  function handleRoleChange(role: typeof ROLES[number]) {
+  function handleRoleChange(role: (typeof ROLES)[number]) {
     roleMutation.mutate({
       params: { path: { id: user.id } },
       body: { role },
@@ -66,12 +66,13 @@ export function UserActionsMenu({ user }: UserActionsMenuProps) {
   return (
     <>
       <DropdownMenu>
-        <DropdownMenuTrigger render={(
-          <Button variant="ghost" size="icon" className="h-8 w-8">
-            <MoreHorizontalIcon className="h-4 w-4" />
-            <span className="sr-only">Open menu</span>
-          </Button>
-        )}
+        <DropdownMenuTrigger
+          render={
+            <Button variant="ghost" size="icon" className="h-8 w-8">
+              <MoreHorizontalIcon className="h-4 w-4" />
+              <span className="sr-only">Open menu</span>
+            </Button>
+          }
         />
         <DropdownMenuContent align="end">
           <DropdownMenuItem
@@ -99,10 +100,7 @@ export function UserActionsMenu({ user }: UserActionsMenuProps) {
 
           <DropdownMenuSeparator />
 
-          <DropdownMenuItem
-            className="text-destructive"
-            onClick={() => setDeleteOpen(true)}
-          >
+          <DropdownMenuItem className="text-destructive" onClick={() => setDeleteOpen(true)}>
             Delete user
           </DropdownMenuItem>
         </DropdownMenuContent>
@@ -113,20 +111,16 @@ export function UserActionsMenu({ user }: UserActionsMenuProps) {
           <AlertDialogHeader>
             <AlertDialogTitle>Delete user?</AlertDialogTitle>
             <AlertDialogDescription>
-              This will permanently delete
-              {' '}
-              <strong>{user.email}</strong>
-              . This action cannot be undone.
+              This will permanently delete <strong>{user.email}</strong>. This action cannot be
+              undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={deleteMutation.isPending}>
-              Cancel
-            </AlertDialogCancel>
+            <AlertDialogCancel disabled={deleteMutation.isPending}>Cancel</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDelete}
               disabled={deleteMutation.isPending}
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              className="text-destructive-foreground bg-destructive hover:bg-destructive/90"
             >
               {deleteMutation.isPending ? 'Deleting...' : 'Delete'}
             </AlertDialogAction>

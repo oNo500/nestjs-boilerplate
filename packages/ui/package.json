@@ -1,11 +1,23 @@
 {
   "name": "@workspace/ui",
   "version": "0.0.0",
-  "type": "module",
   "private": true,
+  "type": "module",
+  "exports": {
+    "./globals.css": "./src/styles/globals.css",
+    "./postcss.config": "./postcss.config.mjs",
+    "./lib/*": "./src/lib/*.ts",
+    "./components/*": [
+      "./src/components/*.tsx",
+      "./src/components/*/index.tsx"
+    ],
+    "./hooks/*": "./src/hooks/*.ts"
+  },
   "scripts": {
-    "lint": "eslint . --max-warnings 0",
-    "lint:fix": "eslint . --fix",
+    "lint": "oxlint",
+    "lint:fix": "oxlint --fix",
+    "format": "oxfmt --write .",
+    "format:check": "oxfmt --check .",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
@@ -28,25 +40,14 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
+    "@infra-x/code-quality": "0.3.2",
     "@infra-x/typescript-config": "^0.1.6",
     "@tailwindcss/postcss": "^4.2.2",
     "@turbo/gen": "^2.8.20",
     "@types/node": "^25.5.0",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
-    "@workspace/eslint-config": "workspace:*",
-    "eslint": "^10.1.0",
     "tailwindcss": "^4.2.2",
     "typescript": "^5.9.3"
-  },
-  "exports": {
-    "./globals.css": "./src/styles/globals.css",
-    "./postcss.config": "./postcss.config.mjs",
-    "./lib/*": "./src/lib/*.ts",
-    "./components/*": [
-      "./src/components/*.tsx",
-      "./src/components/*/index.tsx"
-    ],
-    "./hooks/*": "./src/hooks/*.ts"
   }
 }

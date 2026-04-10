@@ -33,7 +33,10 @@ export function DeleteAccountDialog() {
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger
         render={
-          <Button variant="outline" className="border-destructive text-destructive hover:bg-destructive/5" />
+          <Button
+            variant="outline"
+            className="border-destructive text-destructive hover:bg-destructive/5"
+          />
         }
       >
         Delete Account
@@ -42,12 +45,8 @@ export function DeleteAccountDialog() {
         <AlertDialogHeader>
           <AlertDialogTitle>Delete your account?</AlertDialogTitle>
           <AlertDialogDescription>
-            This action is permanent and cannot be undone. All your data will be permanently deleted.
-            Type
-            {' '}
-            <strong className="text-foreground">DELETE</strong>
-            {' '}
-            to confirm.
+            This action is permanent and cannot be undone. All your data will be permanently
+            deleted. Type <strong className="text-foreground">DELETE</strong> to confirm.
           </AlertDialogDescription>
         </AlertDialogHeader>
 

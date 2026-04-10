@@ -1,10 +1,4 @@
-import {
-  index,
-  pgTable,
-  text,
-  timestamp,
-  uniqueIndex,
-} from 'drizzle-orm/pg-core'
+import { index, pgTable, text, timestamp, uniqueIndex } from 'drizzle-orm/pg-core'
 
 import { usersTable } from './users.schema'
 
@@ -42,9 +36,7 @@ export const sessionsTable = pgTable(
     // isRevoked: boolean('is_revoked').notNull().default(false),
 
     // Timestamps
-    createdAt: timestamp('created_at', { withTimezone: true })
-      .notNull()
-      .defaultNow(),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp('updated_at', { withTimezone: true })
       .notNull()
       .defaultNow()

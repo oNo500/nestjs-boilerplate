@@ -19,7 +19,7 @@ import { ChevronRightIcon } from 'lucide-react'
 import Link from 'next/link'
 import { useState } from 'react'
 
-type SubItem = { title: string, url: string, isActive?: boolean }
+type SubItem = { title: string; url: string; isActive?: boolean }
 
 type NavItem = {
   title: string
@@ -40,9 +40,7 @@ function NavMainItemsMap({ item }: { item: NavItem & { items: SubItem[] } }) {
       className="group/collapsible"
       render={<SidebarMenuItem />}
     >
-      <CollapsibleTrigger
-        render={<SidebarMenuButton tooltip={item.title} />}
-      >
+      <CollapsibleTrigger render={<SidebarMenuButton tooltip={item.title} />}>
         {item.icon && <item.icon />}
         <span>{item.title}</span>
         <ChevronRightIcon className="ml-auto transition-transform duration-200 group-data-open/collapsible:rotate-90" />
@@ -51,7 +49,10 @@ function NavMainItemsMap({ item }: { item: NavItem & { items: SubItem[] } }) {
         <SidebarMenuSub>
           {item.items.map((subItem) => (
             <SidebarMenuSubItem key={subItem.title}>
-              <SidebarMenuSubButton isActive={subItem.isActive} render={<Link href={subItem.url} />}>
+              <SidebarMenuSubButton
+                isActive={subItem.isActive}
+                render={<Link href={subItem.url} />}
+              >
                 <span>{subItem.title}</span>
               </SidebarMenuSubButton>
             </SidebarMenuSubItem>
@@ -62,28 +63,26 @@ function NavMainItemsMap({ item }: { item: NavItem & { items: SubItem[] } }) {
   )
 }
 
-export function NavMain({
-  label,
-  items,
-}: {
-  label: string
-  items: NavItem[]
-}) {
+export function NavMain({ label, items }: { label: string; items: NavItem[] }) {
   return (
     <SidebarGroup>
-      <SidebarGroupLabel className="uppercase tracking-wider">{label}</SidebarGroupLabel>
+      <SidebarGroupLabel className="tracking-wider uppercase">{label}</SidebarGroupLabel>
       <SidebarMenu>
         {items.map((item) =>
-          item.items && item.items.length > 0
-            ? <NavMainItemsMap key={item.title} item={{ ...item, items: item.items }} />
-            : (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton isActive={item.isActive} tooltip={item.title} render={<Link href={item.url} />}>
-                    {item.icon && <item.icon />}
-                    <span>{item.title}</span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ),
+          item.items && item.items.length > 0 ? (
+            <NavMainItemsMap key={item.title} item={{ ...item, items: item.items }} />
+          ) : (
+            <SidebarMenuItem key={item.title}>
+              <SidebarMenuButton
+                isActive={item.isActive}
+                tooltip={item.title}
+                render={<Link href={item.url} />}
+              >
+                {item.icon && <item.icon />}
+                <span>{item.title}</span>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          ),
         )}
       </SidebarMenu>
     </SidebarGroup>

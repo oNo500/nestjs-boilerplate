@@ -7,8 +7,5 @@
       "@workspace/ui/*": ["../../packages/ui/src/*"]
     }
   },
-  "references": [
-    {"path": "./tsconfig.app.json"},
-    {"path": "./tsconfig.test.json"}
-  ]
+  "references": [{ "path": "./tsconfig.app.json" }, { "path": "./tsconfig.test.json" }]
 }

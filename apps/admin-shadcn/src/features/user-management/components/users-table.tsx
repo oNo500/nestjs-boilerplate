@@ -45,11 +45,6 @@ interface UsersTableProps {
 
 export function UsersTable({ data, isLoading }: UsersTableProps) {
   return (
-    <DataTable
-      columns={columns}
-      data={data}
-      isLoading={isLoading}
-      emptyText="No users found."
-    />
+    <DataTable columns={columns} data={data} isLoading={isLoading} emptyText="No users found." />
   )
 }

@@ -18,7 +18,9 @@ export function useCreateArticle() {
       invalidateArticles(queryClient)
       toast.success('Article created')
     },
-    onError: () => { toast.error('Failed to create article') },
+    onError: () => {
+      toast.error('Failed to create article')
+    },
   })
 }
 
@@ -29,7 +31,9 @@ export function useUpdateArticle() {
       invalidateArticles(queryClient)
       toast.success('Article updated')
     },
-    onError: () => { toast.error('Failed to update article') },
+    onError: () => {
+      toast.error('Failed to update article')
+    },
   })
 }
 
@@ -40,7 +44,9 @@ export function useDeleteArticle() {
       invalidateArticles(queryClient)
       toast.success('Article deleted')
     },
-    onError: () => { toast.error('Failed to delete article') },
+    onError: () => {
+      toast.error('Failed to delete article')
+    },
   })
 }
 
@@ -51,7 +57,9 @@ export function usePublishArticle() {
       invalidateArticles(queryClient)
       toast.success('Article published')
     },
-    onError: () => { toast.error('Failed to publish article') },
+    onError: () => {
+      toast.error('Failed to publish article')
+    },
   })
 }
 
@@ -62,22 +70,32 @@ export function useArchiveArticle() {
       invalidateArticles(queryClient)
       toast.success('Article archived')
     },
-    onError: () => { toast.error('Failed to archive article') },
+    onError: () => {
+      toast.error('Failed to archive article')
+    },
   })
 }
 
 export function useAddTag() {
   const queryClient = useQueryClient()
   return $api.useMutation('post', '/api/articles/{id}/tags', {
-    onSuccess: () => { invalidateArticles(queryClient) },
-    onError: () => { toast.error('Failed to add tag') },
+    onSuccess: () => {
+      invalidateArticles(queryClient)
+    },
+    onError: () => {
+      toast.error('Failed to add tag')
+    },
   })
 }
 
 export function useRemoveTag() {
   const queryClient = useQueryClient()
   return $api.useMutation('delete', '/api/articles/{id}/tags/{tag}', {
-    onSuccess: () => { invalidateArticles(queryClient) },
-    onError: () => { toast.error('Failed to remove tag') },
+    onSuccess: () => {
+      invalidateArticles(queryClient)
+    },
+    onError: () => {
+      toast.error('Failed to remove tag')
+    },
   })
 }

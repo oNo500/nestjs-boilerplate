@@ -6,11 +6,14 @@
     "build": "turbo run build",
     "lint": "turbo run lint",
     "lint:fix": "turbo run lint:fix",
+    "format": "turbo run format",
+    "format:check": "turbo run format:check",
     "typecheck": "turbo run typecheck",
     "prepare": "pnpm run setup:env",
     "setup:env": "pnpm --filter api --filter admin-shadcn --filter @workspace/database exec cp .env.example .env"
   },
   "devDependencies": {
+    "@infra-x/code-quality": "0.3.2",
     "oxfmt": "^0.44.0",
     "oxlint": "^1.59.0",
     "turbo": "^2.8.20"
@@ -31,8 +34,5 @@
       "@swc/core",
       "esbuild"
     ]
-  },
-  "dependencies": {
-    "eslint-config-prettier": "^10.1.8"
   }
 }

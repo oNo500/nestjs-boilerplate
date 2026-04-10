@@ -17,7 +17,7 @@ import { $api } from '@/lib/api'
 
 const PAGE_SIZE = 10
 
-type PageItem = { key: string, value: number | 'ellipsis' }
+type PageItem = { key: string; value: number | 'ellipsis' }
 
 function toPageItems(arr: (number | 'ellipsis')[]): PageItem[] {
   return arr.map((v, i) => ({
@@ -29,7 +29,8 @@ function toPageItems(arr: (number | 'ellipsis')[]): PageItem[] {
 function getPageNumbers(current: number, total: number): PageItem[] {
   if (total <= 7) return toPageItems(Array.from({ length: total }, (_, i) => i + 1))
   if (current <= 4) return toPageItems([1, 2, 3, 4, 5, 'ellipsis', total])
-  if (current >= total - 3) return toPageItems([1, 'ellipsis', total - 4, total - 3, total - 2, total - 1, total])
+  if (current >= total - 3)
+    return toPageItems([1, 'ellipsis', total - 4, total - 3, total - 2, total - 1, total])
   return toPageItems([1, 'ellipsis', current - 1, current, current + 1, 'ellipsis', total])
 }
 
@@ -58,21 +59,9 @@ export function OffsetPaginationPanel() {
   return (
     <div className="space-y-4">
       <div className="rounded-md bg-muted/50 p-3 text-sm text-muted-foreground">
-        <strong>Offset Pagination</strong>
-        {' '}
-        — Uses
-        {' '}
-        <code>page</code>
-        {' '}
-        +
-        {' '}
-        <code>pageSize</code>
-        . Returns
-        {' '}
-        <code>total</code>
-        {' '}
-        count for page navigation.
-        Simple but slower on large tables (DB must scan all preceding rows).
+        <strong>Offset Pagination</strong> — Uses <code>page</code> + <code>pageSize</code>. Returns{' '}
+        <code>total</code> count for page navigation. Simple but slower on large tables (DB must
+        scan all preceding rows).
       </div>
 
       <Input
@@ -100,24 +89,22 @@ export function OffsetPaginationPanel() {
               </PaginationItem>
 
               {pageNumbers.map(({ key, value }) =>
-                value === 'ellipsis'
-                  ? (
-                      <PaginationItem key={key}>
-                        <PaginationEllipsis />
-                      </PaginationItem>
-                    )
-                  : (
-                      <PaginationItem key={key}>
-                        <Button
-                          variant={value === page ? 'outline' : 'ghost'}
-                          size="icon"
-                          onClick={() => setPage(value)}
-                          aria-current={value === page ? 'page' : undefined}
-                        >
-                          {value}
-                        </Button>
-                      </PaginationItem>
-                    ),
+                value === 'ellipsis' ? (
+                  <PaginationItem key={key}>
+                    <PaginationEllipsis />
+                  </PaginationItem>
+                ) : (
+                  <PaginationItem key={key}>
+                    <Button
+                      variant={value === page ? 'outline' : 'ghost'}
+                      size="icon"
+                      onClick={() => setPage(value)}
+                      aria-current={value === page ? 'page' : undefined}
+                    >
+                      {value}
+                    </Button>
+                  </PaginationItem>
+                ),
               )}
 
               <PaginationItem>

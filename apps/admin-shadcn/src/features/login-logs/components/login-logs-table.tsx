@@ -1,10 +1,6 @@
 'use client'
 
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from '@workspace/ui/components/tooltip'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@workspace/ui/components/tooltip'
 
 import { DataTable } from '@/components/data-table/data-table'
 import { LoginStatusBadge } from '@/features/login-logs/components/login-status-badge'
@@ -48,9 +44,7 @@ const columns: ColumnDef<LoginLogRow>[] = [
       const truncated = ua.length > 60 ? `${ua.slice(0, 60)}…` : ua
       return (
         <Tooltip>
-          <TooltipTrigger render={<span className="cursor-default" />}>
-            {truncated}
-          </TooltipTrigger>
+          <TooltipTrigger render={<span className="cursor-default" />}>{truncated}</TooltipTrigger>
           <TooltipContent>
             <p className="max-w-xs break-all">{ua}</p>
           </TooltipContent>

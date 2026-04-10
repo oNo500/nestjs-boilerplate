@@ -2,7 +2,14 @@
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button, buttonVariants } from '@workspace/ui/components/button'
-import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel, FieldSeparator } from '@workspace/ui/components/field'
+import {
+  Field,
+  FieldDescription,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+  FieldSeparator,
+} from '@workspace/ui/components/field'
 import { Input } from '@workspace/ui/components/input'
 import { cn } from '@workspace/ui/lib/utils'
 import { GalleryVerticalEndIcon } from 'lucide-react'
@@ -62,8 +69,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) 
             </a>
             <h1 className="text-xl font-bold">Welcome to Acme Inc.</h1>
             <FieldDescription>
-              Don&apos;t have an account?
-              {' '}
+              Don&apos;t have an account?{' '}
               <Link href={appPaths.auth.register.getHref()}>Sign up</Link>
             </FieldDescription>
           </div>
@@ -143,14 +149,8 @@ export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) 
         </FieldGroup>
       </form>
       <FieldDescription className="px-6 text-center">
-        By clicking continue, you agree to our
-        {' '}
-        <a href="#">Terms of Service</a>
-        {' '}
-        and
-        {' '}
-        <a href="#">Privacy Policy</a>
-        .
+        By clicking continue, you agree to our <a href="#">Terms of Service</a> and{' '}
+        <a href="#">Privacy Policy</a>.
       </FieldDescription>
     </div>
   )

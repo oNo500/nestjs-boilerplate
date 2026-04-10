@@ -3,7 +3,6 @@ import { env } from '@/config/env'
 import { AppProvider } from './provide'
 
 import type { Metadata } from 'next'
-
 import '@/styles/globals.css'
 
 export const metadata: Metadata = {
@@ -40,9 +39,7 @@ export default function RootLayout({
         >
           Skip to main content
         </a>
-        <AppProvider>
-          {children}
-        </AppProvider>
+        <AppProvider>{children}</AppProvider>
       </body>
     </html>
   )

@@ -35,10 +35,19 @@ export default defineConfig({
         {
           from: ['module'],
           allow: ['shared-kernel', 'app', ['module', { moduleName: '${moduleName}' }]],
-          message: 'Cross-module imports are forbidden. Share code via shared-kernel or decouple through events.',
+          message:
+            'Cross-module imports are forbidden. Share code via shared-kernel or decouple through events.',
         },
-        { from: ['shared-kernel'], allow: ['shared-kernel', 'app'], message: 'shared-kernel must not import business modules' },
-        { from: ['app'], allow: ['app', 'shared-kernel'], message: 'The app layer should not directly depend on business modules' },
+        {
+          from: ['shared-kernel'],
+          allow: ['shared-kernel', 'app'],
+          message: 'shared-kernel must not import business modules',
+        },
+        {
+          from: ['app'],
+          allow: ['app', 'shared-kernel'],
+          message: 'The app layer should not directly depend on business modules',
+        },
         { from: ['main'], allow: ['module', 'shared-kernel', 'app', 'main'] },
       ],
     }),

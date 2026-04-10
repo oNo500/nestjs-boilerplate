@@ -21,7 +21,11 @@ function range(start: number, end: number): number[] {
   return Array.from({ length: end - start + 1 }, (_, i) => start + i)
 }
 
-function getPageNumbers(page: number, totalPages: number, siblingCount: number): (number | 'ellipsis')[] {
+function getPageNumbers(
+  page: number,
+  totalPages: number,
+  siblingCount: number,
+): (number | 'ellipsis')[] {
   const totalPageNumbers = siblingCount * 2 + 5 // siblings + current + first + last + 2 ellipsis
 
   if (totalPages <= totalPageNumbers) {
@@ -48,7 +52,12 @@ function getPageNumbers(page: number, totalPages: number, siblingCount: number):
   return [1, 'ellipsis', ...middleRange, 'ellipsis', totalPages]
 }
 
-export function TablePagination({ page, totalPages, onPageChange, siblingCount = 1 }: TablePaginationProps) {
+export function TablePagination({
+  page,
+  totalPages,
+  onPageChange,
+  siblingCount = 1,
+}: TablePaginationProps) {
   if (totalPages <= 1) return null
 
   const pages = getPageNumbers(page, totalPages, siblingCount)
@@ -74,24 +83,18 @@ export function TablePagination({ page, totalPages, onPageChange, siblingCount =
           </PaginationItem>
 
           {pages.map((p, i) =>
-            p === 'ellipsis'
-              ? (
-                  // eslint-disable-next-line @eslint-react/no-array-index-key
-                  <PaginationItem key={`ellipsis-${i}`}>
-                    <PaginationEllipsis />
-                  </PaginationItem>
-                )
-              : (
-                  <PaginationItem key={p}>
-                    <PaginationLink
-                      href="#"
-                      isActive={p === page}
-                      onClick={(e) => handleClick(e, p)}
-                    >
-                      {p}
-                    </PaginationLink>
-                  </PaginationItem>
-                ),
+            p === 'ellipsis' ? (
+              // eslint-disable-next-line @eslint-react/no-array-index-key
+              <PaginationItem key={`ellipsis-${i}`}>
+                <PaginationEllipsis />
+              </PaginationItem>
+            ) : (
+              <PaginationItem key={p}>
+                <PaginationLink href="#" isActive={p === page} onClick={(e) => handleClick(e, p)}>
+                  {p}
+                </PaginationLink>
+              </PaginationItem>
+            ),
           )}
 
           <PaginationItem>

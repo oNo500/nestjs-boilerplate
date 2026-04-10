@@ -3,7 +3,7 @@ import { createClient } from '@infra-x/fwrap'
 import type { RequestOptions } from '@infra-x/fwrap'
 
 export const fetchClient = createClient({
-//   prefixUrl:,
+  //   prefixUrl:,
   timeout: 30_000,
   retry: {
     limit: 2,

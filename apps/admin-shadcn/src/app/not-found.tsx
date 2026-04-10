@@ -10,15 +10,15 @@ export default function NotFound() {
       <div className="max-w-md space-y-8">
         {/* Large decorative background number */}
         <div className="relative select-none">
-          <span className="text-[160px] font-black leading-none tracking-tighter text-muted-foreground/10">
+          <span className="text-[160px] leading-none font-black tracking-tighter text-muted-foreground/10">
             404
           </span>
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="space-y-2">
-              <p className="text-sm font-semibold uppercase tracking-widest text-muted-foreground">
+              <p className="text-sm font-semibold tracking-widest text-muted-foreground uppercase">
                 Page not found
               </p>
-              <h1 className="text-balance text-2xl font-bold tracking-tight text-foreground">
+              <h1 className="text-2xl font-bold tracking-tight text-balance text-foreground">
                 Oops! Wrong turn.
               </h1>
             </div>
@@ -26,17 +26,14 @@ export default function NotFound() {
         </div>
 
         {/* Description */}
-        <p className="text-pretty text-sm text-muted-foreground">
-          The page you&apos;re looking for doesn&apos;t exist or has been moved.
-          Double-check the URL or head back to safety.
+        <p className="text-sm text-pretty text-muted-foreground">
+          The page you&apos;re looking for doesn&apos;t exist or has been moved. Double-check the
+          URL or head back to safety.
         </p>
 
         {/* Actions */}
         <div className="flex justify-center gap-3">
-          <Button
-            render={<Link href={appPaths.home.href} />}
-            nativeButton={false}
-          >
+          <Button render={<Link href={appPaths.home.href} />} nativeButton={false}>
             Back to home
           </Button>
           <BackButton />

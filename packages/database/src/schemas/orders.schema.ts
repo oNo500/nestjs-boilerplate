@@ -1,4 +1,14 @@
-import { index, integer, jsonb, numeric, pgTable, text, timestamp, uuid, varchar } from 'drizzle-orm/pg-core'
+import {
+  index,
+  integer,
+  jsonb,
+  numeric,
+  pgTable,
+  text,
+  timestamp,
+  uuid,
+  varchar,
+} from 'drizzle-orm/pg-core'
 
 /**
  * Orders table definition
@@ -23,7 +33,7 @@ export const ordersTable = pgTable(
 
     // Order items (embedded JSON, avoids multi-table JOINs)
     items: jsonb('items')
-      .$type<{ productId: string, quantity: number, unitPrice: string }[]>()
+      .$type<{ productId: string; quantity: number; unitPrice: string }[]>()
       .notNull()
       .default([]),
 

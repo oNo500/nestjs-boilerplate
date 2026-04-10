@@ -106,9 +106,7 @@
         "articles_slug_unique": {
           "name": "articles_slug_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "slug"
-          ]
+          "columns": ["slug"]
         }
       },
       "policies": {},
@@ -495,9 +493,7 @@
         "users_username_unique": {
           "name": "users_username_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "username"
-          ]
+          "columns": ["username"]
         }
       },
       "policies": {},
@@ -560,12 +556,8 @@
           "name": "profiles_user_id_users_id_fk",
           "tableFrom": "profiles",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -704,12 +696,8 @@
           "name": "accounts_user_id_users_id_fk",
           "tableFrom": "accounts",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -833,12 +821,8 @@
           "name": "sessions_user_id_users_id_fk",
           "tableFrom": "sessions",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -976,12 +960,8 @@
           "name": "conversation_user_id_users_id_fk",
           "tableFrom": "conversation",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1056,12 +1036,8 @@
           "name": "conversation_message_conversation_id_conversation_id_fk",
           "tableFrom": "conversation_message",
           "tableTo": "conversation",
-          "columnsFrom": [
-            "conversation_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["conversation_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1101,12 +1077,8 @@
           "name": "conversation_message_vote_conversation_id_conversation_id_fk",
           "tableFrom": "conversation_message_vote",
           "tableTo": "conversation",
-          "columnsFrom": [
-            "conversation_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["conversation_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -1114,12 +1086,8 @@
           "name": "conversation_message_vote_message_id_conversation_message_id_fk",
           "tableFrom": "conversation_message_vote",
           "tableTo": "conversation_message",
-          "columnsFrom": [
-            "message_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["message_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1127,10 +1095,7 @@
       "compositePrimaryKeys": {
         "conversation_message_vote_conversation_id_message_id_pk": {
           "name": "conversation_message_vote_conversation_id_message_id_pk",
-          "columns": [
-            "conversation_id",
-            "message_id"
-          ]
+          "columns": ["conversation_id", "message_id"]
         }
       },
       "uniqueConstraints": {},
@@ -1192,12 +1157,8 @@
           "name": "conversation_stream_conversation_id_conversation_id_fk",
           "tableFrom": "conversation_stream",
           "tableTo": "conversation",
-          "columnsFrom": [
-            "conversation_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["conversation_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1295,12 +1256,8 @@
           "name": "artifact_user_id_users_id_fk",
           "tableFrom": "artifact",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -1308,12 +1265,8 @@
           "name": "artifact_message_id_conversation_message_id_fk",
           "tableFrom": "artifact",
           "tableTo": "conversation_message",
-          "columnsFrom": [
-            "message_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["message_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -1321,10 +1274,7 @@
       "compositePrimaryKeys": {
         "artifact_id_created_at_pk": {
           "name": "artifact_id_created_at_pk",
-          "columns": [
-            "id",
-            "created_at"
-          ]
+          "columns": ["id", "created_at"]
         }
       },
       "uniqueConstraints": {},
@@ -1437,12 +1387,8 @@
           "name": "artifact_suggestion_user_id_users_id_fk",
           "tableFrom": "artifact_suggestion",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }

@@ -1,23 +1,11 @@
-import {
-  index,
-  pgTable,
-  text,
-  timestamp,
-  uniqueIndex,
-} from 'drizzle-orm/pg-core'
+import { index, pgTable, text, timestamp, uniqueIndex } from 'drizzle-orm/pg-core'
 
 import { usersTable } from './users.schema'
 
 /**
  * Authentication provider types
  */
-export type AuthProvider
-  = | 'email'
-    | 'google'
-    | 'github'
-    | 'phone'
-    | 'saml'
-    | 'oidc'
+export type AuthProvider = 'email' | 'google' | 'github' | 'phone' | 'saml' | 'oidc'
 
 /**
  * Auth Accounts table definition
@@ -65,9 +53,7 @@ export const accountsTable = pgTable(
     password: text('password'),
 
     // Timestamps
-    createdAt: timestamp('created_at', { withTimezone: true })
-      .notNull()
-      .defaultNow(),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp('updated_at', { withTimezone: true })
       .notNull()
       .defaultNow()
@@ -75,10 +61,7 @@ export const accountsTable = pgTable(
   },
   (table) => [
     // Unique index: accounts cannot be duplicated under the same provider
-    uniqueIndex('accounts_provider_account_idx').on(
-      table.providerId,
-      table.accountId,
-    ),
+    uniqueIndex('accounts_provider_account_idx').on(table.providerId, table.accountId),
     // Index: query by user ID
     index('accounts_userId_idx').on(table.userId),
   ],

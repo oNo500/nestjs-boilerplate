@@ -13,12 +13,7 @@ export default defineConfig({
       reporter: ['text', 'json', 'html'],
       reportsDirectory: './coverage',
       include: ['src/**/*.ts'],
-      exclude: [
-        '**/*.spec.ts',
-        '**/*.e2e-spec.ts',
-        '**/index.ts',
-        '**/*.module.ts',
-      ],
+      exclude: ['**/*.spec.ts', '**/*.e2e-spec.ts', '**/index.ts', '**/*.module.ts'],
     },
   },
   plugins: [

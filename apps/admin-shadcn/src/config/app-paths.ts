@@ -65,7 +65,8 @@ export const appPaths = {
     label: 'Audit Logs',
   },
   settings: {
-    href: '/settings', label: 'Settings',
+    href: '/settings',
+    label: 'Settings',
     general: { href: '/settings/general', label: 'General' },
     sessions: { href: '/settings/sessions', label: 'Sessions' },
     uploadDemo: { href: '/settings/upload-demo', label: 'Upload Demo' },
@@ -77,7 +78,7 @@ export type NavItem = {
   url: string
   icon: LucideIcon
   isActive?: boolean
-  items?: { title: string, url: string }[]
+  items?: { title: string; url: string }[]
 }
 
 export const dashboardNavItems: NavItem[] = [

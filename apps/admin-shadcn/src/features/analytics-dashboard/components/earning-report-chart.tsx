@@ -1,11 +1,7 @@
 'use client'
 
 import { Card, CardHeader, CardTitle, CardContent } from '@workspace/ui/components/card'
-import {
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from '@workspace/ui/components/chart'
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@workspace/ui/components/chart'
 import { cn } from '@workspace/ui/lib/utils'
 import { useMemo } from 'react'
 import { Label, Pie, PieChart } from 'recharts'
@@ -52,22 +48,16 @@ export default function EarningReportChart() {
   )
 
   return (
-    <Card className="h-full w-full py-6 gap-6">
+    <Card className="h-full w-full gap-6 py-6">
       <CardHeader className="px-6">
         <CardTitle>
           <h4 className="text-lg font-semibold">Article Categories</h4>
         </CardTitle>
       </CardHeader>
-      <CardContent className="flex flex-col justify-between gap-2 flex-1 px-6">
-        <ChartContainer
-          config={chartConfig}
-          className="aspect-square max-h-[250px]"
-        >
+      <CardContent className="flex flex-1 flex-col justify-between gap-2 px-6">
+        <ChartContainer config={chartConfig} className="aspect-square max-h-[250px]">
           <PieChart>
-            <ChartTooltip
-              cursor={false}
-              content={<ChartTooltipContent hideLabel />}
-            />
+            <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
             <Pie
               data={chartData}
               dataKey="visitors"
@@ -112,19 +102,13 @@ export default function EarningReportChart() {
           {(data?.categories ?? []).map((item) => (
             <div key={item.category} className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <div className={cn(CATEGORY_BAR_COLORS[item.category], 'w-1 h-4 rounded-full')} />
+                <div className={cn(CATEGORY_BAR_COLORS[item.category], 'h-4 w-1 rounded-full')} />
                 <h6 className="text-sm font-medium capitalize">{item.category}</h6>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-sm font-medium">
-                  {item.count}
-                  {' '}
-                  articles
-                </span>
+                <span className="text-sm font-medium">{item.count} articles</span>
                 <span className="text-xs text-muted-foreground">
-                  {item.viewCount.toLocaleString()}
-                  {' '}
-                  views
+                  {item.viewCount.toLocaleString()} views
                 </span>
               </div>
             </div>
