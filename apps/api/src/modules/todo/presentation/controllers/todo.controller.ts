@@ -13,7 +13,10 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
 
 import { TodoService } from '@/modules/todo/application/services/todo.service'
 import { CreateTodoDto } from '@/modules/todo/presentation/dtos/create-todo.dto'
-import { TodoListResponseDto, TodoResponseDto } from '@/modules/todo/presentation/dtos/todo-response.dto'
+import {
+  TodoListResponseDto,
+  TodoResponseDto,
+} from '@/modules/todo/presentation/dtos/todo-response.dto'
 import { UpdateTodoDto } from '@/modules/todo/presentation/dtos/update-todo.dto'
 import { UseEnvelope } from '@/shared-kernel/infrastructure/decorators/use-envelope.decorator'
 
@@ -55,10 +58,7 @@ export class TodoController {
   @ApiResponse({ status: 200, description: 'Todo updated successfully', type: TodoResponseDto })
   @ApiResponse({ status: 404, description: 'Todo not found' })
   @ApiResponse({ status: 422, description: 'Validation failed' })
-  async update(
-    @Param('id') id: string,
-    @Body() updateTodoDto: UpdateTodoDto,
-  ): Promise<Todo> {
+  async update(@Param('id') id: string, @Body() updateTodoDto: UpdateTodoDto): Promise<Todo> {
     return this.todoService.update(id, updateTodoDto)
   }
 

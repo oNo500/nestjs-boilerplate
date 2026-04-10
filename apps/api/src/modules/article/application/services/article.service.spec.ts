@@ -38,7 +38,10 @@ describe('articleService', () => {
       slugGenerator.generate.mockReturnValue(slug)
       slugGenerator.generateUnique.mockResolvedValue(slug)
 
-      const result = await service.create('Test Article', 'This is a test article content with enough characters to be valid.')
+      const result = await service.create(
+        'Test Article',
+        'This is a test article content with enough characters to be valid.',
+      )
 
       expect(result.status).toBe(ArticleStatus.DRAFT)
       expect(articleRepository.save).toHaveBeenCalledWith(result)
@@ -53,7 +56,10 @@ describe('articleService', () => {
 
       const result = await service.create('Test Article', 'Content long enough to be valid.')
 
-      expect(slugGenerator.generateUnique).toHaveBeenCalledWith(baseSlug.value, expect.any(Function))
+      expect(slugGenerator.generateUnique).toHaveBeenCalledWith(
+        baseSlug.value,
+        expect.any(Function),
+      )
       expect(result.slug).toBe(uniqueSlug)
     })
   })
@@ -70,7 +76,9 @@ describe('articleService', () => {
       const article = ArticleFixtures.draft({ content: 'Short' })
       articleRepository.findById.mockResolvedValue(article)
 
-      await expect(service.publish(article.id)).rejects.toThrow('Article content is less than 50 characters and cannot be published')
+      await expect(service.publish(article.id)).rejects.toThrow(
+        'Article content is less than 50 characters and cannot be published',
+      )
       expect(articleRepository.save).not.toHaveBeenCalled()
     })
 
@@ -92,7 +100,9 @@ describe('articleService', () => {
       const article = ArticleFixtures.draft()
       articleRepository.findById.mockResolvedValue(article)
 
-      await expect(service.archive(article.id)).rejects.toThrow('Only published articles can be archived')
+      await expect(service.archive(article.id)).rejects.toThrow(
+        'Only published articles can be archived',
+      )
     })
 
     it('success → status becomes ARCHIVED, saves, publishes events', async () => {
@@ -112,14 +122,20 @@ describe('articleService', () => {
       const article = ArticleFixtures.published()
       articleRepository.findById.mockResolvedValue(article)
 
-      await expect(service.update(article.id, 'New Title', 'New Content')).rejects.toThrow('Only draft articles can be edited')
+      await expect(service.update(article.id, 'New Title', 'New Content')).rejects.toThrow(
+        'Only draft articles can be edited',
+      )
     })
 
     it('success → updates title and content, saves, publishes events', async () => {
       const article = ArticleFixtures.draft()
       articleRepository.findById.mockResolvedValue(article)
 
-      const result = await service.update(article.id, 'New Title', 'New content that is also long enough to be valid.')
+      const result = await service.update(
+        article.id,
+        'New Title',
+        'New content that is also long enough to be valid.',
+      )
 
       expect(result.title.value).toBe('New Title')
       expect(articleRepository.save).toHaveBeenCalledWith(article)
@@ -167,7 +183,10 @@ describe('articleService', () => {
     })
 
     it('findAll → returns all articles', async () => {
-      const articles = [ArticleFixtures.draft({ id: 'id-1' }), ArticleFixtures.draft({ id: 'id-2' })]
+      const articles = [
+        ArticleFixtures.draft({ id: 'id-1' }),
+        ArticleFixtures.draft({ id: 'id-2' }),
+      ]
       articleRepository.findAll.mockResolvedValue(articles)
 
       expect(await service.findAll()).toHaveLength(2)

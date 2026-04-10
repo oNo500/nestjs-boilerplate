@@ -1,11 +1,6 @@
 import { randomUUID } from 'node:crypto'
 
-import {
-  ConflictException,
-  Inject,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common'
+import { ConflictException, Inject, Injectable, UnauthorizedException } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { JwtService } from '@nestjs/jwt'
 
@@ -68,7 +63,10 @@ export class AuthService {
         userAgent: deviceContext?.userAgent,
         failReason: 'user_not_found',
       })
-      throw new UnauthorizedException({ code: ErrorCode.INVALID_CREDENTIALS, message: 'Invalid email or password' })
+      throw new UnauthorizedException({
+        code: ErrorCode.INVALID_CREDENTIALS,
+        message: 'Invalid email or password',
+      })
     }
 
     if (!identity.password) {
@@ -80,7 +78,10 @@ export class AuthService {
         userAgent: deviceContext?.userAgent,
         failReason: 'no_password_auth',
       })
-      throw new UnauthorizedException({ code: ErrorCode.INVALID_CREDENTIALS, message: 'Invalid email or password' })
+      throw new UnauthorizedException({
+        code: ErrorCode.INVALID_CREDENTIALS,
+        message: 'Invalid email or password',
+      })
     }
     const isValid = await this.passwordHasher.verify(password, identity.password)
     if (!isValid) {
@@ -92,7 +93,10 @@ export class AuthService {
         userAgent: deviceContext?.userAgent,
         failReason: 'invalid_password',
       })
-      throw new UnauthorizedException({ code: ErrorCode.INVALID_CREDENTIALS, message: 'Invalid email or password' })
+      throw new UnauthorizedException({
+        code: ErrorCode.INVALID_CREDENTIALS,
+        message: 'Invalid email or password',
+      })
     }
 
     await this.authIdentityRepo.save(identity)
@@ -122,7 +126,10 @@ export class AuthService {
   ) {
     const exists = await this.authIdentityRepo.existsByIdentifier(email)
     if (exists) {
-      throw new ConflictException({ code: ErrorCode.EMAIL_EXISTS, message: 'This email is already registered' })
+      throw new ConflictException({
+        code: ErrorCode.EMAIL_EXISTS,
+        message: 'This email is already registered',
+      })
     }
 
     const userId = randomUUID()
@@ -139,7 +146,10 @@ export class AuthService {
   async refreshToken(refreshToken: string, deviceContext?: DeviceContext) {
     const session = await this.authSessionRepo.findByToken(refreshToken)
     if (!session?.isValid) {
-      throw new UnauthorizedException({ code: ErrorCode.TOKEN_INVALID, message: 'Invalid refresh token' })
+      throw new UnauthorizedException({
+        code: ErrorCode.TOKEN_INVALID,
+        message: 'Invalid refresh token',
+      })
     }
 
     await this.authSessionRepo.delete(session.id)
@@ -169,7 +179,7 @@ export class AuthService {
     sessionId: string,
     userId: string,
     currentSessionId: string,
-  ): Promise<{ success: boolean, message: string }> {
+  ): Promise<{ success: boolean; message: string }> {
     if (sessionId === currentSessionId) {
       return { success: false, message: 'Cannot revoke the current session; use logout instead' }
     }
@@ -193,7 +203,10 @@ export class AuthService {
   async getSession(sessionId: string, userId: string, email: string, role: string | null) {
     const session = await this.authSessionRepo.findById(sessionId)
     if (session?.userId !== userId) {
-      throw new UnauthorizedException({ code: ErrorCode.TOKEN_INVALID, message: 'Session not found or has expired' })
+      throw new UnauthorizedException({
+        code: ErrorCode.TOKEN_INVALID,
+        message: 'Session not found or has expired',
+      })
     }
 
     return {
@@ -228,15 +241,24 @@ export class AuthService {
   ): Promise<void> {
     const identity = await this.authIdentityRepo.findByUserIdAndProvider(userId, 'email')
     if (!identity) {
-      throw new UnauthorizedException({ code: ErrorCode.UNAUTHORIZED, message: 'No email authentication method found' })
+      throw new UnauthorizedException({
+        code: ErrorCode.UNAUTHORIZED,
+        message: 'No email authentication method found',
+      })
     }
 
     if (!identity.password) {
-      throw new UnauthorizedException({ code: ErrorCode.INVALID_CREDENTIALS, message: 'Current password is incorrect' })
+      throw new UnauthorizedException({
+        code: ErrorCode.INVALID_CREDENTIALS,
+        message: 'Current password is incorrect',
+      })
     }
     const isValid = await this.passwordHasher.verify(currentPassword, identity.password)
     if (!isValid) {
-      throw new UnauthorizedException({ code: ErrorCode.INVALID_CREDENTIALS, message: 'Current password is incorrect' })
+      throw new UnauthorizedException({
+        code: ErrorCode.INVALID_CREDENTIALS,
+        message: 'Current password is incorrect',
+      })
     }
 
     const newPasswordHash = await this.passwordHasher.hash(newPassword)
@@ -255,8 +277,8 @@ export class AuthService {
   ) {
     const refreshToken = randomUUID()
 
-    const refreshExpiresIn
-      = this.configService.get('JWT_REFRESH_EXPIRES_IN', { infer: true }) ?? '7d'
+    const refreshExpiresIn =
+      this.configService.get('JWT_REFRESH_EXPIRES_IN', { infer: true }) ?? '7d'
     const expiresAt = this.parseExpiration(refreshExpiresIn)
 
     const sessionId = randomUUID()

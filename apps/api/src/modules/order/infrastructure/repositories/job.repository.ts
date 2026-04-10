@@ -5,7 +5,11 @@ import { eq } from 'drizzle-orm'
 import { DB_TOKEN } from '@/app/database/db.port'
 
 import type { DrizzleDb } from '@/app/database/db.port'
-import type { Job, JobRepository, JobStatus } from '@/modules/order/application/ports/job.repository.port'
+import type {
+  Job,
+  JobRepository,
+  JobStatus,
+} from '@/modules/order/application/ports/job.repository.port'
 import type { JobDatabase } from '@workspace/database'
 
 /**
@@ -40,7 +44,7 @@ export class JobRepositoryImpl implements JobRepository {
     id: string,
     status: JobStatus,
     result?: unknown,
-    error?: { code: string, message: string },
+    error?: { code: string; message: string },
   ): Promise<void> {
     await this.db
       .update(jobsTable)
@@ -60,7 +64,7 @@ export class JobRepositoryImpl implements JobRepository {
       status: row.status as JobStatus,
       payload: row.payload as Record<string, unknown>,
       result: row.result ?? null,
-      error: row.error as { code: string, message: string } | null,
+      error: row.error as { code: string; message: string } | null,
       createdAt: row.createdAt,
       updatedAt: row.updatedAt,
     }

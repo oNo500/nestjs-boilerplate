@@ -61,21 +61,21 @@ export class ThrottlerExceptionFilter implements ExceptionFilter {
       correlation_id: this.cls.get('correlationId'),
       trace_id: this.cls.get('traceId'),
       timestamp: new Date().toISOString(),
-      errors: [{
-        code: 'RATE_LIMIT_EXCEEDED',
-        message: `You have sent ${limit} requests within ${ttl} seconds. Please try again later.`,
-        constraints: {
-          limit,
-          remaining: 0,
-          reset: resetTime,
+      errors: [
+        {
+          code: 'RATE_LIMIT_EXCEEDED',
+          message: `You have sent ${limit} requests within ${ttl} seconds. Please try again later.`,
+          constraints: {
+            limit,
+            remaining: 0,
+            reset: resetTime,
+          },
         },
-      }],
+      ],
     }
 
     // Log warning
-    this.logger.warn(
-      `Rate limit exceeded: ${request.method} ${request.url} - ${request.ip}`,
-    )
+    this.logger.warn(`Rate limit exceeded: ${request.method} ${request.url} - ${request.ip}`)
 
     response.status(429).json(problemDetails)
   }

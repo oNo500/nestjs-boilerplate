@@ -44,9 +44,6 @@ import type { Env } from '@/app/config/env.schema'
       useExisting: CacheService,
     },
   ],
-  exports: [
-    CacheService,
-    CACHE_PORT,
-  ],
+  exports: [CacheService, CACHE_PORT],
 })
 export class CacheModule {}

@@ -34,7 +34,12 @@ describe('response format', () => {
   beforeAll(async () => {
     app = await createTestApp()
     const prefix = globalThis.e2ePrefix ?? `e2e-${Date.now()}`
-    token = await registerAndLogin(app, `${prefix}-article-fmt@test.com`, 'Password123', 'articlefmt')
+    token = await registerAndLogin(
+      app,
+      `${prefix}-article-fmt@test.com`,
+      'Password123',
+      'articlefmt',
+    )
 
     // Create a test article to be reused by subsequent test cases
     const res = await createRequest(app)
@@ -51,7 +56,9 @@ describe('response format', () => {
 
   afterAll(async () => {
     if (createdArticleId) {
-      await createRequest(app).delete(`/api/articles/${createdArticleId}`).set('Authorization', `Bearer ${token}`)
+      await createRequest(app)
+        .delete(`/api/articles/${createdArticleId}`)
+        .set('Authorization', `Bearer ${token}`)
     }
     await app.close()
   })
@@ -97,7 +104,9 @@ describe('response format', () => {
       expect(body).not.toHaveProperty('object')
 
       // Cleanup
-      await createRequest(app).delete(`/api/articles/${body.id as string}`).set('Authorization', `Bearer ${token}`)
+      await createRequest(app)
+        .delete(`/api/articles/${body.id as string}`)
+        .set('Authorization', `Bearer ${token}`)
     })
 
     it('pOST 201 Created: response header contains Location', async () => {
@@ -117,7 +126,9 @@ describe('response format', () => {
       expect(res.headers.location).toContain(articleId)
 
       // Cleanup
-      await createRequest(app).delete(`/api/articles/${articleId}`).set('Authorization', `Bearer ${token}`)
+      await createRequest(app)
+        .delete(`/api/articles/${articleId}`)
+        .set('Authorization', `Bearer ${token}`)
     })
 
     it('all success responses include X-Request-Id header', async () => {
@@ -128,7 +139,7 @@ describe('response format', () => {
 
       expect(res.headers['x-request-id']).toBeDefined()
       expect(typeof res.headers['x-request-id']).toBe('string')
-      expect((res.headers['x-request-id']!).length).toBeGreaterThan(0)
+      expect(res.headers['x-request-id']!.length).toBeGreaterThan(0)
     })
   })
 
@@ -271,7 +282,9 @@ describe('response format', () => {
       expect(location).toContain('/articles/')
 
       // Cleanup
-      await createRequest(app).delete(`/api/articles/${body.id}`).set('Authorization', `Bearer ${token}`)
+      await createRequest(app)
+        .delete(`/api/articles/${body.id}`)
+        .set('Authorization', `Bearer ${token}`)
     })
 
     it('error response Content-Type is application/problem+json', async () => {
@@ -339,13 +352,20 @@ describe('article E2E Tests', () => {
   beforeAll(async () => {
     app = await createTestApp()
     const prefix = globalThis.e2ePrefix ?? `e2e-${Date.now()}`
-    token = await registerAndLogin(app, `${prefix}-article-e2e@test.com`, 'Password123', 'articlee2e')
+    token = await registerAndLogin(
+      app,
+      `${prefix}-article-e2e@test.com`,
+      'Password123',
+      'articlee2e',
+    )
   })
 
   afterAll(async () => {
     // Cleanup: delete the article created during tests
     if (createdArticleId) {
-      await createRequest(app).delete(`/api/articles/${createdArticleId}`).set('Authorization', `Bearer ${token}`)
+      await createRequest(app)
+        .delete(`/api/articles/${createdArticleId}`)
+        .set('Authorization', `Bearer ${token}`)
     }
 
     await app.close()
@@ -355,8 +375,7 @@ describe('article E2E Tests', () => {
     it('should successfully create a draft article', async () => {
       const createDto = {
         title: 'E2E Test Article',
-        content:
-          'This is an E2E test article content with enough characters to pass validation.',
+        content: 'This is an E2E test article content with enough characters to pass validation.',
       }
 
       const response = await createRequest(app)
@@ -459,7 +478,7 @@ describe('article E2E Tests', () => {
         .set('Authorization', `Bearer ${token}`)
         .expect(200)
 
-      const body = response.body as { object: string, data: ArticleResponse[] }
+      const body = response.body as { object: string; data: ArticleResponse[] }
       expect(body.object).toBe('list')
       expect(Array.isArray(body.data)).toBe(true)
     })
@@ -494,7 +513,7 @@ describe('article E2E Tests', () => {
         .set('Authorization', `Bearer ${token}`)
         .expect(200)
 
-      const body = response.body as { page: number, pageSize: number }
+      const body = response.body as { page: number; pageSize: number }
       expect(body.page).toBe(1)
       expect(body.pageSize).toBe(2)
     })
@@ -524,7 +543,10 @@ describe('article E2E Tests', () => {
       const extra = await createRequest(app)
         .post('/api/articles')
         .set('Authorization', `Bearer ${token}`)
-        .send({ title: 'Cursor Test Extra Article', content: 'Extra content for cursor pagination test.' })
+        .send({
+          title: 'Cursor Test Extra Article',
+          content: 'Extra content for cursor pagination test.',
+        })
         .expect(201)
       const extraId = (extra.body as { id: string }).id
 
@@ -555,7 +577,9 @@ describe('article E2E Tests', () => {
       expect(secondBody.data[0]?.id).not.toBe(firstBody.data[0]?.id)
 
       // Cleanup extra article
-      await createRequest(app).delete(`/api/articles/${extraId}`).set('Authorization', `Bearer ${token}`)
+      await createRequest(app)
+        .delete(`/api/articles/${extraId}`)
+        .set('Authorization', `Bearer ${token}`)
     })
   })
 
@@ -594,10 +618,16 @@ describe('article E2E Tests', () => {
       expect(archivedArticle.status).toBe('archived')
 
       // 4. Delete article
-      await createRequest(app).delete(`/api/articles/${articleId}`).set('Authorization', `Bearer ${token}`).expect(200)
+      await createRequest(app)
+        .delete(`/api/articles/${articleId}`)
+        .set('Authorization', `Bearer ${token}`)
+        .expect(200)
 
       // 5. Verify article has been deleted
-      await createRequest(app).get(`/api/articles/${articleId}`).set('Authorization', `Bearer ${token}`).expect(404)
+      await createRequest(app)
+        .get(`/api/articles/${articleId}`)
+        .set('Authorization', `Bearer ${token}`)
+        .expect(404)
     })
   })
 })

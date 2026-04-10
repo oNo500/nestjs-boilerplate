@@ -7,7 +7,12 @@ import { count, eq, ilike, and } from 'drizzle-orm'
 import { DB_TOKEN } from '@/app/database/db.port'
 
 import type { DrizzleDb } from '@/app/database/db.port'
-import type { LoginLogEntry, LoginLogRecord, LoginLogQueryParams, LoginLogRepository } from '@/modules/auth/application/ports/login-log.repository.port'
+import type {
+  LoginLogEntry,
+  LoginLogRecord,
+  LoginLogQueryParams,
+  LoginLogRepository,
+} from '@/modules/auth/application/ports/login-log.repository.port'
 import type { SQL } from 'drizzle-orm'
 
 @Injectable()
@@ -29,7 +34,7 @@ export class LoginLogRepositoryImpl implements LoginLogRepository {
     })
   }
 
-  async findAll(params: LoginLogQueryParams): Promise<{ data: LoginLogRecord[], total: number }> {
+  async findAll(params: LoginLogQueryParams): Promise<{ data: LoginLogRecord[]; total: number }> {
     const { page, pageSize, email, status } = params
     const offset = (page - 1) * pageSize
 
@@ -51,10 +56,7 @@ export class LoginLogRepositoryImpl implements LoginLogRepository {
         .orderBy(loginLogsTable.createdAt)
         .limit(pageSize)
         .offset(offset),
-      this.db
-        .select({ total: count() })
-        .from(loginLogsTable)
-        .where(where),
+      this.db.select({ total: count() }).from(loginLogsTable).where(where),
     ])
     const total = Number(countRows[0]?.total ?? 0)
 

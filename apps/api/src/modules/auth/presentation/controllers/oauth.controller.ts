@@ -31,10 +31,7 @@ export class OAuthController {
   @Get('google/callback')
   @UseGuards(AuthGuard('google'))
   @ApiOperation({ summary: 'Google OAuth callback' })
-  async googleCallback(
-    @Req() req: OAuthRequest,
-    @Res() res: Response,
-  ) {
+  async googleCallback(@Req() req: OAuthRequest, @Res() res: Response) {
     await this.handleCallback(req, res)
   }
 
@@ -50,10 +47,7 @@ export class OAuthController {
   @Get('github/callback')
   @UseGuards(AuthGuard('github'))
   @ApiOperation({ summary: 'GitHub OAuth callback' })
-  async githubCallback(
-    @Req() req: OAuthRequest,
-    @Res() res: Response,
-  ) {
+  async githubCallback(@Req() req: OAuthRequest, @Res() res: Response) {
     await this.handleCallback(req, res)
   }
 

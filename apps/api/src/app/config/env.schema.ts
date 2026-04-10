@@ -7,9 +7,7 @@ import { z } from 'zod'
  */
 export const envSchema = z.object({
   // Application environment
-  NODE_ENV: z
-    .enum(['development', 'production', 'test'])
-    .default('development'),
+  NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
 
   // Application port
   PORT: z
@@ -21,9 +19,7 @@ export const envSchema = z.object({
     }),
 
   // Database connection string
-  DATABASE_URL: z
-    .url()
-    .default('postgres://postgres:postgres@localhost:5432/vsa_m_nest'),
+  DATABASE_URL: z.url().default('postgres://postgres:postgres@localhost:5432/vsa_m_nest'),
 
   // Database connection pool configuration
   DB_POOL_MAX: z
@@ -61,7 +57,9 @@ export const envSchema = z.object({
   // JWT configuration
   JWT_SECRET: z
     .string()
-    .min(32, { message: 'JWT_SECRET must be at least 32 characters long (use a randomly generated key)' })
+    .min(32, {
+      message: 'JWT_SECRET must be at least 32 characters long (use a randomly generated key)',
+    })
     .default('your-secret-key-change-me-in-production-min-32-chars'),
 
   JWT_EXPIRES_IN: z
@@ -82,7 +80,12 @@ export const envSchema = z.object({
   ALLOWED_ORIGINS: z
     .string()
     .optional()
-    .transform((value) => value?.split(',').map((s) => s.trim()).filter(Boolean)),
+    .transform((value) =>
+      value
+        ?.split(',')
+        .map((s) => s.trim())
+        .filter(Boolean),
+    ),
 
   // Redis configuration (supports redis:// and rediss:// for TLS encrypted connections)
   REDIS_URL: z
@@ -101,9 +104,7 @@ export const envSchema = z.object({
     }),
 
   // API base URL (used as the type URI for RFC 9457 Problem Details)
-  API_BASE_URL: z
-    .url()
-    .default('https://api.example.com'),
+  API_BASE_URL: z.url().default('https://api.example.com'),
 
   // OAuth configuration (optional; OAuth login is disabled when not set)
   GOOGLE_CLIENT_ID: z.string().optional(),
@@ -125,7 +126,6 @@ export const envSchema = z.object({
     .default('100000')
     .transform((value) => Number.parseInt(value, 10))
     .refine((value) => value > 0, { message: 'THROTTLE_LIMIT must be greater than 0' }),
-
 })
 
 /**
@@ -144,9 +144,7 @@ export function validateEnv(config: Record<string, unknown>): Env {
   } catch (error) {
     if (error instanceof z.ZodError) {
       const errorMessages = error.issues
-        .map(
-          (error_: z.core.$ZodIssue) => `${error_.path.join('.')}: ${error_.message}`,
-        )
+        .map((error_: z.core.$ZodIssue) => `${error_.path.join('.')}: ${error_.message}`)
         .join('\n')
 
       throw new Error(

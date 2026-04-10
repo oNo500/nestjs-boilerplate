@@ -1,8 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger'
 
-import { CursorListResponseDto, ListResponseDto, OffsetListResponseDto } from '@/shared-kernel/infrastructure/dtos/list-response.dto'
+import {
+  CursorListResponseDto,
+  ListResponseDto,
+  OffsetListResponseDto,
+} from '@/shared-kernel/infrastructure/dtos/list-response.dto'
 
-import type { Article, ArticleCategory } from '@/modules/article/domain/aggregates/article.aggregate'
+import type {
+  Article,
+  ArticleCategory,
+} from '@/modules/article/domain/aggregates/article.aggregate'
 import type { ArticleStatus } from '@/modules/article/domain/enums/article-status.enum'
 
 export class ArticleResponseDto {

@@ -28,7 +28,5 @@ export interface DrizzleModuleOptions {
 // forRootAsync async configuration options
 export interface DrizzleAsyncOptions extends Pick<ModuleMetadata, 'imports'> {
   inject?: InjectionToken[]
-  useFactory: (
-    ...args: unknown[]
-  ) => DrizzleModuleOptions | Promise<DrizzleModuleOptions>
+  useFactory: (...args: unknown[]) => DrizzleModuleOptions | Promise<DrizzleModuleOptions>
 }

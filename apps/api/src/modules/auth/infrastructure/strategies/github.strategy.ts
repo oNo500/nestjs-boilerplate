@@ -9,9 +9,7 @@ import type { VerifyCallback } from 'passport-oauth2'
 
 @Injectable()
 export class GithubStrategy extends PassportStrategy(PassportGithubStrategy, 'github') {
-  constructor(
-    @Inject(ConfigService) configService: ConfigService<Env, true>,
-  ) {
+  constructor(@Inject(ConfigService) configService: ConfigService<Env, true>) {
     super({
       clientID: configService.get('GITHUB_CLIENT_ID', { infer: true }) ?? 'placeholder',
       clientSecret: configService.get('GITHUB_CLIENT_SECRET', { infer: true }) ?? 'placeholder',
@@ -33,7 +31,9 @@ export class GithubStrategy extends PassportStrategy(PassportGithubStrategy, 'gi
   ): void {
     const email = profile.emails?.[0]?.value
     if (!email) {
-      done(new Error('No email returned from GitHub. Ensure your GitHub account has a public email.'))
+      done(
+        new Error('No email returned from GitHub. Ensure your GitHub account has a public email.'),
+      )
       return
     }
 

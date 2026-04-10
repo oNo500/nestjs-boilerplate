@@ -36,8 +36,7 @@ export class DrizzleHealthIndicator {
       return {
         [key]: {
           status: 'down' as const,
-          message:
-            error instanceof Error ? error.message : 'Database check failed',
+          message: error instanceof Error ? error.message : 'Database check failed',
         },
       }
     }

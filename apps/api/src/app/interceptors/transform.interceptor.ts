@@ -1,14 +1,9 @@
-import {
-  Injectable,
-} from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import { map } from 'rxjs/operators'
 
 import { USE_ENVELOPE_KEY } from '@/shared-kernel/infrastructure/decorators/use-envelope.decorator'
 
-import type {
-  NestInterceptor,
-  ExecutionContext,
-  CallHandler } from '@nestjs/common'
+import type { NestInterceptor, ExecutionContext, CallHandler } from '@nestjs/common'
 import type { Reflector } from '@nestjs/core'
 import type { Observable } from 'rxjs'
 
@@ -53,10 +48,7 @@ export class TransformInterceptor implements NestInterceptor {
           return data
         }
 
-        const useEnvelope = this.reflector.get<boolean>(
-          USE_ENVELOPE_KEY,
-          context.getHandler(),
-        )
+        const useEnvelope = this.reflector.get<boolean>(USE_ENVELOPE_KEY, context.getHandler())
 
         if (useEnvelope) {
           return data
@@ -73,12 +65,12 @@ export class TransformInterceptor implements NestInterceptor {
 
   private isListResponse(data: unknown): boolean {
     return (
-      typeof data === 'object'
-      && data !== null
-      && 'object' in data
-      && data.object === 'list'
-      && 'data' in data
-      && Array.isArray(data.data)
+      typeof data === 'object' &&
+      data !== null &&
+      'object' in data &&
+      data.object === 'list' &&
+      'data' in data &&
+      Array.isArray(data.data)
     )
   }
 }

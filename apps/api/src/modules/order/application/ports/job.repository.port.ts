@@ -14,7 +14,7 @@ export interface Job {
   status: JobStatus
   payload: Record<string, unknown>
   result: unknown
-  error: { code: string, message: string } | null
+  error: { code: string; message: string } | null
   createdAt: Date
   updatedAt: Date
 }
@@ -27,7 +27,12 @@ export interface Job {
 export interface JobRepository {
   findById(id: string): Promise<Job | null>
   create(job: Omit<Job, 'createdAt' | 'updatedAt'>): Promise<Job>
-  updateStatus(id: string, status: JobStatus, result?: unknown, error?: { code: string, message: string }): Promise<void>
+  updateStatus(
+    id: string,
+    status: JobStatus,
+    result?: unknown,
+    error?: { code: string; message: string },
+  ): Promise<void>
 }
 
 export const JOB_REPOSITORY = Symbol('JOB_REPOSITORY')

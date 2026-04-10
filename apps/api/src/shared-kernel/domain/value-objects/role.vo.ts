@@ -18,12 +18,7 @@ export const ROLES = {
 /**
  * Role hierarchy (higher index means higher privilege)
  */
-export const ROLE_HIERARCHY: RoleType[] = [
-  'USER',
-  'EDITOR',
-  'MODERATOR',
-  'ADMIN',
-]
+export const ROLE_HIERARCHY: RoleType[] = ['USER', 'EDITOR', 'MODERATOR', 'ADMIN']
 
 /**
  * Checks whether a role satisfies the required minimum role.

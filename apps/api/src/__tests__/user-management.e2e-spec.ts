@@ -55,7 +55,7 @@ describe('userManagement E2E Tests', () => {
       .send({ email: adminEmail, password: 'Password123', name: 'adminuser' })
       .expect(201)
 
-    const adminBody = adminRegRes.body as { accessToken: string, user: { id: string } }
+    const adminBody = adminRegRes.body as { accessToken: string; user: { id: string } }
     adminUserId = adminBody.user.id
     createdUserIds.push(adminUserId)
 
@@ -76,7 +76,7 @@ describe('userManagement E2E Tests', () => {
       .send({ email: regularEmail, password: 'Password123', name: 'regularuser' })
       .expect(201)
 
-    const regularBody = regularRegRes.body as { accessToken: string, user: { id: string } }
+    const regularBody = regularRegRes.body as { accessToken: string; user: { id: string } }
     regularUserToken = regularBody.accessToken
     regularUserId = regularBody.user.id
     createdUserIds.push(regularUserId)
@@ -250,7 +250,12 @@ describe('userManagement E2E Tests', () => {
         .set('Authorization', `Bearer ${adminToken}`)
         .expect(200)
 
-      const body = res.body as { total: number, active: number, adminCount: number, newToday: number }
+      const body = res.body as {
+        total: number
+        active: number
+        adminCount: number
+        newToday: number
+      }
       expect(typeof body.total).toBe('number')
       expect(typeof body.active).toBe('number')
       expect(typeof body.adminCount).toBe('number')

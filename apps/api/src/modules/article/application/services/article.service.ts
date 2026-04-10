@@ -10,7 +10,10 @@ import { Content } from '@/modules/article/domain/value-objects/content.vo'
 import { Title } from '@/modules/article/domain/value-objects/title.vo'
 import { ErrorCode } from '@/shared-kernel/infrastructure/enums/error-code'
 
-import type { ArticleCursorResult, ArticleRepository } from '@/modules/article/application/ports/article.repository.port'
+import type {
+  ArticleCursorResult,
+  ArticleRepository,
+} from '@/modules/article/application/ports/article.repository.port'
 import type { SlugGenerator } from '@/modules/article/application/ports/slug-generator.port'
 import type { ArticleCategory } from '@/modules/article/domain/aggregates/article.aggregate'
 
@@ -62,7 +65,10 @@ export class ArticleService {
   async publish(id: string): Promise<Article> {
     const article = await this.articleRepository.findById(id)
     if (!article) {
-      throw new NotFoundException({ code: ErrorCode.ARTICLE_NOT_FOUND, message: `Article ${id} not found` })
+      throw new NotFoundException({
+        code: ErrorCode.ARTICLE_NOT_FOUND,
+        message: `Article ${id} not found`,
+      })
     }
 
     article.publish()
@@ -76,7 +82,10 @@ export class ArticleService {
   async archive(id: string): Promise<Article> {
     const article = await this.articleRepository.findById(id)
     if (!article) {
-      throw new NotFoundException({ code: ErrorCode.ARTICLE_NOT_FOUND, message: `Article ${id} not found` })
+      throw new NotFoundException({
+        code: ErrorCode.ARTICLE_NOT_FOUND,
+        message: `Article ${id} not found`,
+      })
     }
 
     article.archive()
@@ -100,7 +109,10 @@ export class ArticleService {
   ): Promise<Article> {
     const article = await this.articleRepository.findById(id)
     if (!article) {
-      throw new NotFoundException({ code: ErrorCode.ARTICLE_NOT_FOUND, message: `Article ${id} not found` })
+      throw new NotFoundException({
+        code: ErrorCode.ARTICLE_NOT_FOUND,
+        message: `Article ${id} not found`,
+      })
     }
 
     if (title !== undefined || content !== undefined) {
@@ -110,10 +122,7 @@ export class ArticleService {
     }
 
     if (category !== undefined || author !== undefined) {
-      article.updateMeta(
-        category ?? article.category,
-        author ?? article.author,
-      )
+      article.updateMeta(category ?? article.category, author ?? article.author)
     }
     if (isPinned !== undefined) {
       if (isPinned) {
@@ -132,7 +141,10 @@ export class ArticleService {
   async addTag(id: string, tag: string): Promise<Article> {
     const article = await this.articleRepository.findById(id)
     if (!article) {
-      throw new NotFoundException({ code: ErrorCode.ARTICLE_NOT_FOUND, message: `Article ${id} not found` })
+      throw new NotFoundException({
+        code: ErrorCode.ARTICLE_NOT_FOUND,
+        message: `Article ${id} not found`,
+      })
     }
 
     article.addTag(tag)
@@ -145,7 +157,10 @@ export class ArticleService {
   async removeTag(id: string, tag: string): Promise<Article> {
     const article = await this.articleRepository.findById(id)
     if (!article) {
-      throw new NotFoundException({ code: ErrorCode.ARTICLE_NOT_FOUND, message: `Article ${id} not found` })
+      throw new NotFoundException({
+        code: ErrorCode.ARTICLE_NOT_FOUND,
+        message: `Article ${id} not found`,
+      })
     }
 
     article.removeTag(tag)

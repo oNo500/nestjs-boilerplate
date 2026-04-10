@@ -96,17 +96,13 @@ export class AuthSessionRepositoryImpl implements AuthSessionRepository {
   }
 
   async delete(id: string): Promise<boolean> {
-    const result = await this.db
-      .delete(sessionsTable)
-      .where(eq(sessionsTable.id, id))
+    const result = await this.db.delete(sessionsTable).where(eq(sessionsTable.id, id))
 
     return (result.rowCount ?? 0) > 0
   }
 
   async deleteAllByUserId(userId: string): Promise<number> {
-    const result = await this.db
-      .delete(sessionsTable)
-      .where(eq(sessionsTable.userId, userId))
+    const result = await this.db.delete(sessionsTable).where(eq(sessionsTable.userId, userId))
 
     return result.rowCount ?? 0
   }

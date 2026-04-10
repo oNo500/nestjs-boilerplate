@@ -19,7 +19,12 @@ import { OrderItem } from '@/modules/order/domain/value-objects/order-item.vo'
 // ============================================================
 
 export const AuthFixtures = {
-  emailIdentity(overrides?: { id?: string, userId?: string, email?: string, passwordHash?: string }): AuthIdentity {
+  emailIdentity(overrides?: {
+    id?: string
+    userId?: string
+    email?: string
+    passwordHash?: string
+  }): AuthIdentity {
     return AuthIdentity.createEmailIdentity(
       overrides?.id ?? 'identity-id-1',
       overrides?.userId ?? 'user-id-1',
@@ -30,7 +35,7 @@ export const AuthFixtures = {
 
   oauthIdentity(
     provider: 'google' | 'github',
-    overrides?: { id?: string, userId?: string, accountId?: string },
+    overrides?: { id?: string; userId?: string; accountId?: string },
   ): AuthIdentity {
     return AuthIdentity.createOAuthIdentity(
       overrides?.id ?? 'oauth-identity-id-1',
@@ -44,7 +49,7 @@ export const AuthFixtures = {
    * AuthIdentity with no password (e.g. OAuth user that has no email/password)
    * Uses reconstitute to bypass the factory method constraints.
    */
-  identityWithNoPassword(overrides?: { id?: string, userId?: string }): AuthIdentity {
+  identityWithNoPassword(overrides?: { id?: string; userId?: string }): AuthIdentity {
     const now = new Date()
     return AuthIdentity.reconstitute(
       overrides?.id ?? 'identity-id-no-pw',
@@ -62,7 +67,12 @@ export const AuthFixtures = {
     )
   },
 
-  session(overrides?: { id?: string, userId?: string, token?: string, expiresAt?: Date }): AuthSession {
+  session(overrides?: {
+    id?: string
+    userId?: string
+    token?: string
+    expiresAt?: Date
+  }): AuthSession {
     return AuthSession.create(
       overrides?.id ?? 'session-id-1',
       overrides?.userId ?? 'user-id-1',
@@ -71,7 +81,7 @@ export const AuthFixtures = {
     )
   },
 
-  expiredSession(overrides?: { id?: string, userId?: string }): AuthSession {
+  expiredSession(overrides?: { id?: string; userId?: string }): AuthSession {
     return AuthSession.reconstitute(
       overrides?.id ?? 'session-id-expired',
       overrides?.userId ?? 'user-id-1',
@@ -89,7 +99,7 @@ export const AuthFixtures = {
 // ============================================================
 
 export const OrderFixtures = {
-  singleItem(overrides?: { productId?: string, quantity?: number, unitPrice?: string }): OrderItem {
+  singleItem(overrides?: { productId?: string; quantity?: number; unitPrice?: string }): OrderItem {
     return OrderItem.create(
       overrides?.productId ?? 'prod-001',
       overrides?.quantity ?? 2,
@@ -97,7 +107,7 @@ export const OrderFixtures = {
     )
   },
 
-  pendingOrder(overrides?: { id?: string, userId?: string }): Order {
+  pendingOrder(overrides?: { id?: string; userId?: string }): Order {
     const items = [OrderItem.create('prod-001', 2, '99.99')]
     const totalAmount = Money.create('199.98', 'CNY')
     return Order.create(
@@ -119,7 +129,7 @@ export const OrderFixtures = {
    * Use `reconstitutedOrder(OrderStatus.PAID)` when you need precise control over
    * `version` or need to verify that NO domain events were raised during setup.
    */
-  paidOrder(overrides?: { id?: string, userId?: string }): Order {
+  paidOrder(overrides?: { id?: string; userId?: string }): Order {
     const order = OrderFixtures.pendingOrder(overrides)
     order.pay()
     order.clearDomainEvents()
@@ -128,7 +138,7 @@ export const OrderFixtures = {
 
   reconstitutedOrder(
     status: OrderStatus = OrderStatus.PENDING_PAYMENT,
-    overrides?: { id?: string, userId?: string, version?: number },
+    overrides?: { id?: string; userId?: string; version?: number },
   ): Order {
     const items = [OrderItem.create('prod-001', 1, '50.00')]
     const totalAmount = Money.create('50.00', 'CNY')
@@ -150,10 +160,11 @@ export const OrderFixtures = {
 // Article fixtures
 // ============================================================
 
-const ARTICLE_BODY = 'This is a test article content with enough characters to be valid and publishable.'
+const ARTICLE_BODY =
+  'This is a test article content with enough characters to be valid and publishable.'
 
 export const ArticleFixtures = {
-  draft(overrides?: { id?: string, title?: string, content?: string }): Article {
+  draft(overrides?: { id?: string; title?: string; content?: string }): Article {
     return Article.create(
       overrides?.id ?? 'article-id-1',
       Title.create(overrides?.title ?? 'Test Article'),
@@ -182,7 +193,7 @@ export const ArticleFixtures = {
 // ============================================================
 
 export const UserFixtures = {
-  user(overrides?: Partial<{ id: string, name: string, email: string, role: string }>) {
+  user(overrides?: Partial<{ id: string; name: string; email: string; role: string }>) {
     return {
       id: overrides?.id ?? 'user-id-1',
       name: overrides?.name ?? 'Test User',
@@ -198,7 +209,7 @@ export const UserFixtures = {
     }
   },
 
-  admin(overrides?: Partial<{ id: string, email: string }>) {
+  admin(overrides?: Partial<{ id: string; email: string }>) {
     return UserFixtures.user({ ...overrides, role: 'ADMIN' })
   },
 }

@@ -2,7 +2,10 @@ import { Body, Controller, Get, Inject, NotFoundException, Patch, Request } from
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
 
 import { PROFILE_REPOSITORY } from '@/modules/identity/application/ports/profile.repository.port'
-import { ProfileResponseDto, UpdateProfileDto } from '@/modules/identity/presentation/dtos/profile.dto'
+import {
+  ProfileResponseDto,
+  UpdateProfileDto,
+} from '@/modules/identity/presentation/dtos/profile.dto'
 import { ErrorCode } from '@/shared-kernel/infrastructure/enums/error-code'
 
 import type { ProfileRepository } from '@/modules/identity/application/ports/profile.repository.port'
@@ -19,9 +22,7 @@ export class ProfileController {
   @Get()
   @ApiOperation({ summary: 'Get current user profile' })
   @ApiResponse({ status: 200, type: ProfileResponseDto })
-  async getProfile(
-    @Request() req: { user: { id: string } },
-  ): Promise<ProfileResponseDto> {
+  async getProfile(@Request() req: { user: { id: string } }): Promise<ProfileResponseDto> {
     const profile = await this.profileRepository.findById(req.user.id)
     if (!profile) {
       throw new NotFoundException({ code: ErrorCode.USER_NOT_FOUND, message: 'Profile not found' })

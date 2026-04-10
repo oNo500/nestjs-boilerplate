@@ -11,7 +11,13 @@ import { Tags } from '@/modules/article/domain/value-objects/tags.vo'
 import { Title } from '@/modules/article/domain/value-objects/title.vo'
 
 import type { DrizzleDb } from '@/app/database/db.port'
-import type { ArticleCursorQuery, ArticleCursorResult, ArticleListQuery, ArticleListResult, ArticleRepository } from '@/modules/article/application/ports/article.repository.port'
+import type {
+  ArticleCursorQuery,
+  ArticleCursorResult,
+  ArticleListQuery,
+  ArticleListResult,
+  ArticleRepository,
+} from '@/modules/article/application/ports/article.repository.port'
 import type { ArticleCategory } from '@/modules/article/domain/aggregates/article.aggregate'
 import type { ArticleDatabase, InsertArticleDatabase } from '@workspace/database'
 
@@ -26,10 +32,7 @@ export class ArticleRepositoryImpl implements ArticleRepository {
   constructor(@Inject(DB_TOKEN) private readonly db: DrizzleDb) {}
 
   async findAll(): Promise<Article[]> {
-    const rows = await this.db
-      .select()
-      .from(articlesTable)
-      .orderBy(articlesTable.createdAt)
+    const rows = await this.db.select().from(articlesTable).orderBy(articlesTable.createdAt)
 
     return rows.map((row) => this.toDomain(row))
   }
@@ -107,19 +110,13 @@ export class ArticleRepositoryImpl implements ArticleRepository {
   }
 
   async findById(id: string): Promise<Article | null> {
-    const [row] = await this.db
-      .select()
-      .from(articlesTable)
-      .where(eq(articlesTable.id, id))
+    const [row] = await this.db.select().from(articlesTable).where(eq(articlesTable.id, id))
 
     return row ? this.toDomain(row) : null
   }
 
   async findBySlug(slug: string): Promise<Article | null> {
-    const [row] = await this.db
-      .select()
-      .from(articlesTable)
-      .where(eq(articlesTable.slug, slug))
+    const [row] = await this.db.select().from(articlesTable).where(eq(articlesTable.slug, slug))
 
     return row ? this.toDomain(row) : null
   }
@@ -127,20 +124,14 @@ export class ArticleRepositoryImpl implements ArticleRepository {
   async save(article: Article): Promise<void> {
     const data = this.toPersistence(article)
 
-    await this.db
-      .insert(articlesTable)
-      .values(data)
-      .onConflictDoUpdate({
-        target: articlesTable.id,
-        set: data,
-      })
+    await this.db.insert(articlesTable).values(data).onConflictDoUpdate({
+      target: articlesTable.id,
+      set: data,
+    })
   }
 
   async delete(id: string): Promise<boolean> {
-    const result = await this.db
-      .delete(articlesTable)
-      .where(eq(articlesTable.id, id))
-      .returning()
+    const result = await this.db.delete(articlesTable).where(eq(articlesTable.id, id)).returning()
 
     return result.length > 0
   }
@@ -180,7 +171,9 @@ export class ArticleRepositoryImpl implements ArticleRepository {
   /**
    * Domain model -> Database record
    */
-  private toPersistence(article: Article): Omit<InsertArticleDatabase, 'searchVector'> & { searchVector: ReturnType<typeof sql> } {
+  private toPersistence(
+    article: Article,
+  ): Omit<InsertArticleDatabase, 'searchVector'> & { searchVector: ReturnType<typeof sql> } {
     const title = article.title.value
     const content = article.content.value
     return {

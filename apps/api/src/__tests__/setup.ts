@@ -4,7 +4,6 @@
  */
 
 declare global {
-
   var e2ePrefix: string
 }
 

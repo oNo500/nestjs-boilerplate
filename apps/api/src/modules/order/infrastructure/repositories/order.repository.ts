@@ -78,7 +78,7 @@ export class OrderRepositoryImpl implements OrderRepository {
   // ========== Domain model <-> Persistence model mapping ==========
 
   private toDomain(row: OrderDatabase): Order {
-    const items = (row.items as { productId: string, quantity: number, unitPrice: string }[]).map(
+    const items = (row.items as { productId: string; quantity: number; unitPrice: string }[]).map(
       (item) => OrderItem.create(item.productId, item.quantity, item.unitPrice),
     )
 

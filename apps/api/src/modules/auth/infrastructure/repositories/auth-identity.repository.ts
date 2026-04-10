@@ -40,10 +40,7 @@ export class AuthIdentityRepositoryImpl implements AuthIdentityRepository {
     const existing = await this.findById(identity.id)
 
     await (existing
-      ? this.db
-          .update(accountsTable)
-          .set(data)
-          .where(eq(accountsTable.id, identity.id))
+      ? this.db.update(accountsTable).set(data).where(eq(accountsTable.id, identity.id))
       : this.db.insert(accountsTable).values({
           ...data,
           createdAt: identity.createdAt,
@@ -80,12 +77,7 @@ export class AuthIdentityRepositoryImpl implements AuthIdentityRepository {
     const result = await this.db
       .select()
       .from(accountsTable)
-      .where(
-        and(
-          eq(accountsTable.userId, userId),
-          eq(accountsTable.providerId, provider),
-        ),
-      )
+      .where(and(eq(accountsTable.userId, userId), eq(accountsTable.providerId, provider)))
       .limit(1)
 
     if (result.length === 0) {
@@ -142,24 +134,18 @@ export class AuthIdentityRepositoryImpl implements AuthIdentityRepository {
   }
 
   async delete(id: string): Promise<boolean> {
-    const result = await this.db
-      .delete(accountsTable)
-      .where(eq(accountsTable.id, id))
+    const result = await this.db.delete(accountsTable).where(eq(accountsTable.id, id))
 
     return (result.rowCount ?? 0) > 0
   }
 
   async deleteByUserId(userId: string): Promise<number> {
-    const result = await this.db
-      .delete(accountsTable)
-      .where(eq(accountsTable.userId, userId))
+    const result = await this.db.delete(accountsTable).where(eq(accountsTable.userId, userId))
 
     return result.rowCount ?? 0
   }
 
-  private toDomain(
-    record: typeof accountsTable.$inferSelect,
-  ): AuthIdentity {
+  private toDomain(record: typeof accountsTable.$inferSelect): AuthIdentity {
     return AuthIdentity.reconstitute(
       record.id,
       record.userId,

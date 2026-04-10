@@ -14,7 +14,7 @@ import type { INestApplication } from '@nestjs/common'
 interface AuthResponse {
   accessToken: string
   refreshToken: string
-  user: { id: string, email: string, role: string | null }
+  user: { id: string; email: string; role: string | null }
 }
 
 interface SessionInfo {

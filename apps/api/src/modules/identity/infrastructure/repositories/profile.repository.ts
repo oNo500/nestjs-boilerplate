@@ -19,11 +19,7 @@ export class ProfileRepositoryImpl implements ProfileRepository {
   ) {}
 
   async findById(id: string): Promise<ProfileData | null> {
-    const result = await this.db
-      .select()
-      .from(usersTable)
-      .where(eq(usersTable.id, id))
-      .limit(1)
+    const result = await this.db.select().from(usersTable).where(eq(usersTable.id, id)).limit(1)
 
     return result[0] ? this.toProfileData(result[0]) : null
   }

@@ -19,9 +19,7 @@ import { ProblemDetailsFilter } from '@/app/filters/problem-details.filter'
 
 import type { Env } from '@/app/config/env.schema'
 import type { ProblemDetailsDto } from '@/shared-kernel/infrastructure/dtos/problem-details.dto'
-import type {
-  ExceptionFilter,
-  ArgumentsHost } from '@nestjs/common'
+import type { ExceptionFilter, ArgumentsHost } from '@nestjs/common'
 import type { Request, Response } from 'express'
 
 /**
@@ -33,25 +31,29 @@ import type { Request, Response } from 'express'
 function mapDatabaseError(error: DatabaseError): HttpException {
   switch (error.code) {
     // Class 23 — Integrity Constraint Violation
-    case '23505': { // unique_violation
+    case '23505': {
+      // unique_violation
       return new ConflictException({
         code: 'RESOURCE_CONFLICT',
         message: 'A resource with the same unique field already exists',
       })
     }
-    case '23503': { // foreign_key_violation
+    case '23503': {
+      // foreign_key_violation
       return new UnprocessableEntityException({
         code: 'RESOURCE_CONFLICT',
         message: 'Referenced resource does not exist',
       })
     }
-    case '23502': { // not_null_violation
+    case '23502': {
+      // not_null_violation
       return new UnprocessableEntityException({
         code: 'RESOURCE_CONFLICT',
         message: 'A required field is missing',
       })
     }
-    case '23514': { // check_violation
+    case '23514': {
+      // check_violation
       return new UnprocessableEntityException({
         code: 'RESOURCE_CONFLICT',
         message: 'Data failed a database constraint check',
@@ -69,7 +71,8 @@ function mapDatabaseError(error: DatabaseError): HttpException {
       })
     }
     // Class 57 — Operator Intervention (e.g. query_canceled, admin_shutdown)
-    case '57014': { // query_canceled (e.g. statement_timeout)
+    case '57014': {
+      // query_canceled (e.g. statement_timeout)
       return new ServiceUnavailableException({
         code: 'INTERNAL_SERVER_ERROR',
         message: 'Database query timed out',
@@ -143,7 +146,8 @@ export class AllExceptionsFilter implements ExceptionFilter {
     const traceId = this.cls?.get<string>('traceId')
 
     // Build Problem Details response (RFC 9457 format)
-    const baseUrl = this.configService?.get('API_BASE_URL', { infer: true }) ?? 'https://api.example.com'
+    const baseUrl =
+      this.configService?.get('API_BASE_URL', { infer: true }) ?? 'https://api.example.com'
     const problemDetails: ProblemDetailsDto = {
       type: `${baseUrl}/errors/internal-server-error`,
       title: 'Internal Server Error',
@@ -158,11 +162,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
     }
 
     // Build trace prefix for log message
-    const tracePrefix = this.buildTracePrefix(
-      requestId,
-      correlationId,
-      traceId,
-    )
+    const tracePrefix = this.buildTracePrefix(requestId, correlationId, traceId)
 
     // Log full error stack
     const logMessage = `${tracePrefix}${request.method} ${request.url} ${status}`
@@ -183,11 +183,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
   /**
    * Build trace ID prefix
    */
-  private buildTracePrefix(
-    requestId?: string,
-    correlationId?: string,
-    traceId?: string,
-  ): string {
+  private buildTracePrefix(requestId?: string, correlationId?: string, traceId?: string): string {
     const parts: string[] = []
 
     if (requestId) {

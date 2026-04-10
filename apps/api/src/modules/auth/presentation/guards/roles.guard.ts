@@ -31,13 +31,19 @@ export class RolesGuard implements CanActivate {
     const actorRole = request.user?.roles?.[0]
 
     if (!actorRole) {
-      throw new ForbiddenException({ code: ErrorCode.FORBIDDEN, message: 'Insufficient permissions' })
+      throw new ForbiddenException({
+        code: ErrorCode.FORBIDDEN,
+        message: 'Insufficient permissions',
+      })
     }
 
     const hasAccess = requiredRoles.some((required) => hasRequiredRole(actorRole, required))
 
     if (!hasAccess) {
-      throw new ForbiddenException({ code: ErrorCode.INSUFFICIENT_SCOPE, message: 'Insufficient permissions' })
+      throw new ForbiddenException({
+        code: ErrorCode.INSUFFICIENT_SCOPE,
+        message: 'Insufficient permissions',
+      })
     }
 
     return true

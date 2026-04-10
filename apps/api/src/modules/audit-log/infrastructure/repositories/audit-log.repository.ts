@@ -59,10 +59,7 @@ export class AuditLogRepositoryImpl implements AuditLogRepository {
         .orderBy(desc(auditLogsTable.createdAt))
         .limit(pageSize)
         .offset((page - 1) * pageSize),
-      this.db
-        .select({ count: count() })
-        .from(auditLogsTable)
-        .where(whereClause),
+      this.db.select({ count: count() }).from(auditLogsTable).where(whereClause),
     ])
 
     const data: AuditLogRecord[] = rows.map((row) => ({

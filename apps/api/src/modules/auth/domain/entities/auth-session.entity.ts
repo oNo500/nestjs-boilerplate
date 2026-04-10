@@ -67,15 +67,7 @@ export class AuthSession {
     userAgent: string | null,
     createdAt: Date,
   ): AuthSession {
-    return new AuthSession(
-      id,
-      userId,
-      token,
-      expiresAt,
-      ipAddress,
-      userAgent,
-      createdAt,
-    )
+    return new AuthSession(id, userId, token, expiresAt, ipAddress, userAgent, createdAt)
   }
 
   /**

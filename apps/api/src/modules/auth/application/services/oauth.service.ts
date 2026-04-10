@@ -52,7 +52,7 @@ export class OAuthService {
   async findOrCreateUser(profile: OAuthUserProfile): Promise<{
     accessToken: string
     refreshToken: string
-    user: { id: string, email: string, role: RoleType | null }
+    user: { id: string; email: string; role: RoleType | null }
   }> {
     // Step 1: look for existing OAuth identity
     const existingOAuthIdentity = await this.authIdentityRepo.findByProviderAndIdentifier(
@@ -64,13 +64,21 @@ export class OAuthService {
       const role = await this.userRoleRepo.getRole(existingOAuthIdentity.userId)
       const tokens = await this.generateTokens(existingOAuthIdentity.userId, profile.email, role)
       void this.eventPublisher.publish(
-        new UserLoggedInViaOAuthEvent(existingOAuthIdentity.userId, profile.email, profile.provider, false),
+        new UserLoggedInViaOAuthEvent(
+          existingOAuthIdentity.userId,
+          profile.email,
+          profile.provider,
+          false,
+        ),
       )
       return tokens
     }
 
     // Step 2: look for same-email user via email identity
-    const emailIdentity = await this.authIdentityRepo.findByProviderAndIdentifier('email', profile.email)
+    const emailIdentity = await this.authIdentityRepo.findByProviderAndIdentifier(
+      'email',
+      profile.email,
+    )
 
     let userId: string
 
@@ -118,13 +126,10 @@ export class OAuthService {
     return this.generateTokens(userId, profile.email, role)
   }
 
-  private async generateTokens(
-    userId: string,
-    email: string,
-    role: RoleType | null,
-  ) {
+  private async generateTokens(userId: string, email: string, role: RoleType | null) {
     const refreshToken = randomUUID()
-    const refreshExpiresIn = this.configService.get('JWT_REFRESH_EXPIRES_IN', { infer: true }) ?? '7d'
+    const refreshExpiresIn =
+      this.configService.get('JWT_REFRESH_EXPIRES_IN', { infer: true }) ?? '7d'
     const expiresAt = this.parseExpiration(refreshExpiresIn)
 
     const sessionId = randomUUID()

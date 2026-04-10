@@ -1,12 +1,7 @@
-import {
-  Injectable,
-} from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import { tap } from 'rxjs/operators'
 
-import type {
-  NestInterceptor,
-  ExecutionContext,
-  CallHandler } from '@nestjs/common'
+import type { NestInterceptor, ExecutionContext, CallHandler } from '@nestjs/common'
 import type { Response, Request } from 'express'
 import type { Observable } from 'rxjs'
 
@@ -78,12 +73,12 @@ export class LinkHeaderInterceptor implements NestInterceptor {
    */
   private isListResponse(data: unknown): data is Record<string, unknown> {
     return (
-      typeof data === 'object'
-      && data !== null
-      && 'object' in data
-      && data.object === 'list'
-      && 'data' in data
-      && Array.isArray(data.data)
+      typeof data === 'object' &&
+      data !== null &&
+      'object' in data &&
+      data.object === 'list' &&
+      'data' in data &&
+      Array.isArray(data.data)
     )
   }
 
@@ -92,14 +87,14 @@ export class LinkHeaderInterceptor implements NestInterceptor {
    */
   private isOffsetListResponse(
     data: unknown,
-  ): data is { total: number, page: number, pageSize: number, hasMore: boolean } {
+  ): data is { total: number; page: number; pageSize: number; hasMore: boolean } {
     return (
-      typeof data === 'object'
-      && data !== null
-      && 'total' in data
-      && 'page' in data
-      && 'pageSize' in data
-      && typeof (data as Record<string, unknown>).total === 'number'
+      typeof data === 'object' &&
+      data !== null &&
+      'total' in data &&
+      'page' in data &&
+      'pageSize' in data &&
+      typeof (data as Record<string, unknown>).total === 'number'
     )
   }
 
@@ -110,10 +105,7 @@ export class LinkHeaderInterceptor implements NestInterceptor {
    * @param data - Response data
    * @returns array of Link header strings
    */
-  private buildLinks(
-    request: Request,
-    data: Record<string, unknown>,
-  ): string[] {
+  private buildLinks(request: Request, data: Record<string, unknown>): string[] {
     const baseUrl = `${request.protocol}://${request.get('host')}${request.path}`
     const links: string[] = []
 
@@ -121,11 +113,11 @@ export class LinkHeaderInterceptor implements NestInterceptor {
     if ('nextCursor' in data) {
       // Next page
       if (
-        'hasMore' in data
-        && data.hasMore
-        && 'nextCursor' in data
-        && data.nextCursor
-        && typeof data.nextCursor === 'string'
+        'hasMore' in data &&
+        data.hasMore &&
+        'nextCursor' in data &&
+        data.nextCursor &&
+        typeof data.nextCursor === 'string'
       ) {
         const nextUrl = this.buildUrl(baseUrl, request.query, {
           cursor: data.nextCursor,

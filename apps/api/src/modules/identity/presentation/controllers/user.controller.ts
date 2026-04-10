@@ -79,9 +79,7 @@ export class UserController {
   @ApiOperation({ summary: 'Get user details' })
   @ApiResponse({ status: 200, type: UserResponseDto })
   @ApiResponse({ status: 404, description: 'User not found' })
-  async findById(
-    @Param('id', ParseUUIDPipe) id: string,
-  ): Promise<UserResponseDto> {
+  async findById(@Param('id', ParseUUIDPipe) id: string): Promise<UserResponseDto> {
     return this.userService.findById(id)
   }
 
@@ -109,12 +107,16 @@ export class UserController {
     @Body() dto: UpdateUserDto,
     @Request() req: { user: { id: string } },
   ): Promise<UserResponseDto> {
-    return this.userService.update(id, {
-      name: dto.name,
-      displayName: dto.displayName,
-      banned: dto.banned,
-      banReason: dto.banReason,
-    }, req.user.id)
+    return this.userService.update(
+      id,
+      {
+        name: dto.name,
+        displayName: dto.displayName,
+        banned: dto.banned,
+        banReason: dto.banReason,
+      },
+      req.user.id,
+    )
   }
 
   @Put(':id/role')
@@ -127,7 +129,7 @@ export class UserController {
   async assignRole(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() dto: AssignRoleDto,
-    @Request() req: { user: { id: string, roles: RoleType[] } },
+    @Request() req: { user: { id: string; roles: RoleType[] } },
   ): Promise<UserResponseDto> {
     return this.userService.assignRole(id, dto.role, req.user.id, req.user.roles[0]!)
   }

@@ -35,7 +35,10 @@ export class TodoService {
     const todo = await this.todoRepository.findById(id)
 
     if (!todo) {
-      throw new NotFoundException({ code: ErrorCode.TODO_NOT_FOUND, message: `Todo with ID ${id} not found` })
+      throw new NotFoundException({
+        code: ErrorCode.TODO_NOT_FOUND,
+        message: `Todo with ID ${id} not found`,
+      })
     }
 
     return todo
@@ -49,7 +52,10 @@ export class TodoService {
     const todo = await this.todoRepository.update(id, input)
 
     if (!todo) {
-      throw new NotFoundException({ code: ErrorCode.TODO_NOT_FOUND, message: `Todo with ID ${id} not found` })
+      throw new NotFoundException({
+        code: ErrorCode.TODO_NOT_FOUND,
+        message: `Todo with ID ${id} not found`,
+      })
     }
 
     return todo
@@ -59,7 +65,10 @@ export class TodoService {
     const deleted = await this.todoRepository.delete(id)
 
     if (!deleted) {
-      throw new NotFoundException({ code: ErrorCode.TODO_NOT_FOUND, message: `Todo with ID ${id} not found` })
+      throw new NotFoundException({
+        code: ErrorCode.TODO_NOT_FOUND,
+        message: `Todo with ID ${id} not found`,
+      })
     }
   }
 }

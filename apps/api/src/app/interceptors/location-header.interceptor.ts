@@ -1,12 +1,7 @@
-import {
-  Injectable,
-} from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import { tap } from 'rxjs/operators'
 
-import type {
-  NestInterceptor,
-  ExecutionContext,
-  CallHandler } from '@nestjs/common'
+import type { NestInterceptor, ExecutionContext, CallHandler } from '@nestjs/common'
 import type { Response, Request } from 'express'
 import type { Observable } from 'rxjs'
 
@@ -53,12 +48,7 @@ export class LocationHeaderInterceptor implements NestInterceptor {
         }
 
         // Check whether the response data contains an id field
-        if (
-          !data
-          || typeof data !== 'object'
-          || !('id' in data)
-          || typeof data.id !== 'string'
-        ) {
+        if (!data || typeof data !== 'object' || !('id' in data) || typeof data.id !== 'string') {
           return
         }
 

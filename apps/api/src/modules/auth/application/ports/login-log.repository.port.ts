@@ -29,5 +29,5 @@ export interface LoginLogQueryParams {
 
 export interface LoginLogRepository {
   create(entry: LoginLogEntry): Promise<void>
-  findAll(params: LoginLogQueryParams): Promise<{ data: LoginLogRecord[], total: number }>
+  findAll(params: LoginLogQueryParams): Promise<{ data: LoginLogRecord[]; total: number }>
 }

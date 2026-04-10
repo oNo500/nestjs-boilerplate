@@ -82,8 +82,13 @@ export class JobResponseDto {
   result!: unknown
 
   /** Populated after the job fails */
-  @ApiProperty({ nullable: true, description: 'Populated after the job fails', type: 'object', properties: { code: { type: 'string' }, message: { type: 'string' } } })
-  error!: { code: string, message: string } | null
+  @ApiProperty({
+    nullable: true,
+    description: 'Populated after the job fails',
+    type: 'object',
+    properties: { code: { type: 'string' }, message: { type: 'string' } },
+  })
+  error!: { code: string; message: string } | null
 
   @ApiProperty()
   createdAt!: Date
@@ -112,8 +117,12 @@ export class BulkCancelItemResponseDto {
   @ApiProperty({ example: 204 })
   status!: 204 | 404 | 409 | 422
 
-  @ApiProperty({ nullable: true, type: 'object', properties: { code: { type: 'string' }, message: { type: 'string' } } })
-  error?: { code: string, message: string }
+  @ApiProperty({
+    nullable: true,
+    type: 'object',
+    properties: { code: { type: 'string' }, message: { type: 'string' } },
+  })
+  error?: { code: string; message: string }
 }
 
 /**
@@ -126,8 +135,12 @@ export class BulkCancelResponseDto {
   @ApiProperty({ type: () => BulkCancelItemResponseDto, isArray: true })
   data!: BulkCancelItemResponseDto[]
 
-  @ApiProperty({ type: 'object', properties: { succeeded: { type: 'number' }, failed: { type: 'number' } }, example: { succeeded: 3, failed: 1 } })
-  summary!: { succeeded: number, failed: number }
+  @ApiProperty({
+    type: 'object',
+    properties: { succeeded: { type: 'number' }, failed: { type: 'number' } },
+    example: { succeeded: 3, failed: 1 },
+  })
+  summary!: { succeeded: number; failed: number }
 
   static fromResult(result: BulkCancelResult): BulkCancelResponseDto {
     const dto = new BulkCancelResponseDto()
@@ -144,6 +157,9 @@ export class BulkCancelResponseDto {
  * Returns the async job ID; client polls GET /jobs/:jobId for status.
  */
 export class ShipOrderResponseDto {
-  @ApiProperty({ example: 'job_01HXYZ', description: 'Async job ID; client polls GET /jobs/:jobId for status' })
+  @ApiProperty({
+    example: 'job_01HXYZ',
+    description: 'Async job ID; client polls GET /jobs/:jobId for status',
+  })
   jobId!: string
 }

@@ -20,9 +20,7 @@ export async function registerAndLogin(
   password: string,
   name = 'Test User',
 ): Promise<string> {
-  await createRequest(app)
-    .post('/api/auth/register')
-    .send({ email, password, name })
+  await createRequest(app).post('/api/auth/register').send({ email, password, name })
 
   const loginRes = await createRequest(app)
     .post('/api/auth/login')
@@ -36,9 +34,6 @@ export async function registerAndLogin(
 /**
  * Attach the Bearer token to a SuperTest agent chain.
  */
-export function withToken(
-  req: TestAgent<SuperTestType>,
-  token: string,
-): TestAgent<SuperTestType> {
+export function withToken(req: TestAgent<SuperTestType>, token: string): TestAgent<SuperTestType> {
   return req.set('Authorization', `Bearer ${token}`) as unknown as TestAgent<SuperTestType>
 }

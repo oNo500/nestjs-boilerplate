@@ -19,6 +19,8 @@ export class CreateOrderDto {
   @ApiPropertyOptional({ example: 'CNY', description: '3 uppercase letters, e.g. CNY, USD' })
   @IsOptional()
   @IsStringField()
-  @MatchesField(/^[A-Z]{3}$/, { message: 'Currency code must be 3 uppercase letters, e.g. CNY, USD' })
+  @MatchesField(/^[A-Z]{3}$/, {
+    message: 'Currency code must be 3 uppercase letters, e.g. CNY, USD',
+  })
   currency?: string
 }

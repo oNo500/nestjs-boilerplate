@@ -113,10 +113,7 @@ export class ETagMiddleware implements NestMiddleware {
    * @returns strong ETag format (quoted)
    */
   private generateETag(data: unknown): string {
-    const hash = crypto
-      .createHash('md5')
-      .update(JSON.stringify(data))
-      .digest('hex')
+    const hash = crypto.createHash('md5').update(JSON.stringify(data)).digest('hex')
 
     // Strong ETag format: wrapped in double quotes
     return `"${hash}"`

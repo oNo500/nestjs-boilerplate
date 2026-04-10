@@ -47,7 +47,7 @@ export class OrderItem {
     return (Number.parseFloat(this.#unitPrice) * this.#quantity).toFixed(2)
   }
 
-  toPlain(): { productId: string, quantity: number, unitPrice: string } {
+  toPlain(): { productId: string; quantity: number; unitPrice: string } {
     return {
       productId: this.#productId,
       quantity: this.#quantity,

@@ -1,10 +1,7 @@
 import { randomUUID } from 'node:crypto'
 
 import { Inject, Injectable } from '@nestjs/common'
-import {
-  accountsTable,
-  usersTable,
-} from '@workspace/database'
+import { accountsTable, usersTable } from '@workspace/database'
 import * as bcrypt from 'bcrypt'
 import { and, count, eq, gte, ilike, inArray } from 'drizzle-orm'
 
@@ -30,8 +27,7 @@ const BCRYPT_ROUNDS = 12
  * accounts: authentication credentials
  */
 @Injectable()
-export class UserRepositoryImpl
-implements IdentityRepository {
+export class UserRepositoryImpl implements IdentityRepository {
   constructor(
     @Inject(DB_TOKEN)
     private readonly db: DrizzleDb,
@@ -62,10 +58,7 @@ implements IdentityRepository {
         .where(ilike(usersTable.email, `%${search}%`))
 
       const searchUserIds = [
-        ...new Set([
-          ...nameMatches.map((p) => p.id),
-          ...emailMatches.map((i) => i.id),
-        ]),
+        ...new Set([...nameMatches.map((p) => p.id), ...emailMatches.map((i) => i.id)]),
       ]
 
       if (searchUserIds.length === 0) {
@@ -96,11 +89,7 @@ implements IdentityRepository {
   }
 
   async findById(id: string): Promise<UserInfo | null> {
-    const result = await this.db
-      .select()
-      .from(usersTable)
-      .where(eq(usersTable.id, id))
-      .limit(1)
+    const result = await this.db.select().from(usersTable).where(eq(usersTable.id, id)).limit(1)
 
     return result[0] ? this.toUserInfo(result[0]) : null
   }

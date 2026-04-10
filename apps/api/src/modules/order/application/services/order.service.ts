@@ -1,6 +1,12 @@
 import { createHash } from 'node:crypto'
 
-import { ConflictException, Inject, Injectable, NotFoundException, UnprocessableEntityException } from '@nestjs/common'
+import {
+  ConflictException,
+  Inject,
+  Injectable,
+  NotFoundException,
+  UnprocessableEntityException,
+} from '@nestjs/common'
 
 import { DomainEventPublisher } from '@/app/events/domain-event-publisher'
 import { JOB_REPOSITORY, JobStatus } from '@/modules/order/application/ports/job.repository.port'
@@ -26,7 +32,7 @@ interface IdempotencyRecord {
 export interface BulkCancelItemResult {
   id: string
   status: 204 | 404 | 409 | 422
-  error?: { code: string, message: string }
+  error?: { code: string; message: string }
 }
 
 export interface BulkCancelResult {
@@ -37,7 +43,7 @@ export interface BulkCancelResult {
 
 export interface CreateOrderInput {
   userId: string
-  items: { productId: string, quantity: number, unitPrice: string }[]
+  items: { productId: string; quantity: number; unitPrice: string }[]
   currency?: string
 }
 
@@ -74,7 +80,7 @@ export class OrderService {
     idempotencyKey: string,
     bodyHash: string,
     input: CreateOrderInput,
-  ): Promise<{ order: Order, replayed: boolean, cachedResponse?: Record<string, unknown> }> {
+  ): Promise<{ order: Order; replayed: boolean; cachedResponse?: Record<string, unknown> }> {
     const cacheKey = `idempotency:${idempotencyKey}`
 
     const existing = await this.cache.get<IdempotencyRecord>(cacheKey)
@@ -93,7 +99,9 @@ export class OrderService {
       }
     }
 
-    const items = input.items.map((item) => OrderItem.create(item.productId, item.quantity, item.unitPrice))
+    const items = input.items.map((item) =>
+      OrderItem.create(item.productId, item.quantity, item.unitPrice),
+    )
 
     const totalAmount = items
       .reduce((sum, item) => sum + Number.parseFloat(item.subtotal), 0)
@@ -206,8 +214,8 @@ export class OrderService {
       }
 
       if (!order.canCancel()) {
-        const code
-          = order.status === 'paid' || order.status === 'shipping' || order.status === 'completed'
+        const code =
+          order.status === 'paid' || order.status === 'shipping' || order.status === 'completed'
             ? ErrorCode.ORDER_ALREADY_PAID
             : ErrorCode.ORDER_CANNOT_CANCEL
 

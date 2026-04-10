@@ -3,10 +3,20 @@ import { ApiTags, ApiOperation, ApiBearerAuth, ApiResponse } from '@nestjs/swagg
 
 import { AuthService } from '@/modules/auth/application/services/auth.service'
 import { LoginDto, LoginResponseDto } from '@/modules/auth/presentation/dtos/login.dto'
-import { LogoutDto, LogoutResponseDto, LogoutAllResponseDto } from '@/modules/auth/presentation/dtos/logout.dto'
-import { RefreshTokenDto, RefreshTokenResponseDto } from '@/modules/auth/presentation/dtos/refresh-token.dto'
+import {
+  LogoutDto,
+  LogoutResponseDto,
+  LogoutAllResponseDto,
+} from '@/modules/auth/presentation/dtos/logout.dto'
+import {
+  RefreshTokenDto,
+  RefreshTokenResponseDto,
+} from '@/modules/auth/presentation/dtos/refresh-token.dto'
 import { RegisterDto, RegisterResponseDto } from '@/modules/auth/presentation/dtos/register.dto'
-import { RevokeSessionDto, RevokeSessionResponseDto } from '@/modules/auth/presentation/dtos/revoke-session.dto'
+import {
+  RevokeSessionDto,
+  RevokeSessionResponseDto,
+} from '@/modules/auth/presentation/dtos/revoke-session.dto'
 import { SessionResponseDto } from '@/modules/auth/presentation/dtos/session-response.dto'
 import { SessionsListResponseDto } from '@/modules/auth/presentation/dtos/sessions-list-response.dto'
 import { Public } from '@/shared-kernel/infrastructure/decorators/public.decorator'
@@ -32,10 +42,15 @@ export class AuthController {
   @ApiResponse({ status: 200, type: LoginResponseDto })
   async login(
     @Body() dto: LoginDto,
-    @Request() req: { headers: Record<string, string | string[] | undefined>, socket?: { remoteAddress?: string } },
+    @Request() req: {
+      headers: Record<string, string | string[] | undefined>
+      socket?: { remoteAddress?: string }
+    },
   ): Promise<LoginResponseDto> {
     const deviceContext = {
-      ipAddress: (req.headers['x-forwarded-for'] as string | undefined)?.split(',')[0]?.trim() ?? req.socket?.remoteAddress,
+      ipAddress:
+        (req.headers['x-forwarded-for'] as string | undefined)?.split(',')[0]?.trim() ??
+        req.socket?.remoteAddress,
       userAgent: req.headers['user-agent'] as string | undefined,
     }
     return await this.authService.login(dto.email, dto.password, deviceContext)
@@ -51,7 +66,8 @@ export class AuthController {
   @Public()
   @ApiOperation({
     summary: 'Refresh access token',
-    description: 'Use a refresh token to obtain a new access token (the refresh token is rotated simultaneously)',
+    description:
+      'Use a refresh token to obtain a new access token (the refresh token is rotated simultaneously)',
   })
   @ApiResponse({ status: 200, type: RefreshTokenResponseDto })
   async refreshToken(@Body() dto: RefreshTokenDto): Promise<RefreshTokenResponseDto> {
@@ -64,7 +80,9 @@ export class AuthController {
   @ApiOperation({ summary: 'Get current session info' })
   @ApiResponse({ status: 200, type: SessionResponseDto })
   async getSession(
-    @Request() req: Express.Request & { user: { id: string, email: string, roles: string[], sessionId: string } },
+    @Request() req: Express.Request & {
+      user: { id: string; email: string; roles: string[]; sessionId: string }
+    },
   ): Promise<SessionResponseDto> {
     const role = req.user.roles[0] ?? null
     return this.authService.getSession(req.user.sessionId, req.user.id, req.user.email, role)
@@ -76,7 +94,7 @@ export class AuthController {
   @ApiOperation({ summary: 'List active sessions' })
   @ApiResponse({ status: 200, type: SessionsListResponseDto })
   async listSessions(
-    @Request() req: Express.Request & { user: { id: string, sessionId: string } },
+    @Request() req: Express.Request & { user: { id: string; sessionId: string } },
   ): Promise<SessionsListResponseDto> {
     return this.authService.listSessions(req.user.id, req.user.sessionId)
   }
@@ -91,7 +109,9 @@ export class AuthController {
     const success = await this.authService.logout(dto.refreshToken)
     return {
       success,
-      message: success ? 'Logged out successfully' : 'Logout failed: session not found or already expired',
+      message: success
+        ? 'Logged out successfully'
+        : 'Logout failed: session not found or already expired',
     }
   }
 
@@ -103,7 +123,7 @@ export class AuthController {
   @ApiResponse({ status: 200, type: RevokeSessionResponseDto })
   async revokeSession(
     @Body() dto: RevokeSessionDto,
-    @Request() req: Express.Request & { user: { id: string, sessionId: string } },
+    @Request() req: Express.Request & { user: { id: string; sessionId: string } },
   ): Promise<RevokeSessionResponseDto> {
     return this.authService.revokeSession(dto.sessionId, req.user.id, req.user.sessionId)
   }

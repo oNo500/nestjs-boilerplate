@@ -1,17 +1,14 @@
-import {
-  Catch,
-  HttpException,
-  Logger,
-} from '@nestjs/common'
+import { Catch, HttpException, Logger } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { ClsService } from 'nestjs-cls'
 
 import type { Env } from '@/app/config/env.schema'
-import type { ProblemDetailsDto, FieldError } from '@/shared-kernel/infrastructure/dtos/problem-details.dto'
-import type { ValidationErrorItem } from '@/shared-kernel/infrastructure/types/validation-error'
 import type {
-  ExceptionFilter,
-  ArgumentsHost } from '@nestjs/common'
+  ProblemDetailsDto,
+  FieldError,
+} from '@/shared-kernel/infrastructure/dtos/problem-details.dto'
+import type { ValidationErrorItem } from '@/shared-kernel/infrastructure/types/validation-error'
+import type { ExceptionFilter, ArgumentsHost } from '@nestjs/common'
 import type { Request, Response } from 'express'
 
 /**
@@ -180,9 +177,7 @@ export class ProblemDetailsFilter implements ExceptionFilter {
     }
 
     // 3. Fallback: no explicit code
-    const detail = typeof exceptionResponse === 'string'
-      ? exceptionResponse
-      : exception.message
+    const detail = typeof exceptionResponse === 'string' ? exceptionResponse : exception.message
     const fallbackCodeMap: Record<number, string> = {
       401: 'UNAUTHORIZED',
       403: 'FORBIDDEN',
@@ -190,9 +185,8 @@ export class ProblemDetailsFilter implements ExceptionFilter {
       409: 'RESOURCE_CONFLICT',
       429: 'RATE_LIMIT_EXCEEDED',
     }
-    const code = status >= 500
-      ? 'INTERNAL_SERVER_ERROR'
-      : (fallbackCodeMap[status] ?? 'BAD_REQUEST')
+    const code =
+      status >= 500 ? 'INTERNAL_SERVER_ERROR' : (fallbackCodeMap[status] ?? 'BAD_REQUEST')
     return { code, detail }
   }
 
@@ -205,9 +199,9 @@ export class ProblemDetailsFilter implements ExceptionFilter {
     exceptionResponse: string | Record<string, unknown>,
   ): FieldError[] | undefined {
     if (
-      typeof exceptionResponse === 'object'
-      && 'message' in exceptionResponse
-      && Array.isArray(exceptionResponse.message)
+      typeof exceptionResponse === 'object' &&
+      'message' in exceptionResponse &&
+      Array.isArray(exceptionResponse.message)
     ) {
       const errors: FieldError[] = []
 
@@ -255,10 +249,10 @@ export class ProblemDetailsFilter implements ExceptionFilter {
    */
   private isValidationErrorItem(item: unknown): item is ValidationErrorItem {
     return (
-      typeof item === 'object'
-      && item !== null
-      && 'property' in item
-      && typeof (item as ValidationErrorItem).property === 'string'
+      typeof item === 'object' &&
+      item !== null &&
+      'property' in item &&
+      typeof (item as ValidationErrorItem).property === 'string'
     )
   }
 }
