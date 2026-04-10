@@ -72,9 +72,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     return items.map((item) => ({
       ...item,
       isActive:
-        pathname === item.url
-        || pathname.startsWith(item.url + '/')
-        || item.items?.some((sub) => pathname === sub.url),
+        pathname === item.url ||
+        pathname.startsWith(item.url + '/') ||
+        item.items?.some((sub) => pathname === sub.url),
       items: item.items?.map((sub) => ({
         ...sub,
         isActive: pathname === sub.url,

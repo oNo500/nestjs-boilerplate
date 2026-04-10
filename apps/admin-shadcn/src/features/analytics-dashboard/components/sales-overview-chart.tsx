@@ -1,11 +1,7 @@
 'use client'
 
 import { Card, CardHeader, CardTitle, CardContent } from '@workspace/ui/components/card'
-import {
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from '@workspace/ui/components/chart'
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@workspace/ui/components/chart'
 import { cn } from '@workspace/ui/lib/utils'
 import { useMemo } from 'react'
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from 'recharts'
@@ -54,22 +50,20 @@ export default function SalesOverviewChart() {
   )
 
   return (
-    <Card className="w-full py-6 gap-6">
-      <CardHeader className="flex sm:flex-row flex-col justify-between sm:items-center items-start gap-3 px-6">
+    <Card className="w-full gap-6 py-6">
+      <CardHeader className="flex flex-col items-start justify-between gap-3 px-6 sm:flex-row sm:items-center">
         <div className="flex flex-col gap-1">
           <CardTitle className="text-lg font-medium">Monthly Overview</CardTitle>
           <div className="flex items-center gap-2">
             <h3 className="text-3xl font-medium text-card-foreground">
-              {totalNewUsers.toLocaleString()}
-              {' '}
-              new users
+              {totalNewUsers.toLocaleString()} new users
             </h3>
           </div>
         </div>
         <div className="flex items-center gap-3">
           {LEGEND_ITEMS.map((item) => (
             <div key={item.title} className="flex items-center gap-2">
-              <span className={cn('w-2.5 h-2.5 rounded-full', item.color)} />
+              <span className={cn('h-2.5 w-2.5 rounded-full', item.color)} />
               <p className="text-sm text-muted-foreground">{item.title}</p>
             </div>
           ))}
@@ -91,12 +85,7 @@ export default function SalesOverviewChart() {
               tickFormatter={(value: string) => value.slice(5)}
               fontSize={12}
             />
-            <YAxis
-              tickLine={false}
-              axisLine={false}
-              tickMargin={10}
-              fontSize={12}
-            />
+            <YAxis tickLine={false} axisLine={false} tickMargin={10} fontSize={12} />
             <ChartTooltip content={<ChartTooltipContent hideLabel />} />
             <Bar
               dataKey="expense"

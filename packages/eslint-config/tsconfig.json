@@ -1,8 +1,0 @@
-{
-  "extends": "@infra-x/typescript-config/tsconfig.library.json",
-  "include": ["src", "*.config.ts", "*.config.mts"],
-  "compilerOptions": {
-    "types": ["node"],
-    "isolatedDeclarations": false // Disabled to reduce maintenance overhead; enabling it would require verbose type annotations across configs
-  }
-}

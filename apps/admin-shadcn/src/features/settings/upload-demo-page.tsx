@@ -2,7 +2,13 @@
 
 import { Badge } from '@workspace/ui/components/badge'
 import { Button } from '@workspace/ui/components/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@workspace/ui/components/card'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@workspace/ui/components/card'
 import { Progress } from '@workspace/ui/components/progress'
 import {
   CheckCircle2Icon,
@@ -52,33 +58,25 @@ function FileItem({
 
   return (
     <div className="flex items-start gap-3 rounded-lg border p-3">
-      <div className="size-12 shrink-0 overflow-hidden rounded-md bg-muted flex items-center justify-center">
-        {isImage && entry.previewUrl
-          ? (
-              // eslint-disable-next-line @next/next/no-img-element -- blob URL, not compatible with next/image
-              <img
-                src={entry.previewUrl}
-                alt={entry.file.name}
-                className="size-full object-cover"
-              />
-            )
-          : (isPdf
-              ? (
-                  <FileTextIcon className="size-6 text-red-500" />
-                )
-              : (
-                  <FileIcon className="size-6 text-muted-foreground" />
-                ))}
+      <div className="flex size-12 shrink-0 items-center justify-center overflow-hidden rounded-md bg-muted">
+        {isImage && entry.previewUrl ? (
+          // eslint-disable-next-line @next/next/no-img-element -- blob URL, not compatible with next/image
+          <img src={entry.previewUrl} alt={entry.file.name} className="size-full object-cover" />
+        ) : isPdf ? (
+          <FileTextIcon className="size-6 text-red-500" />
+        ) : (
+          <FileIcon className="size-6 text-muted-foreground" />
+        )}
       </div>
 
-      <div className="flex-1 min-w-0 space-y-1">
+      <div className="min-w-0 flex-1 space-y-1">
         <div className="flex items-start justify-between gap-2">
           <span className="truncate text-sm font-medium">{entry.file.name}</span>
           {entry.status !== 'uploading' && (
             <button
               type="button"
               onClick={onRemove}
-              className="shrink-0 text-muted-foreground hover:text-destructive transition-colors"
+              className="shrink-0 text-muted-foreground transition-colors hover:text-destructive"
               aria-label="Remove file"
             >
               <XIcon className="size-4" />
@@ -92,10 +90,7 @@ function FileItem({
           <div className="mt-1.5 space-y-1">
             <div className="flex items-center justify-between">
               <span className="text-xs text-muted-foreground">Uploading...</span>
-              <span className="text-xs text-muted-foreground tabular-nums">
-                {entry.progress}
-                %
-              </span>
+              <span className="text-xs text-muted-foreground tabular-nums">{entry.progress}%</span>
             </div>
             <Progress value={entry.progress} />
           </div>
@@ -103,21 +98,19 @@ function FileItem({
 
         {entry.status === 'done' && (
           <div className="flex items-center gap-1.5">
-            <CheckCircle2Icon className="size-3.5 text-green-500 shrink-0" />
-            {entry.url
-              ? (
-                  <a
-                    href={entry.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-xs text-primary hover:underline truncate"
-                  >
-                    View uploaded file
-                  </a>
-                )
-              : (
-                  <span className="text-xs text-green-600">Upload complete</span>
-                )}
+            <CheckCircle2Icon className="size-3.5 shrink-0 text-green-500" />
+            {entry.url ? (
+              <a
+                href={entry.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="truncate text-xs text-primary hover:underline"
+              >
+                View uploaded file
+              </a>
+            ) : (
+              <span className="text-xs text-green-600">Upload complete</span>
+            )}
           </div>
         )}
 
@@ -127,7 +120,7 @@ function FileItem({
             <button
               type="button"
               onClick={onRetry}
-              className="text-xs text-primary hover:underline flex items-center gap-0.5"
+              className="flex items-center gap-0.5 text-xs text-primary hover:underline"
             >
               <RotateCcwIcon className="size-3" />
               Retry
@@ -202,9 +195,7 @@ export function UploadDemoPage() {
       xhr.upload.addEventListener('progress', (e) => {
         if (e.lengthComputable) {
           const pct = Math.round((e.loaded / e.total) * 100)
-          setFileList((prev) =>
-            prev.map((f, i) => (i === index ? { ...f, progress: pct } : f)),
-          )
+          setFileList((prev) => prev.map((f, i) => (i === index ? { ...f, progress: pct } : f)))
         }
       })
 
@@ -228,9 +219,7 @@ export function UploadDemoPage() {
 
       xhr.addEventListener('error', () => {
         setFileList((prev) =>
-          prev.map((f, i) =>
-            i === index ? { ...f, status: 'error', error: 'Network error' } : f,
-          ),
+          prev.map((f, i) => (i === index ? { ...f, status: 'error', error: 'Network error' } : f)),
         )
         resolve()
       })
@@ -245,7 +234,9 @@ export function UploadDemoPage() {
     const index = fileList.findIndex((f) => f.file.name === fileName)
     if (index === -1) return
     setFileList((prev) =>
-      prev.map((f, i) => (i === index ? { ...f, status: 'pending', error: undefined, progress: 0 } : f)),
+      prev.map((f, i) =>
+        i === index ? { ...f, status: 'pending', error: undefined, progress: 0 } : f,
+      ),
     )
     await uploadFile(index)
   }
@@ -295,13 +286,7 @@ export function UploadDemoPage() {
         <CardHeader>
           <CardTitle>Upload Files</CardTitle>
           <CardDescription>
-            Up to
-            {' '}
-            {MAX_FILES}
-            {' '}
-            files, max
-            {' '}
-            {MAX_SIZE_MB}
+            Up to {MAX_FILES} files, max {MAX_SIZE_MB}
             MB each. Images and PDF only.
           </CardDescription>
         </CardHeader>
@@ -316,7 +301,7 @@ export function UploadDemoPage() {
             onKeyDown={(e) => e.key === 'Enter' && inputRef.current?.click()}
             className={`flex cursor-pointer flex-col items-center justify-center gap-3 rounded-lg border-2 border-dashed p-10 transition-all ${
               isDragging
-                ? 'border-primary bg-primary/5 scale-[1.01]'
+                ? 'scale-[1.01] border-primary bg-primary/5'
                 : 'border-muted-foreground/25 hover:border-primary/50'
             }`}
           >
@@ -326,17 +311,11 @@ export function UploadDemoPage() {
             <div className="text-center">
               <p className="text-sm font-medium">Drag & drop files here, or click to select</p>
               <p className="mt-1 text-xs text-muted-foreground">
-                Up to
-                {' '}
-                {MAX_FILES}
-                {' '}
-                files ·
-                {' '}
-                {MAX_SIZE_MB}
+                Up to {MAX_FILES} files · {MAX_SIZE_MB}
                 MB max each
               </p>
             </div>
-            <div className="flex gap-1.5 flex-wrap justify-center">
+            <div className="flex flex-wrap justify-center gap-1.5">
               {['PNG', 'JPG', 'WebP', 'PDF'].map((fmt) => (
                 <Badge key={fmt} variant="outline" className="text-xs">
                   {fmt}
@@ -388,11 +367,7 @@ export function UploadDemoPage() {
                   Clear all
                 </Button>
                 <Button size="sm" onClick={uploadAll} disabled={pendingCount === 0}>
-                  Upload
-                  {' '}
-                  {pendingCount}
-                  {' '}
-                  file
+                  Upload {pendingCount} file
                   {pendingCount === 1 ? '' : 's'}
                 </Button>
               </div>

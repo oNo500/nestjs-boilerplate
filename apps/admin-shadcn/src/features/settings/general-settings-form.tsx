@@ -2,7 +2,14 @@
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button } from '@workspace/ui/components/button'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@workspace/ui/components/card'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@workspace/ui/components/card'
 import { Checkbox } from '@workspace/ui/components/checkbox'
 import {
   Field,
@@ -90,7 +97,10 @@ function ProfileCard() {
           <FieldSet>
             <FieldLegend variant="label">Avatar</FieldLegend>
             <div className="flex items-center gap-4">
-              <AvatarUpload currentAvatarUrl={avatarUrl} fallbackText={displayName === '' ? 'U' : displayName} />
+              <AvatarUpload
+                currentAvatarUrl={avatarUrl}
+                fallbackText={displayName === '' ? 'U' : displayName}
+              />
               <FieldDescription>
                 Click the avatar to upload a new photo. Supports JPG, PNG, WebP up to 10MB.
               </FieldDescription>
@@ -119,10 +129,11 @@ function ProfileCard() {
                   aria-invalid={!!errors.bio}
                   {...register('bio')}
                 />
-                <FieldDescription>A brief description about yourself. Max 500 characters.</FieldDescription>
+                <FieldDescription>
+                  A brief description about yourself. Max 500 characters.
+                </FieldDescription>
                 <FieldError errors={errors.bio ? [errors.bio] : []} />
               </Field>
-
             </FieldGroup>
           </div>
         </CardContent>
@@ -162,7 +173,11 @@ const LANGUAGES = [
 ]
 
 function AccountPreferencesCard() {
-  const { handleSubmit, control, formState: { isDirty, isSubmitting } } = useForm<AccountValues>({
+  const {
+    handleSubmit,
+    control,
+    formState: { isDirty, isSubmitting },
+  } = useForm<AccountValues>({
     resolver: zodResolver(accountSchema),
     defaultValues: { timezone: 'UTC', language: 'en' },
   })
@@ -200,7 +215,9 @@ function AccountPreferencesCard() {
                   </Select>
                 )}
               />
-              <FieldDescription>Used for displaying dates and times in your local timezone.</FieldDescription>
+              <FieldDescription>
+                Used for displaying dates and times in your local timezone.
+              </FieldDescription>
             </Field>
 
             <Field>
@@ -270,7 +287,11 @@ const NOTIFICATION_FIELDS: {
 ]
 
 function NotificationsCard() {
-  const { handleSubmit, control, formState: { isDirty, isSubmitting } } = useForm<NotificationsValues>({
+  const {
+    handleSubmit,
+    control,
+    formState: { isDirty, isSubmitting },
+  } = useForm<NotificationsValues>({
     resolver: zodResolver(notificationsSchema),
     defaultValues: {
       emailSecurityAlerts: true,
@@ -298,11 +319,7 @@ function NotificationsCard() {
                   control={control}
                   name={name}
                   render={({ field }) => (
-                    <Checkbox
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                      id={name}
-                    />
+                    <Checkbox checked={field.value} onCheckedChange={field.onChange} id={name} />
                   )}
                 />
                 <FieldContent>

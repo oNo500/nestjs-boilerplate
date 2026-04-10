@@ -1,11 +1,6 @@
 'use client'
 
-import {
-  Card,
-  CardTitle,
-  CardHeader,
-  CardContent,
-} from '@workspace/ui/components/card'
+import { Card, CardTitle, CardHeader, CardContent } from '@workspace/ui/components/card'
 import { Separator } from '@workspace/ui/components/separator'
 import { Activity } from 'lucide-react'
 import { motion, useInView } from 'motion/react'
@@ -33,11 +28,9 @@ const SalesByCountryWidget = () => {
   }, [auditData])
 
   return (
-    <Card className="h-full py-6 gap-6">
+    <Card className="h-full gap-6 py-6">
       <CardHeader className="flex items-center justify-between px-6">
-        <CardTitle className="text-lg font-medium text-foreground">
-          Top Audit Actions
-        </CardTitle>
+        <CardTitle className="text-lg font-medium text-foreground">Top Audit Actions</CardTitle>
       </CardHeader>
       <CardContent className="px-0">
         <motion.div
@@ -57,7 +50,7 @@ const SalesByCountryWidget = () => {
           {topActions.map((item, index) => (
             <div key={item.action}>
               <motion.div
-                className="flex gap-3 items-center px-6"
+                className="flex items-center gap-3 px-6"
                 variants={{
                   hidden: { opacity: 0, y: 20 },
                   visible: { opacity: 1, y: 0 },
@@ -71,17 +64,15 @@ const SalesByCountryWidget = () => {
                 whileTap={{ scale: 0.98 }}
               >
                 <motion.div
-                  className="w-8 h-8 rounded-full flex justify-center items-center bg-muted"
+                  className="flex h-8 w-8 items-center justify-center rounded-full bg-muted"
                   whileHover={{ rotate: 5, scale: 1.1 }}
                   transition={{ type: 'spring', stiffness: 400 }}
                 >
                   <Activity size={16} className="text-muted-foreground" />
                 </motion.div>
-                <div className="flex items-center justify-between flex-1">
+                <div className="flex flex-1 items-center justify-between">
                   <div>
-                    <h5 className="text-base font-medium text-foreground">
-                      {item.count}
-                    </h5>
+                    <h5 className="text-base font-medium text-foreground">{item.count}</h5>
                     <p className="text-sm font-normal tracking-wide text-muted-foreground">
                       {item.action}
                     </p>

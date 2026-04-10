@@ -35,20 +35,18 @@ export function AvatarUpload({ currentAvatarUrl, fallbackText = 'U' }: Props) {
   const avatarSrc = previewUrl ?? currentAvatarUrl ?? undefined
 
   return (
-    <div className="relative w-fit cursor-pointer group" onClick={handleClick}>
+    <div className="group relative w-fit cursor-pointer" onClick={handleClick}>
       <Avatar size="lg" className="size-20">
         <AvatarImage src={avatarSrc} />
         <AvatarFallback className="text-lg">{fallbackText.charAt(0).toUpperCase()}</AvatarFallback>
       </Avatar>
 
-      <div className="absolute inset-0 flex items-center justify-center rounded-full bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity">
-        {isUploading
-          ? (
-              <Loader2Icon className="size-5 text-white animate-spin" />
-            )
-          : (
-              <CameraIcon className="size-5 text-white" />
-            )}
+      <div className="absolute inset-0 flex items-center justify-center rounded-full bg-black/40 opacity-0 transition-opacity group-hover:opacity-100">
+        {isUploading ? (
+          <Loader2Icon className="size-5 animate-spin text-white" />
+        ) : (
+          <CameraIcon className="size-5 text-white" />
+        )}
       </div>
 
       <input

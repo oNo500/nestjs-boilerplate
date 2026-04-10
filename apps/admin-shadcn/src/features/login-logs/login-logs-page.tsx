@@ -46,8 +46,11 @@ export function LoginLogsPage() {
       <TablePageHeader
         title="Login Logs"
         description={total > 0 ? `${total} record${total === 1 ? '' : 's'} total` : undefined}
-        actions={(
-          <Select value={status} onValueChange={(val) => handleStatusChange(val as StatusFilter | null)}>
+        actions={
+          <Select
+            value={status}
+            onValueChange={(val) => handleStatusChange(val as StatusFilter | null)}
+          >
             <SelectTrigger className="w-[160px]">
               <SelectValue placeholder="All Status" />
             </SelectTrigger>
@@ -57,7 +60,7 @@ export function LoginLogsPage() {
               <SelectItem value="failed">Failed</SelectItem>
             </SelectContent>
           </Select>
-        )}
+        }
       />
 
       <LoginLogsTable data={logs} isLoading={isLoading} />

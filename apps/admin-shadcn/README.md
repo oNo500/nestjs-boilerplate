@@ -4,15 +4,15 @@
 
 ## Tech Stack
 
-| Category | Technology |
-|---|---|
-| Framework | Next.js 16 (App Router, Turbopack) + React Compiler |
-| UI | @workspace/ui (@base-ui/react) · Tailwind CSS v4 · shadcn/ui · lucide-react · recharts |
-| Forms | react-hook-form · zod · @hookform/resolvers |
-| Data Fetching | openapi-fetch · openapi-react-query · TanStack Query v5 |
-| Tables | @tanstack/react-table |
-| API Types | openapi-typescript (auto-generated — never hand-write) |
-| Testing | Vitest · @testing-library/react · MSW |
+| Category      | Technology                                                                             |
+| ------------- | -------------------------------------------------------------------------------------- |
+| Framework     | Next.js 16 (App Router, Turbopack) + React Compiler                                    |
+| UI            | @workspace/ui (@base-ui/react) · Tailwind CSS v4 · shadcn/ui · lucide-react · recharts |
+| Forms         | react-hook-form · zod · @hookform/resolvers                                            |
+| Data Fetching | openapi-fetch · openapi-react-query · TanStack Query v5                                |
+| Tables        | @tanstack/react-table                                                                  |
+| API Types     | openapi-typescript (auto-generated — never hand-write)                                 |
+| Testing       | Vitest · @testing-library/react · MSW                                                  |
 
 ## Quick Start
 
@@ -24,14 +24,14 @@ pnpm dev   # http://localhost:8080 (Turbopack)
 
 ## Commands
 
-| Command | Description |
-|---|---|
-| `pnpm dev` | Start dev server with Turbopack (port 8080) |
-| `pnpm build` | Production build |
-| `pnpm test` | Run unit tests |
-| `pnpm typecheck` | Type-check without emitting |
-| `pnpm lint:fix` | Lint and auto-fix |
-| `pnpm api:gen` | Regenerate API types from running backend |
+| Command          | Description                                 |
+| ---------------- | ------------------------------------------- |
+| `pnpm dev`       | Start dev server with Turbopack (port 8080) |
+| `pnpm build`     | Production build                            |
+| `pnpm test`      | Run unit tests                              |
+| `pnpm typecheck` | Type-check without emitting                 |
+| `pnpm lint:fix`  | Lint and auto-fix                           |
+| `pnpm api:gen`   | Regenerate API types from running backend   |
 
 ## Directory Structure
 
@@ -69,25 +69,25 @@ src/
 
 ## Features
 
-| Feature | Route | Description |
-|---|---|---|
-| `auth` | `/login` `/register` `/oauth` | Login, register, OAuth callback |
-| `dashboard` | `/dashboard` | Stats charts and visualization |
-| `user-management` | `/users` | User list, ban/unban (DataTable) |
-| `audit-logs` | `/audit-logs` | Audit log table |
-| `login-logs` | `/login-logs` | Login log table |
-| `articles` | `/articles` | Article management |
-| `settings` | `/settings/general` `/settings/sessions` `/settings/upload-demo` | Personal settings |
-| `example` | `/(example)/*` | Tech demo pages |
+| Feature           | Route                                                            | Description                      |
+| ----------------- | ---------------------------------------------------------------- | -------------------------------- |
+| `auth`            | `/login` `/register` `/oauth`                                    | Login, register, OAuth callback  |
+| `dashboard`       | `/dashboard`                                                     | Stats charts and visualization   |
+| `user-management` | `/users`                                                         | User list, ban/unban (DataTable) |
+| `audit-logs`      | `/audit-logs`                                                    | Audit log table                  |
+| `login-logs`      | `/login-logs`                                                    | Login log table                  |
+| `articles`        | `/articles`                                                      | Article management               |
+| `settings`        | `/settings/general` `/settings/sessions` `/settings/upload-demo` | Personal settings                |
+| `example`         | `/(example)/*`                                                   | Tech demo pages                  |
 
 ## Two HTTP Clients (Never Mix)
 
 This app has two HTTP clients for different rendering contexts — using the wrong one in a given context will break auth or caching:
 
-| Client | File | Use in | Auth mechanism |
-|---|---|---|---|
-| `apiClient` | `lib/api-client.ts` | Client Components | Bearer token (auto-refresh, Promise queue lock) |
-| `fetchClient` | `lib/fetch-client.ts` | Server Components | Cookie passthrough + Next.js `cache tags` |
+| Client        | File                  | Use in            | Auth mechanism                                  |
+| ------------- | --------------------- | ----------------- | ----------------------------------------------- |
+| `apiClient`   | `lib/api-client.ts`   | Client Components | Bearer token (auto-refresh, Promise queue lock) |
+| `fetchClient` | `lib/fetch-client.ts` | Server Components | Cookie passthrough + Next.js `cache tags`       |
 
 ## Regenerate API Types
 

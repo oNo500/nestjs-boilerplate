@@ -1,10 +1,6 @@
 'use client'
 
-import {
-  flexRender,
-  getCoreRowModel,
-  useReactTable,
-} from '@tanstack/react-table'
+import { flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { Skeleton } from '@workspace/ui/components/skeleton'
 import {
   Table,
@@ -79,40 +75,43 @@ export function DataTable<TData>({
           ))}
         </TableHeader>
         <TableBody>
-          {table.getRowModel().rows.length > 0
-            ? table.getRowModel().rows.map((row) => {
-                const rowId = hasExpandRow ? getRowId(row.original) : undefined
-                const isExpanded = hasExpandRow && expandedRowId === rowId
+          {table.getRowModel().rows.length > 0 ? (
+            table.getRowModel().rows.map((row) => {
+              const rowId = hasExpandRow ? getRowId(row.original) : undefined
+              const isExpanded = hasExpandRow && expandedRowId === rowId
 
-                return (
-                  <React.Fragment key={row.id}>
-                    <TableRow
-                      className={onRowClick ? 'cursor-pointer' : undefined}
-                      onClick={onRowClick ? () => onRowClick(row.original) : undefined}
-                    >
-                      {row.getVisibleCells().map((cell) => (
-                        <TableCell key={cell.id}>
-                          {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                        </TableCell>
-                      ))}
+              return (
+                <React.Fragment key={row.id}>
+                  <TableRow
+                    className={onRowClick ? 'cursor-pointer' : undefined}
+                    onClick={onRowClick ? () => onRowClick(row.original) : undefined}
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id}>
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                  {isExpanded && (
+                    <TableRow>
+                      <TableCell colSpan={columns.length} className="bg-muted/30">
+                        {renderExpandedRow(row.original)}
+                      </TableCell>
                     </TableRow>
-                    {isExpanded && (
-                      <TableRow>
-                        <TableCell colSpan={columns.length} className="bg-muted/30">
-                          {renderExpandedRow(row.original)}
-                        </TableCell>
-                      </TableRow>
-                    )}
-                  </React.Fragment>
-                )
-              })
-            : (
-                <TableRow>
-                  <TableCell colSpan={columns.length} className="h-24 text-center text-muted-foreground">
-                    {emptyText}
-                  </TableCell>
-                </TableRow>
-              )}
+                  )}
+                </React.Fragment>
+              )
+            })
+          ) : (
+            <TableRow>
+              <TableCell
+                colSpan={columns.length}
+                className="h-24 text-center text-muted-foreground"
+              >
+                {emptyText}
+              </TableCell>
+            </TableRow>
+          )}
         </TableBody>
       </Table>
     </div>

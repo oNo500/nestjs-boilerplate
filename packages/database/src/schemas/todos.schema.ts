@@ -19,9 +19,7 @@ export const todosTable = pgTable('todos', {
   isCompleted: boolean('is_completed').notNull().default(false),
 
   // Timestamps
-  createdAt: timestamp('created_at', { withTimezone: true })
-    .notNull()
-    .defaultNow(),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp('updated_at', { withTimezone: true })
     .notNull()
     .defaultNow()

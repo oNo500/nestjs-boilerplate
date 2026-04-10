@@ -4,15 +4,15 @@
 
 ## Tech Stack
 
-| Category | Technology |
-|---|---|
-| Framework | NestJS 11 + TypeScript 5 |
-| Database | PostgreSQL · Drizzle ORM (via `@workspace/database`) |
-| Auth | JWT · Passport · OAuth2 (Google / GitHub) |
-| Cache | Redis · cache-manager · Keyv |
-| Docs | Swagger + Scalar (available at `/docs`) |
-| Logging | nestjs-pino · pino-http |
-| Testing | Vitest · @nestjs/testing · Supertest |
+| Category  | Technology                                           |
+| --------- | ---------------------------------------------------- |
+| Framework | NestJS 11 + TypeScript 5                             |
+| Database  | PostgreSQL · Drizzle ORM (via `@workspace/database`) |
+| Auth      | JWT · Passport · OAuth2 (Google / GitHub)            |
+| Cache     | Redis · cache-manager · Keyv                         |
+| Docs      | Swagger + Scalar (available at `/docs`)              |
+| Logging   | nestjs-pino · pino-http                              |
+| Testing   | Vitest · @nestjs/testing · Supertest                 |
 
 ## Quick Start
 
@@ -29,15 +29,15 @@ pnpm dev
 
 ## Commands
 
-| Command | Description |
-|---|---|
-| `pnpm dev` | Start dev server with hot reload |
-| `pnpm test` | Run unit tests |
-| `pnpm test:e2e` | Run E2E tests |
-| `pnpm test:cov` | Run tests with coverage report |
-| `pnpm typecheck` | Type-check without emitting |
-| `pnpm lint:fix` | Lint and auto-fix |
-| `pnpm build` | Production build |
+| Command          | Description                      |
+| ---------------- | -------------------------------- |
+| `pnpm dev`       | Start dev server with hot reload |
+| `pnpm test`      | Run unit tests                   |
+| `pnpm test:e2e`  | Run E2E tests                    |
+| `pnpm test:cov`  | Run tests with coverage report   |
+| `pnpm typecheck` | Type-check without emitting      |
+| `pnpm lint:fix`  | Lint and auto-fix                |
+| `pnpm build`     | Production build                 |
 
 ## Architecture
 
@@ -82,19 +82,19 @@ src/
 
 ## Modules
 
-| Module | Pattern | Description |
-|---|---|---|
-| `auth` | Anemic + Strategy | JWT login/register/refresh/session + OAuth (Google/GitHub) |
-| `user-management` | Anemic | User list, ban/unban |
-| `profile` | Anemic | Current user profile view and update |
-| `audit-log` | Anemic | Audit log query |
-| `dashboard` | Anemic | Stats aggregation |
-| `upload` | Anemic | File upload — Multer diskStorage, 10 MB limit, image/* + PDF |
-| `cache` | Anemic | Redis cache service wrapper |
-| `scheduled-tasks` | Anemic | @nestjs/schedule examples (cron/interval/timeout) |
-| `todo` | Anemic | Minimal CRUD reference implementation |
-| `article` | Rich DDD | Aggregate root + domain events (DDD reference) |
-| `order` | Rich DDD | Advanced features: idempotency, optimistic lock, async, bulk |
+| Module            | Pattern           | Description                                                   |
+| ----------------- | ----------------- | ------------------------------------------------------------- |
+| `auth`            | Anemic + Strategy | JWT login/register/refresh/session + OAuth (Google/GitHub)    |
+| `user-management` | Anemic            | User list, ban/unban                                          |
+| `profile`         | Anemic            | Current user profile view and update                          |
+| `audit-log`       | Anemic            | Audit log query                                               |
+| `dashboard`       | Anemic            | Stats aggregation                                             |
+| `upload`          | Anemic            | File upload — Multer diskStorage, 10 MB limit, image/\* + PDF |
+| `cache`           | Anemic            | Redis cache service wrapper                                   |
+| `scheduled-tasks` | Anemic            | @nestjs/schedule examples (cron/interval/timeout)             |
+| `todo`            | Anemic            | Minimal CRUD reference implementation                         |
+| `article`         | Rich DDD          | Aggregate root + domain events (DDD reference)                |
+| `order`           | Rich DDD          | Advanced features: idempotency, optimistic lock, async, bulk  |
 
 ## Error Handling
 
@@ -113,6 +113,7 @@ All errors are converted to [RFC 9457 Problem Details](https://www.rfc-editor.or
 ```
 
 Global filter execution order (reverse registration order):
+
 ```
 AllExceptionsFilter → ProblemDetailsFilter → ThrottlerExceptionFilter
 ```
@@ -128,8 +129,8 @@ AllExceptionsFilter → ProblemDetailsFilter → ThrottlerExceptionFilter
 
 ## Reference Modules
 
-| Module | Use to learn |
-|---|---|
-| `modules/todo/` | Minimal anemic CRUD |
-| `modules/article/` | DDD aggregate root + domain events |
-| `modules/order/` | Idempotency, optimistic locking, async processing, bulk ops |
+| Module             | Use to learn                                                |
+| ------------------ | ----------------------------------------------------------- |
+| `modules/todo/`    | Minimal anemic CRUD                                         |
+| `modules/article/` | DDD aggregate root + domain events                          |
+| `modules/order/`   | Idempotency, optimistic locking, async processing, bulk ops |

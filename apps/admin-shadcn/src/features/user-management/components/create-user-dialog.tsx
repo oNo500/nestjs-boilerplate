@@ -10,12 +10,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@workspace/ui/components/dialog'
-import {
-  Field,
-  FieldError,
-  FieldGroup,
-  FieldLabel,
-} from '@workspace/ui/components/field'
+import { Field, FieldError, FieldGroup, FieldLabel } from '@workspace/ui/components/field'
 import { Input } from '@workspace/ui/components/input'
 import { PlusIcon } from 'lucide-react'
 import { useState } from 'react'
@@ -60,12 +55,13 @@ export function CreateUserDialog() {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger render={(
-        <Button size="sm">
-          <PlusIcon className="mr-1 h-4 w-4" />
-          New User
-        </Button>
-      )}
+      <DialogTrigger
+        render={
+          <Button size="sm">
+            <PlusIcon className="mr-1 h-4 w-4" />
+            New User
+          </Button>
+        }
       />
       <DialogContent>
         <DialogHeader>
@@ -86,11 +82,7 @@ export function CreateUserDialog() {
 
             <Field data-invalid={!!errors.name}>
               <FieldLabel htmlFor="name">Name (optional)</FieldLabel>
-              <Input
-                id="name"
-                placeholder="Full name"
-                {...register('name')}
-              />
+              <Input id="name" placeholder="Full name" {...register('name')} />
               <FieldError errors={errors.name ? [errors.name] : []} />
             </Field>
 

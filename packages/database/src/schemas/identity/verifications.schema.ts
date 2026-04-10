@@ -1,9 +1,4 @@
-import {
-  index,
-  pgTable,
-  text,
-  timestamp,
-} from 'drizzle-orm/pg-core'
+import { index, pgTable, text, timestamp } from 'drizzle-orm/pg-core'
 
 /**
  * Auth Verification Tokens table definition
@@ -31,27 +26,21 @@ export const verificationsTable = pgTable(
     // }),
 
     // Timestamps
-    createdAt: timestamp('created_at', { withTimezone: true })
-      .notNull()
-      .defaultNow(),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp('updated_at', { withTimezone: true })
       .notNull()
       .defaultNow()
       .$onUpdate(() => new Date()),
   },
-  (table) => [
-    index('verifications_identifier_idx').on(table.identifier),
-  ],
+  (table) => [index('verifications_identifier_idx').on(table.identifier)],
 )
 
 /**
  * AuthVerificationToken database type (inferred from table definition)
  */
-export type VerificationTokenDatabase
-  = typeof verificationsTable.$inferSelect
+export type VerificationTokenDatabase = typeof verificationsTable.$inferSelect
 
 /**
  * Insert AuthVerificationToken type (inferred from table definition)
  */
-export type InsertVerificationTokenDatabase
-  = typeof verificationsTable.$inferInsert
+export type InsertVerificationTokenDatabase = typeof verificationsTable.$inferInsert

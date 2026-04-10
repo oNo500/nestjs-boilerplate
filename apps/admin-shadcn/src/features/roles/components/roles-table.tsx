@@ -33,7 +33,13 @@ interface PendingChange {
   userEmail: string
 }
 
-function RoleCell({ user, onPending }: { user: UserRow, onPending: (change: PendingChange) => void }) {
+function RoleCell({
+  user,
+  onPending,
+}: {
+  user: UserRow
+  onPending: (change: PendingChange) => void
+}) {
   const currentRole = user.role?.toUpperCase() ?? 'USER'
   const [selected, setSelected] = useState(currentRole)
 
@@ -94,45 +100,31 @@ export function RolesTable({ data, isLoading }: RolesTableProps) {
     {
       accessorKey: 'role',
       header: 'Current Role',
-      cell: ({ row }) => (
-        <RoleCell
-          user={row.original}
-          onPending={setPending}
-        />
-      ),
+      cell: ({ row }) => <RoleCell user={row.original} onPending={setPending} />,
     },
   ]
 
   return (
     <>
-      <DataTable
-        columns={columns}
-        data={data}
-        isLoading={isLoading}
-        emptyText="No users found."
-      />
+      <DataTable columns={columns} data={data} isLoading={isLoading} emptyText="No users found." />
 
-      <AlertDialog open={!!pending} onOpenChange={(open) => { if (!open) handleCancel() }}>
+      <AlertDialog
+        open={!!pending}
+        onOpenChange={(open) => {
+          if (!open) handleCancel()
+        }}
+      >
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Confirm Role Change</AlertDialogTitle>
             <AlertDialogDescription>
-              Change role of
-              {' '}
-              <strong>{pending?.userEmail}</strong>
-              {' '}
-              to
-              {' '}
-              <strong>{pending?.role === 'ADMIN' ? 'Administrator' : 'User'}</strong>
-              ?
+              Change role of <strong>{pending?.userEmail}</strong> to{' '}
+              <strong>{pending?.role === 'ADMIN' ? 'Administrator' : 'User'}</strong>?
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel disabled={assignRole.isPending}>Cancel</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={handleConfirm}
-              disabled={assignRole.isPending}
-            >
+            <AlertDialogAction onClick={handleConfirm} disabled={assignRole.isPending}>
               {assignRole.isPending ? 'Saving...' : 'Confirm'}
             </AlertDialogAction>
           </AlertDialogFooter>

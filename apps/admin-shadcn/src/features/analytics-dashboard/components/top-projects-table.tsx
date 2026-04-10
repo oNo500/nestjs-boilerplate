@@ -40,13 +40,11 @@ const TopProjectsTable = () => {
   const articles = articlesData?.data ?? []
 
   return (
-    <Card className="w-full h-full pb-0 pt-6 gap-6">
-      <CardHeader className="sm:flex items-center justify-between px-6">
+    <Card className="h-full w-full gap-6 pt-6 pb-0">
+      <CardHeader className="items-center justify-between px-6 sm:flex">
         <div>
           <CardTitle className="leading-normal">Recent Articles</CardTitle>
-          <CardDescription>
-            Latest published and draft articles
-          </CardDescription>
+          <CardDescription>Latest published and draft articles</CardDescription>
         </div>
       </CardHeader>
       <CardContent className="px-0">
@@ -63,10 +61,10 @@ const TopProjectsTable = () => {
               </TableRow>
             </TableHeader>
 
-            <TableBody className="divide-y divide-border dark:divide-darkborder">
+            <TableBody className="dark:divide-darkborder divide-y divide-border">
               {articles.map((article, index) => (
                 <TableRow key={article.id}>
-                  <TableCell className="whitespace-nowrap p-3 ps-6 text-muted-foreground text-sm">
+                  <TableCell className="p-3 ps-6 text-sm whitespace-nowrap text-muted-foreground">
                     {index + 1}
                   </TableCell>
 
@@ -74,13 +72,19 @@ const TopProjectsTable = () => {
                     <div>
                       <h6 className="text-sm font-medium">{article.title}</h6>
                       <p className="text-xs text-muted-foreground">
-                        {new Date(article.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                        {new Date(article.createdAt).toLocaleDateString('en-US', {
+                          month: 'short',
+                          day: 'numeric',
+                          year: 'numeric',
+                        })}
                       </p>
                     </div>
                   </TableCell>
 
                   <TableCell className="whitespace-nowrap">
-                    <span className="text-sm capitalize text-muted-foreground">{article.category}</span>
+                    <span className="text-sm text-muted-foreground capitalize">
+                      {article.category}
+                    </span>
                   </TableCell>
 
                   <TableCell className="whitespace-nowrap">
@@ -91,13 +95,10 @@ const TopProjectsTable = () => {
                     <p className="text-sm text-foreground">{article.viewCount.toLocaleString()}</p>
                   </TableCell>
 
-                  <TableCell className="whitespace-nowrap pe-6">
+                  <TableCell className="pe-6 whitespace-nowrap">
                     <Progress
                       value={STATUS_PROGRESS[article.status] ?? 0}
-                      className={cn(
-                        'w-full h-1.5 [&>div]:h-1.5',
-                        STATUS_COLOR[article.status],
-                      )}
+                      className={cn('h-1.5 w-full [&>div]:h-1.5', STATUS_COLOR[article.status])}
                     />
                   </TableCell>
                 </TableRow>

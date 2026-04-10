@@ -54,7 +54,7 @@ async function doRefresh(): Promise<boolean> {
 
     if (!res.ok) return false
 
-    const data = (await res.json()) as { accessToken?: string, refreshToken?: string }
+    const data = (await res.json()) as { accessToken?: string; refreshToken?: string }
     if (data.accessToken) setToken(data.accessToken)
     if (data.refreshToken) setRefreshToken(data.refreshToken)
     return true
@@ -68,10 +68,19 @@ apiClient.use({
   onResponse: async ({ request, response }) => {
     if (response.status !== 401) {
       if (!response.ok) {
-        const data: unknown = await response.clone().json().catch(() => null)
+        const data: unknown = await response
+          .clone()
+          .json()
+          .catch(() => null)
         throw new ApiClientError(
           data && typeof data === 'object'
-            ? (data as { title: string, status: number, code?: string, detail?: string, errors?: FieldError[] })
+            ? (data as {
+                title: string
+                status: number
+                code?: string
+                detail?: string
+                errors?: FieldError[]
+              })
             : { title: 'Request failed', status: response.status },
         )
       }
@@ -102,10 +111,19 @@ apiClient.use({
 
     const retryResponse = await globalThis.fetch(retryRequest)
     if (!retryResponse.ok) {
-      const data: unknown = await retryResponse.clone().json().catch(() => null)
+      const data: unknown = await retryResponse
+        .clone()
+        .json()
+        .catch(() => null)
       throw new ApiClientError(
         data && typeof data === 'object'
-          ? (data as { title: string, status: number, code?: string, detail?: string, errors?: FieldError[] })
+          ? (data as {
+              title: string
+              status: number
+              code?: string
+              detail?: string
+              errors?: FieldError[]
+            })
           : { title: 'Request failed', status: retryResponse.status },
       )
     }

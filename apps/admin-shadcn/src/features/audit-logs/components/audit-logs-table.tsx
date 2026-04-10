@@ -1,10 +1,6 @@
 'use client'
 
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from '@workspace/ui/components/tooltip'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@workspace/ui/components/tooltip'
 import { useState } from 'react'
 
 import { DataTable } from '@/components/data-table/data-table'
@@ -25,7 +21,8 @@ const columns: ColumnDef<AuditLogRow>[] = [
   {
     accessorKey: 'actorEmail',
     header: 'Actor',
-    cell: ({ row }) => row.original.actorEmail ?? <span className="text-muted-foreground">system</span>,
+    cell: ({ row }) =>
+      row.original.actorEmail ?? <span className="text-muted-foreground">system</span>,
   },
   {
     accessorKey: 'action',
@@ -35,7 +32,8 @@ const columns: ColumnDef<AuditLogRow>[] = [
   {
     accessorKey: 'resourceType',
     header: 'Resource Type',
-    cell: ({ row }) => row.original.resourceType ?? <span className="text-muted-foreground">—</span>,
+    cell: ({ row }) =>
+      row.original.resourceType ?? <span className="text-muted-foreground">—</span>,
   },
   {
     accessorKey: 'resourceId',

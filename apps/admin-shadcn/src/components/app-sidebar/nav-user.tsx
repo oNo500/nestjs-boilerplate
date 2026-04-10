@@ -1,10 +1,6 @@
 'use client'
 
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from '@workspace/ui/components/avatar'
+import { Avatar, AvatarFallback, AvatarImage } from '@workspace/ui/components/avatar'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -22,8 +18,8 @@ import {
   useSidebar,
 } from '@workspace/ui/components/sidebar'
 import { ChevronsUpDownIcon, LogOutIcon } from 'lucide-react'
-import { useRouter } from 'next/navigation'
 import { useTheme } from 'next-themes'
+import { useRouter } from 'next/navigation'
 
 import { appPaths } from '@/config/app-paths'
 import { removeToken, removeRefreshToken, removeUser } from '@/lib/token'
@@ -55,9 +51,7 @@ export function NavUser({
       <SidebarMenuItem>
         <DropdownMenu>
           <DropdownMenuTrigger
-            render={
-              <SidebarMenuButton size="lg" className="aria-expanded:bg-muted" />
-            }
+            render={<SidebarMenuButton size="lg" className="aria-expanded:bg-muted" />}
           >
             <Avatar>
               <AvatarImage src={user.avatar} alt={user.name} />
@@ -92,10 +86,7 @@ export function NavUser({
             <DropdownMenuSeparator />
             <div className="flex items-center justify-between px-2 py-1.5">
               <span className="text-sm text-muted-foreground">Theme</span>
-              <ThemeSwitcher
-                value={theme as 'light' | 'dark' | 'system'}
-                onChange={setTheme}
-              />
+              <ThemeSwitcher value={theme as 'light' | 'dark' | 'system'} onChange={setTheme} />
             </div>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={handleLogout}>

@@ -1,10 +1,9 @@
-"use client"
+'use client'
 
-import * as React from "react"
-import { AlertDialog as AlertDialogPrimitive } from "@base-ui/react/alert-dialog"
-
-import { cn } from "@workspace/ui/lib/utils"
-import { buttonVariants } from "@workspace/ui/components/button"
+import { AlertDialog as AlertDialogPrimitive } from '@base-ui/react/alert-dialog'
+import { buttonVariants } from '@workspace/ui/components/button'
+import { cn } from '@workspace/ui/lib/utils'
+import * as React from 'react'
 
 function AlertDialog({ ...props }: AlertDialogPrimitive.Root.Props) {
   return <AlertDialogPrimitive.Root data-slot="alert-dialog" {...props} />
@@ -23,27 +22,23 @@ function AlertDialogOverlay({ className, ...props }: AlertDialogPrimitive.Backdr
     <AlertDialogPrimitive.Backdrop
       data-slot="alert-dialog-overlay"
       className={cn(
-        "fixed inset-0 z-50 bg-black/50 duration-100 data-ending-style:opacity-0 data-starting-style:opacity-0",
-        className
+        'fixed inset-0 z-50 bg-black/50 duration-100 data-ending-style:opacity-0 data-starting-style:opacity-0',
+        className,
       )}
       {...props}
     />
   )
 }
 
-function AlertDialogContent({
-  className,
-  children,
-  ...props
-}: AlertDialogPrimitive.Popup.Props) {
+function AlertDialogContent({ className, children, ...props }: AlertDialogPrimitive.Popup.Props) {
   return (
     <AlertDialogPortal>
       <AlertDialogOverlay />
       <AlertDialogPrimitive.Popup
         data-slot="alert-dialog-content"
         className={cn(
-          "bg-background fixed top-1/2 left-1/2 z-50 w-full max-w-md -translate-x-1/2 -translate-y-1/2 rounded-lg border p-6 shadow-lg duration-100 data-ending-style:opacity-0 data-ending-style:scale-95 data-starting-style:opacity-0 data-starting-style:scale-95",
-          className
+          'fixed top-1/2 left-1/2 z-50 w-full max-w-md -translate-x-1/2 -translate-y-1/2 rounded-lg border bg-background p-6 shadow-lg duration-100 data-ending-style:scale-95 data-ending-style:opacity-0 data-starting-style:scale-95 data-starting-style:opacity-0',
+          className,
         )}
         {...props}
       >
@@ -53,21 +48,21 @@ function AlertDialogContent({
   )
 }
 
-function AlertDialogHeader({ className, ...props }: React.ComponentProps<"div">) {
+function AlertDialogHeader({ className, ...props }: React.ComponentProps<'div'>) {
   return (
     <div
       data-slot="alert-dialog-header"
-      className={cn("flex flex-col gap-1.5 text-center sm:text-left", className)}
+      className={cn('flex flex-col gap-1.5 text-center sm:text-left', className)}
       {...props}
     />
   )
 }
 
-function AlertDialogFooter({ className, ...props }: React.ComponentProps<"div">) {
+function AlertDialogFooter({ className, ...props }: React.ComponentProps<'div'>) {
   return (
     <div
       data-slot="alert-dialog-footer"
-      className={cn("flex flex-col-reverse gap-2 sm:flex-row sm:justify-end", className)}
+      className={cn('flex flex-col-reverse gap-2 sm:flex-row sm:justify-end', className)}
       {...props}
     />
   )
@@ -77,7 +72,7 @@ function AlertDialogTitle({ className, ...props }: AlertDialogPrimitive.Title.Pr
   return (
     <AlertDialogPrimitive.Title
       data-slot="alert-dialog-title"
-      className={cn("text-lg font-semibold", className)}
+      className={cn('text-lg font-semibold', className)}
       {...props}
     />
   )
@@ -87,7 +82,7 @@ function AlertDialogDescription({ className, ...props }: AlertDialogPrimitive.De
   return (
     <AlertDialogPrimitive.Description
       data-slot="alert-dialog-description"
-      className={cn("text-muted-foreground text-sm", className)}
+      className={cn('text-sm text-muted-foreground', className)}
       {...props}
     />
   )
@@ -107,7 +102,7 @@ function AlertDialogCancel({ className, ...props }: AlertDialogPrimitive.Close.P
   return (
     <AlertDialogPrimitive.Close
       data-slot="alert-dialog-cancel"
-      className={cn(buttonVariants({ variant: "outline" }), className)}
+      className={cn(buttonVariants({ variant: 'outline' }), className)}
       {...props}
     />
   )

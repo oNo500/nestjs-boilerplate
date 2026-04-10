@@ -29,9 +29,12 @@ describe('loginForm', () => {
     await user.type(screen.getByLabelText(/password/i), mockCredentials.valid.password)
     await user.click(screen.getByRole('button', { name: /login/i }))
 
-    await waitFor(() => {
-      expect(mockPush).toHaveBeenCalledWith(expect.stringContaining('/dashboards/analytics'))
-    }, { timeout: 5000 })
+    await waitFor(
+      () => {
+        expect(mockPush).toHaveBeenCalledWith(expect.stringContaining('/dashboards/analytics'))
+      },
+      { timeout: 5000 },
+    )
   })
 
   it('login button is present and enabled initially', () => {

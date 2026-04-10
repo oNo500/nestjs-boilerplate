@@ -11,11 +11,9 @@ export function AllListPanel() {
   return (
     <div className="space-y-4">
       <div className="rounded-md bg-muted/50 p-3 text-sm text-muted-foreground">
-        <strong>No Pagination</strong>
-        {' '}
-        — Fetches all records in a single request.
-        Only suitable for small, relatively static datasets (e.g. config lists, dropdown options).
-        Avoid when the dataset may grow unbounded.
+        <strong>No Pagination</strong> — Fetches all records in a single request. Only suitable for
+        small, relatively static datasets (e.g. config lists, dropdown options). Avoid when the
+        dataset may grow unbounded.
       </div>
 
       <ArticlesTable data={articles} isLoading={isLoading} />

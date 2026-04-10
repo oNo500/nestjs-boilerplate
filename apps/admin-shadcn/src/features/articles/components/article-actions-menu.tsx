@@ -22,7 +22,11 @@ import { MoreHorizontalIcon } from 'lucide-react'
 import { useState } from 'react'
 
 import { ArticleFormSheet } from '@/features/articles/components/article-form-sheet'
-import { useDeleteArticle, usePublishArticle, useArchiveArticle } from '@/features/articles/hooks/use-article-mutations'
+import {
+  useDeleteArticle,
+  usePublishArticle,
+  useArchiveArticle,
+} from '@/features/articles/hooks/use-article-mutations'
 
 import type { components } from '@workspace/api-types'
 
@@ -60,49 +64,39 @@ export function ArticleActionsMenu({ article }: ArticleActionsMenuProps) {
   return (
     <>
       <DropdownMenu>
-        <DropdownMenuTrigger render={(
-          <Button variant="ghost" size="icon" className="h-8 w-8">
-            <MoreHorizontalIcon className="h-4 w-4" />
-            <span className="sr-only">Open menu</span>
-          </Button>
-        )}
+        <DropdownMenuTrigger
+          render={
+            <Button variant="ghost" size="icon" className="h-8 w-8">
+              <MoreHorizontalIcon className="h-4 w-4" />
+              <span className="sr-only">Open menu</span>
+            </Button>
+          }
         />
         <DropdownMenuContent align="end">
           {canEdit && (
             <ArticleFormSheet
               article={article}
-              trigger={(
-                <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                  Edit
-                </DropdownMenuItem>
-              )}
+              trigger={
+                <DropdownMenuItem onSelect={(e) => e.preventDefault()}>Edit</DropdownMenuItem>
+              }
             />
           )}
 
           {canPublish && (
-            <DropdownMenuItem
-              onClick={handlePublish}
-              disabled={publishMutation.isPending}
-            >
+            <DropdownMenuItem onClick={handlePublish} disabled={publishMutation.isPending}>
               Publish
             </DropdownMenuItem>
           )}
 
           {canArchive && (
-            <DropdownMenuItem
-              onClick={handleArchive}
-              disabled={archiveMutation.isPending}
-            >
+            <DropdownMenuItem onClick={handleArchive} disabled={archiveMutation.isPending}>
               Archive
             </DropdownMenuItem>
           )}
 
           <DropdownMenuSeparator />
 
-          <DropdownMenuItem
-            className="text-destructive"
-            onClick={() => setDeleteOpen(true)}
-          >
+          <DropdownMenuItem className="text-destructive" onClick={() => setDeleteOpen(true)}>
             Delete
           </DropdownMenuItem>
         </DropdownMenuContent>
@@ -113,10 +107,8 @@ export function ArticleActionsMenu({ article }: ArticleActionsMenuProps) {
           <AlertDialogHeader>
             <AlertDialogTitle>Delete article?</AlertDialogTitle>
             <AlertDialogDescription>
-              This will permanently delete
-              {' '}
-              <strong>{article.title}</strong>
-              . This action cannot be undone.
+              This will permanently delete <strong>{article.title}</strong>. This action cannot be
+              undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -124,7 +116,7 @@ export function ArticleActionsMenu({ article }: ArticleActionsMenuProps) {
             <AlertDialogAction
               onClick={handleDelete}
               disabled={deleteMutation.isPending}
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              className="text-destructive-foreground bg-destructive hover:bg-destructive/90"
             >
               {deleteMutation.isPending ? 'Deleting...' : 'Delete'}
             </AlertDialogAction>

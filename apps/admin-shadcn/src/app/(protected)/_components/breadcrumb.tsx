@@ -14,7 +14,14 @@ import React from 'react'
 import { getLabelByHref } from '@/config/app-paths'
 
 function getLabel(href: string): string {
-  return getLabelByHref(href) ?? href.split('/').pop()!.replaceAll('-', ' ').replaceAll(/\b\w/g, (c) => c.toUpperCase())
+  return (
+    getLabelByHref(href) ??
+    href
+      .split('/')
+      .pop()!
+      .replaceAll('-', ' ')
+      .replaceAll(/\b\w/g, (c) => c.toUpperCase())
+  )
 }
 
 export function DynamicBreadcrumb() {
@@ -37,13 +44,11 @@ export function DynamicBreadcrumb() {
               <BreadcrumbItem
                 className={index < segments.length - 1 ? 'hidden md:block' : undefined}
               >
-                {isLast
-                  ? (
-                      <BreadcrumbPage>{label}</BreadcrumbPage>
-                    )
-                  : (
-                      <BreadcrumbLink href={href}>{label}</BreadcrumbLink>
-                    )}
+                {isLast ? (
+                  <BreadcrumbPage>{label}</BreadcrumbPage>
+                ) : (
+                  <BreadcrumbLink href={href}>{label}</BreadcrumbLink>
+                )}
               </BreadcrumbItem>
             </React.Fragment>
           )

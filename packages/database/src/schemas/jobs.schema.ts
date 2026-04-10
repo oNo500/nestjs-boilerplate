@@ -27,7 +27,7 @@ export const jobsTable = pgTable(
     result: jsonb('result'),
 
     // Failure details (nullable)
-    error: jsonb('error').$type<{ code: string, message: string } | null>(),
+    error: jsonb('error').$type<{ code: string; message: string } | null>(),
 
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp('updated_at', { withTimezone: true })
@@ -36,10 +36,7 @@ export const jobsTable = pgTable(
       .$onUpdate(() => new Date()),
   },
 
-  (table) => [
-    index('jobs_status_idx').on(table.status),
-    index('jobs_type_idx').on(table.type),
-  ],
+  (table) => [index('jobs_status_idx').on(table.status), index('jobs_type_idx').on(table.type)],
 )
 
 export type JobDatabase = typeof jobsTable.$inferSelect

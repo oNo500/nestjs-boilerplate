@@ -17,6 +17,10 @@
       "dependsOn": ["^build"],
       "cache": false
     },
+    "format": {
+      "cache": false
+    },
+    "format:check": {},
     "dev": {
       "dependsOn": ["^build"],
       "persistent": true,

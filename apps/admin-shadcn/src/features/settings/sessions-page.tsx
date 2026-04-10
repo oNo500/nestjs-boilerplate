@@ -14,16 +14,21 @@ import {
 } from '@workspace/ui/components/alert-dialog'
 import { Badge } from '@workspace/ui/components/badge'
 import { Button, buttonVariants } from '@workspace/ui/components/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@workspace/ui/components/card'
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@workspace/ui/components/collapsible'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@workspace/ui/components/card'
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from '@workspace/ui/components/collapsible'
 import { Separator } from '@workspace/ui/components/separator'
 import { Skeleton } from '@workspace/ui/components/skeleton'
-import {
-  MonitorIcon,
-  SmartphoneIcon,
-  MapPinIcon,
-  ChevronDownIcon,
-} from 'lucide-react'
+import { MonitorIcon, SmartphoneIcon, MapPinIcon, ChevronDownIcon } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'sonner'
 
@@ -33,7 +38,7 @@ import type { components } from '@workspace/api-types'
 
 type SessionItem = components['schemas']['SessionItemDto']
 
-function parseUserAgent(ua: string | null): { browser: string, os: string } {
+function parseUserAgent(ua: string | null): { browser: string; os: string } {
   if (!ua) return { browser: 'Unknown', os: 'Unknown' }
 
   const BROWSER_PATTERNS: [RegExp, string][] = [
@@ -91,22 +96,22 @@ function SessionCard({
   const { browser, os } = parseUserAgent(session.userAgent ?? null)
 
   return (
-    <div className="rounded-lg border p-4 space-y-3">
+    <div className="space-y-3 rounded-lg border p-4">
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-start gap-3">
-          <div className="rounded-md bg-muted p-2.5 shrink-0">
+          <div className="shrink-0 rounded-md bg-muted p-2.5">
             <Icon className="size-4 text-muted-foreground" />
           </div>
-          <div className="space-y-1 min-w-0">
-            <div className="flex items-center gap-2 flex-wrap">
+          <div className="min-w-0 space-y-1">
+            <div className="flex flex-wrap items-center gap-2">
               <span className="text-sm font-medium">
-                {browser}
-                {' '}
-                on
+                {browser} on
                 {os}
               </span>
               {session.isCurrent && (
-                <Badge variant="secondary" className="text-xs">Current</Badge>
+                <Badge variant="secondary" className="text-xs">
+                  Current
+                </Badge>
               )}
             </div>
             <div className="flex items-center gap-1 text-xs text-muted-foreground">
@@ -114,12 +119,7 @@ function SessionCard({
               <span>{session.ipAddress ?? 'Unknown IP'}</span>
             </div>
             <p className="text-xs text-muted-foreground">
-              Signed in
-              {' '}
-              {formatRelativeTime(session.createdAt)}
-              {' '}
-              · Expires
-              {' '}
+              Signed in {formatRelativeTime(session.createdAt)} · Expires{' '}
               {formatRelativeTime(session.expiresAt)}
             </p>
           </div>
@@ -141,16 +141,14 @@ function SessionCard({
       {/* Current session: collapsible full UA string */}
       {session.isCurrent && session.userAgent && (
         <Collapsible open={uaOpen} onOpenChange={setUaOpen}>
-          <CollapsibleTrigger className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors">
+          <CollapsibleTrigger className="flex items-center gap-1 text-xs text-muted-foreground transition-colors hover:text-foreground">
             <ChevronDownIcon
               className={`size-3 transition-transform ${uaOpen ? 'rotate-180' : ''}`}
             />
-            {uaOpen ? 'Hide' : 'Show'}
-            {' '}
-            user agent
+            {uaOpen ? 'Hide' : 'Show'} user agent
           </CollapsibleTrigger>
           <CollapsibleContent>
-            <p className="mt-1.5 break-all rounded bg-muted px-2 py-1.5 text-xs text-muted-foreground font-mono">
+            <p className="mt-1.5 rounded bg-muted px-2 py-1.5 font-mono text-xs break-all text-muted-foreground">
               {session.userAgent}
             </p>
           </CollapsibleContent>
@@ -189,38 +187,32 @@ export function SessionsPage() {
     <div className="flex flex-col gap-6 p-4 pt-0">
       <div>
         <h1 className="text-2xl font-bold">Sessions</h1>
-        <p className="text-sm text-muted-foreground">
-          Manage your active sessions across devices.
-        </p>
+        <p className="text-sm text-muted-foreground">Manage your active sessions across devices.</p>
       </div>
 
       {/* Stats badges */}
       {!isLoading && sessions.length > 0 && (
-        <div className="flex gap-2 flex-wrap">
+        <div className="flex flex-wrap gap-2">
           <Badge variant="secondary">
-            {sessions.length}
-            {' '}
-            Session
+            {sessions.length} Session
             {sessions.length === 1 ? '' : 's'}
           </Badge>
           <Badge variant="outline">
-            {uniqueIps}
-            {' '}
-            Device
+            {uniqueIps} Device
             {uniqueIps === 1 ? '' : 's'}
           </Badge>
         </div>
       )}
 
       <Card>
-        <CardHeader className="flex flex-row items-start justify-between space-y-0 gap-4">
+        <CardHeader className="flex flex-row items-start justify-between gap-4 space-y-0">
           <div>
             <CardTitle>Active Sessions</CardTitle>
             <CardDescription>
               {isLoading
                 ? 'Loading sessions...'
-                // eslint-disable-next-line unicorn/no-nested-ternary
-                : sessions.length > 0
+                : // eslint-disable-next-line unicorn/no-nested-ternary
+                  sessions.length > 0
                   ? `${currentSession ? '1 active' : '0 active'} · ${otherSessions.length} other`
                   : 'No active sessions'}
             </CardDescription>
@@ -229,9 +221,7 @@ export function SessionsPage() {
           {otherSessions.length > 0 && (
             <AlertDialog>
               <AlertDialogTrigger
-                render={
-                  <Button variant="destructive" size="sm" className="shrink-0" />
-                }
+                render={<Button variant="destructive" size="sm" className="shrink-0" />}
               >
                 Revoke other sessions
               </AlertDialogTrigger>
@@ -239,14 +229,8 @@ export function SessionsPage() {
                 <AlertDialogHeader>
                   <AlertDialogTitle>Revoke all other sessions?</AlertDialogTitle>
                   <AlertDialogDescription>
-                    This will sign out
-                    {' '}
-                    {otherSessions.length}
-                    {' '}
-                    other device
-                    {otherSessions.length === 1 ? '' : 's'}
-                    .
-                    This action cannot be undone.
+                    This will sign out {otherSessions.length} other device
+                    {otherSessions.length === 1 ? '' : 's'}. This action cannot be undone.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
@@ -264,47 +248,47 @@ export function SessionsPage() {
         </CardHeader>
 
         <CardContent className="space-y-3">
-          {isLoading
-            ? (
-                Array.from({ length: 3 }, (_, i) => `sk-${i}`).map((key) => (
-                  <Skeleton key={key} className="h-24 w-full" />
-                ))
-              )
-            : (
+          {isLoading ? (
+            Array.from({ length: 3 }, (_, i) => `sk-${i}`).map((key) => (
+              <Skeleton key={key} className="h-24 w-full" />
+            ))
+          ) : (
+            <>
+              {/* Current session pinned to top */}
+              {currentSession && (
+                <SessionCard
+                  session={currentSession}
+                  onRevoke={(id) => revokeOne.mutate({ body: { sessionId: id } })}
+                  isRevoking={revokeOne.isPending}
+                />
+              )}
+
+              {/* Other sessions */}
+              {otherSessions.length > 0 && (
                 <>
-                  {/* Current session pinned to top */}
-                  {currentSession && (
+                  <div className="flex items-center gap-3 py-1">
+                    <Separator className="flex-1" />
+                    <span className="shrink-0 text-xs text-muted-foreground">Other sessions</span>
+                    <Separator className="flex-1" />
+                  </div>
+                  {otherSessions.map((session) => (
                     <SessionCard
-                      session={currentSession}
+                      key={session.id}
+                      session={session}
                       onRevoke={(id) => revokeOne.mutate({ body: { sessionId: id } })}
                       isRevoking={revokeOne.isPending}
                     />
-                  )}
-
-                  {/* Other sessions */}
-                  {otherSessions.length > 0 && (
-                    <>
-                      <div className="flex items-center gap-3 py-1">
-                        <Separator className="flex-1" />
-                        <span className="text-xs text-muted-foreground shrink-0">Other sessions</span>
-                        <Separator className="flex-1" />
-                      </div>
-                      {otherSessions.map((session) => (
-                        <SessionCard
-                          key={session.id}
-                          session={session}
-                          onRevoke={(id) => revokeOne.mutate({ body: { sessionId: id } })}
-                          isRevoking={revokeOne.isPending}
-                        />
-                      ))}
-                    </>
-                  )}
-
-                  {sessions.length === 0 && (
-                    <p className="text-center text-sm text-muted-foreground py-6">No active sessions found.</p>
-                  )}
+                  ))}
                 </>
               )}
+
+              {sessions.length === 0 && (
+                <p className="py-6 text-center text-sm text-muted-foreground">
+                  No active sessions found.
+                </p>
+              )}
+            </>
+          )}
         </CardContent>
       </Card>
     </div>

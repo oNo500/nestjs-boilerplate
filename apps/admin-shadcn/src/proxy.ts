@@ -7,10 +7,7 @@ export const proxy: NextProxy = (request: NextRequest) => {
   const { pathname } = request.nextUrl
 
   if (!token) {
-    const loginUrl = new URL(
-      `/login?redirectTo=${encodeURIComponent(pathname)}`,
-      request.url,
-    )
+    const loginUrl = new URL(`/login?redirectTo=${encodeURIComponent(pathname)}`, request.url)
     return NextResponse.redirect(loginUrl)
   }
 

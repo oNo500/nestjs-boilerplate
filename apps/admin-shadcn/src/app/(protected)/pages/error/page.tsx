@@ -8,15 +8,15 @@ export default function ErrorPage() {
     <div className="flex flex-1 flex-col items-center justify-center px-6 py-20 text-center">
       <div className="max-w-md space-y-8">
         <div className="relative select-none">
-          <span className="text-[160px] font-black leading-none tracking-tighter text-muted-foreground/10">
+          <span className="text-[160px] leading-none font-black tracking-tighter text-muted-foreground/10">
             500
           </span>
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="space-y-2">
-              <p className="text-sm font-semibold uppercase tracking-widest text-destructive">
+              <p className="text-sm font-semibold tracking-widest text-destructive uppercase">
                 Something went wrong
               </p>
-              <h1 className="text-balance text-2xl font-bold tracking-tight text-foreground">
+              <h1 className="text-2xl font-bold tracking-tight text-balance text-foreground">
                 Unexpected error
               </h1>
             </div>
@@ -24,12 +24,10 @@ export default function ErrorPage() {
         </div>
 
         <div className="space-y-2">
-          <p className="text-pretty text-sm text-muted-foreground">
+          <p className="text-sm text-pretty text-muted-foreground">
             An unexpected error occurred. Please try again or return to the dashboard.
           </p>
-          <p className="font-mono text-xs text-muted-foreground/60">
-            Error ID: abc123xyz
-          </p>
+          <p className="font-mono text-xs text-muted-foreground/60">Error ID: abc123xyz</p>
         </div>
 
         <div className="flex justify-center gap-3">

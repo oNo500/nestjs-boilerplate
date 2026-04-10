@@ -5,7 +5,11 @@ interface UserStatusBadgeProps {
 }
 
 export function UserStatusBadge({ banned }: UserStatusBadgeProps) {
-  return banned
-    ? <Badge variant="destructive">Banned</Badge>
-    : <Badge variant="outline" className="text-green-600 border-green-600">Active</Badge>
+  return banned ? (
+    <Badge variant="destructive">Banned</Badge>
+  ) : (
+    <Badge variant="outline" className="border-green-600 text-green-600">
+      Active
+    </Badge>
+  )
 }

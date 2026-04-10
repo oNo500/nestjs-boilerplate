@@ -1,4 +1,14 @@
-import { boolean, customType, index, integer, jsonb, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core'
+import {
+  boolean,
+  customType,
+  index,
+  integer,
+  jsonb,
+  pgTable,
+  text,
+  timestamp,
+  uuid,
+} from 'drizzle-orm/pg-core'
 
 const tsvector = customType<{ data: string }>({
   dataType() {
@@ -49,9 +59,7 @@ export const articlesTable = pgTable(
     isPinned: boolean('is_pinned').notNull().default(false),
 
     // Timestamps
-    createdAt: timestamp('created_at', { withTimezone: true })
-      .notNull()
-      .defaultNow(),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp('updated_at', { withTimezone: true })
       .notNull()
       .defaultNow()

@@ -21,15 +21,15 @@ export default function GlobalError({
         <div className="flex min-h-dvh flex-col items-center justify-center px-6 text-center">
           <div className="max-w-md space-y-8">
             <div className="relative select-none">
-              <span className="text-[160px] font-black leading-none tracking-tighter text-muted-foreground/10">
+              <span className="text-[160px] leading-none font-black tracking-tighter text-muted-foreground/10">
                 500
               </span>
               <div className="absolute inset-0 flex items-center justify-center">
                 <div className="space-y-2">
-                  <p className="text-sm font-semibold uppercase tracking-widest text-destructive">
+                  <p className="text-sm font-semibold tracking-widest text-destructive uppercase">
                     Critical error
                   </p>
-                  <h1 className="text-balance text-2xl font-bold tracking-tight text-foreground">
+                  <h1 className="text-2xl font-bold tracking-tight text-balance text-foreground">
                     Application failed to load
                   </h1>
                 </div>
@@ -37,14 +37,12 @@ export default function GlobalError({
             </div>
 
             <div className="space-y-2">
-              <p className="text-pretty text-sm text-muted-foreground">
+              <p className="text-sm text-pretty text-muted-foreground">
                 {error.message || 'A critical error occurred. Please refresh the page.'}
               </p>
               {error.digest && (
                 <p className="font-mono text-xs text-muted-foreground/60">
-                  Error ID:
-                  {' '}
-                  {error.digest}
+                  Error ID: {error.digest}
                 </p>
               )}
             </div>

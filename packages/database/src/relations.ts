@@ -1,10 +1,6 @@
 import { relations } from 'drizzle-orm'
 
-import {
-  usersTable,
-  accountsTable,
-  sessionsTable,
-} from './schemas'
+import { usersTable, accountsTable, sessionsTable } from './schemas'
 
 /**
  * Users table relations
