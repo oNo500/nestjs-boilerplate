@@ -37,7 +37,20 @@ pnpm dev
 
 ```bash
 turbo build / test / lint / typecheck
+turbo format          # auto-fix formatting (oxfmt)
+turbo format:check    # CI formatting check
 ```
+
+## Code Quality
+
+Linting and formatting are powered by [oxlint](https://oxc.rs/docs/guide/usage/linter) + [oxfmt](https://oxc.rs/docs/guide/usage/formatter) via [`@infra-x/code-quality`](https://github.com/oNo500/infra-code/tree/master/packages/code-quality) presets. Each package has its own `oxlint.config.ts` and `oxfmt.config.ts` with framework-specific rules.
+
+- **Root** — shared baseline (base, unicorn, depend)
+- **api** — NestJS boundaries, Drizzle, Node.js, Vitest
+- **admin-shadcn** — React, Next.js, Vitest, Tailwind CSS class sorting
+- **database** — Drizzle, Node.js
+- **ui** — React, Tailwind CSS class sorting
+- **icons** — React
 
 ## Workflows
 
