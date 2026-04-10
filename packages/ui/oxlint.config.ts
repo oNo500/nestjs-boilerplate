@@ -3,7 +3,12 @@ import { defineConfig } from 'oxlint'
 
 export default defineConfig({
   extends: [
-    base(),
+    base({
+      rules: {
+        // shadcn-generated components use variable shadowing patterns
+        'no-shadow': 'off',
+      },
+    }),
     unicorn(),
     depend(),
     react({
