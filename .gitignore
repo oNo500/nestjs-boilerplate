@@ -84,3 +84,8 @@ playwright/.cache/
 
 *storybook.log
 storybook-static
+
+# Track project-level Claude Code instructions (override global ~/.gitignore)
+!.claude/
+!CLAUDE.md
+!**/CLAUDE.md
