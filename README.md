@@ -3,7 +3,7 @@
 [![CI](https://github.com/oNo500/nestjs-boilerplate/actions/workflows/ci.yml/badge.svg)](https://github.com/oNo500/nestjs-boilerplate/actions/workflows/ci.yml)
 [![Node.js](https://img.shields.io/badge/node-22-brightgreen)](https://nodejs.org)
 [![pnpm](https://img.shields.io/badge/pnpm-10-orange)](https://pnpm.io)
-[![Claude Code](https://img.shields.io/badge/Claude_Code-ready-555?logo=claude)](https://docs.claude.com/en/docs/claude-code)
+[![Claude Code](https://img.shields.io/badge/claude_code-555?logo=claude&logoColor=white)](https://docs.claude.com/en/docs/claude-code)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](./LICENSE)
 
 NestJS monorepo — DDD backend, Drizzle ORM + PostgreSQL, JWT/OAuth2, Next.js App Router admin frontend.
