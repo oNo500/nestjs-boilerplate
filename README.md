@@ -3,7 +3,6 @@
 [![CI](https://github.com/oNo500/nestjs-boilerplate/actions/workflows/ci.yml/badge.svg)](https://github.com/oNo500/nestjs-boilerplate/actions/workflows/ci.yml)
 [![Node.js](https://img.shields.io/badge/node-22-brightgreen)](https://nodejs.org)
 [![pnpm](https://img.shields.io/badge/pnpm-10-orange)](https://pnpm.io)
-[![Claude Code](https://img.shields.io/badge/claude_code-555?logo=claude&logoColor=white)](https://docs.claude.com/en/docs/claude-code)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](./LICENSE)
 
 NestJS monorepo — DDD backend, Drizzle ORM + PostgreSQL, JWT/OAuth2, Next.js App Router admin frontend.
@@ -11,9 +10,9 @@ NestJS monorepo — DDD backend, Drizzle ORM + PostgreSQL, JWT/OAuth2, Next.js A
 > [!NOTE]
 > Looking for the Ant Design Pro integration? It has been archived due to maintenance cost. See the [`archive/admin-antd`](https://github.com/oNo500/nestjs-boilerplate/tree/archive/admin-antd) branch for the last working snapshot.
 
-## Claude Code Ready
+## Claude Code
 
-The `.claude/` directory encodes architectural boundaries, testing rules, and package conventions, so [Claude Code](https://docs.claude.com/en/docs/claude-code) generates code consistent with the project without having to re-establish context each session.
+Project rules for [Claude Code](https://docs.claude.com/en/docs/claude-code) live under `.claude/` and load automatically.
 
 ## Workspace
 
