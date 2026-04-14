@@ -3,7 +3,7 @@
 [![CI](https://github.com/oNo500/nestjs-boilerplate/actions/workflows/ci.yml/badge.svg)](https://github.com/oNo500/nestjs-boilerplate/actions/workflows/ci.yml)
 [![Node.js](https://img.shields.io/badge/node-22-brightgreen)](https://nodejs.org)
 [![pnpm](https://img.shields.io/badge/pnpm-10-orange)](https://pnpm.io)
-[![Claude Code Ready](https://img.shields.io/badge/Claude%20Code-ready-8a2be2)](https://docs.claude.com/en/docs/claude-code)
+[![Claude Code](https://img.shields.io/badge/Claude_Code-ready-555?logo=claude)](https://docs.claude.com/en/docs/claude-code)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](./LICENSE)
 
 NestJS monorepo — DDD backend, Drizzle ORM + PostgreSQL, JWT/OAuth2, Next.js App Router admin frontend.
@@ -13,7 +13,7 @@ NestJS monorepo — DDD backend, Drizzle ORM + PostgreSQL, JWT/OAuth2, Next.js A
 
 ## Claude Code Ready
 
-Pre-tuned instruction files under `.claude/` make [Claude Code](https://docs.claude.com/en/docs/claude-code) an effective pair-programmer out of the box — architectural boundaries, testing discipline, and package conventions are encoded as rules, so generated code stays consistent with the project without repeating context.
+The `.claude/` directory encodes architectural boundaries, testing rules, and package conventions, so [Claude Code](https://docs.claude.com/en/docs/claude-code) generates code consistent with the project without having to re-establish context each session.
 
 ## Workspace
 
