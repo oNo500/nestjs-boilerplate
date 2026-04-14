@@ -5,7 +5,7 @@
 [![pnpm](https://img.shields.io/badge/pnpm-10-orange)](https://pnpm.io)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](./LICENSE)
 
-NestJS monorepo — DDD backend, Drizzle ORM + PostgreSQL, JWT/OAuth2, Next.js App Router admin frontend. Claude Code-ready out of the box.
+NestJS monorepo — DDD backend, Drizzle ORM + PostgreSQL, JWT/OAuth2, Next.js App Router admin frontend.
 
 > [!NOTE]
 > Looking for the Ant Design Pro integration? It has been archived due to maintenance cost. See the [`archive/admin-antd`](https://github.com/oNo500/nestjs-boilerplate/tree/archive/admin-antd) branch for the last working snapshot.
