@@ -48,7 +48,7 @@ import type { NestModule, MiddlewareConsumer } from '@nestjs/common'
     // Config module: global environment variable management
     ConfigModule.forRoot({
       isGlobal: true, // make ConfigService available throughout the application
-      envFilePath: ['../../.env', '.env'], // root shared vars, then local overrides
+      envFilePath: ['.env'],
       validate: validateEnv, // validate environment variables with Zod
       cache: true, // cache environment variables for improved performance
     }),

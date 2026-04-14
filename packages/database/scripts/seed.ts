@@ -16,7 +16,7 @@ import { boolean, index, pgTable, text, timestamp, uniqueIndex } from 'drizzle-o
 import { Pool } from 'pg'
 
 // Load environment variables
-config({ path: '../../.env' })
+config({ path: '.env' })
 
 const usersTable = pgTable(
   'users',
