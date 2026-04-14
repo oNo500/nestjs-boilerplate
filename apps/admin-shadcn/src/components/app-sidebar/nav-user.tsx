@@ -10,7 +10,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@workspace/ui/components/dropdown-menu'
-import { ThemeSwitcher } from '@workspace/ui/components/kibo-ui/theme-switcher'
+import { Button } from '@workspace/ui/components/button'
+import { MoonIcon, SunIcon, SunMoonIcon } from 'lucide-react'
 import {
   SidebarMenu,
   SidebarMenuButton,
@@ -86,7 +87,32 @@ export function NavUser({
             <DropdownMenuSeparator />
             <div className="flex items-center justify-between px-2 py-1.5">
               <span className="text-sm text-muted-foreground">Theme</span>
-              <ThemeSwitcher value={theme as 'light' | 'dark' | 'system'} onChange={setTheme} />
+              <div className="flex gap-1">
+                <Button
+                  variant={theme === 'light' ? 'default' : 'ghost'}
+                  size="icon"
+                  className="size-7"
+                  onClick={() => setTheme('light')}
+                >
+                  <SunIcon className="size-3.5" />
+                </Button>
+                <Button
+                  variant={theme === 'system' ? 'default' : 'ghost'}
+                  size="icon"
+                  className="size-7"
+                  onClick={() => setTheme('system')}
+                >
+                  <SunMoonIcon className="size-3.5" />
+                </Button>
+                <Button
+                  variant={theme === 'dark' ? 'default' : 'ghost'}
+                  size="icon"
+                  className="size-7"
+                  onClick={() => setTheme('dark')}
+                >
+                  <MoonIcon className="size-3.5" />
+                </Button>
+              </div>
             </div>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={handleLogout}>
