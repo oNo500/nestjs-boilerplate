@@ -1134,8 +1134,11 @@ export interface components {
             emailVerified: boolean;
             /** @example https://example.com/avatar.png */
             image: string | null;
-            /** @example user */
-            role: string | null;
+            /**
+             * @example USER
+             * @enum {string}
+             */
+            role: "ADMIN" | "USER";
             /** @example false */
             banned: boolean;
             /** @example null */
@@ -1200,7 +1203,7 @@ export interface components {
              * @example user
              * @enum {string}
              */
-            role?: "ADMIN" | "USER" | "EDITOR" | "MODERATOR";
+            role?: "ADMIN" | "USER";
         };
         UpdateUserDto: {
             /** @example John Doe */
@@ -1217,7 +1220,7 @@ export interface components {
              * @example USER
              * @enum {string}
              */
-            role: "ADMIN" | "USER" | "EDITOR" | "MODERATOR";
+            role: "ADMIN" | "USER";
         };
         ProfileResponseDto: {
             /** @example usr_01HXYZ */
@@ -2716,7 +2719,7 @@ export interface operations {
                 page?: number;
                 pageSize?: number;
                 search?: string;
-                role?: string;
+                role?: "ADMIN" | "USER";
                 banned?: boolean;
             };
             header?: never;
