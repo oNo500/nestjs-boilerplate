@@ -1,10 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger'
 
+import { ROLES } from '@/shared-kernel/domain/value-objects/role.vo'
 import {
   IsEmailField,
   IsNotEmptyField,
   IsStringField,
 } from '@/shared-kernel/infrastructure/decorators/validators'
+
+import type { RoleType } from '@/shared-kernel/domain/value-objects/role.vo'
 
 export class LoginDto {
   @ApiProperty({ example: 'user@example.com' })
@@ -24,8 +27,8 @@ export class UserInfo {
   @ApiProperty({ example: 'user@example.com' })
   email: string
 
-  @ApiProperty({ type: String, example: 'user', nullable: true })
-  role: string | null
+  @ApiProperty({ enum: Object.values(ROLES), example: 'USER' })
+  role: RoleType
 }
 
 export class LoginResponseDto {
