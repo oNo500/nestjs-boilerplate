@@ -1,3 +1,5 @@
+import type { RoleType } from '@/lib/rbac'
+
 const ACCESS_TOKEN_KEY = 'token'
 const REFRESH_TOKEN_KEY = 'refreshToken'
 const USER_KEY = 'user'
@@ -49,7 +51,7 @@ export function removeRefreshToken(): void {
 export type StoredUser = {
   id: string
   email: string
-  role: string | null
+  role: RoleType | null
 }
 
 export function getUser(): StoredUser | null {
