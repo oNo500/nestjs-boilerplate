@@ -13,6 +13,7 @@ import {
 } from 'lucide-react'
 
 import type { LucideIcon } from 'lucide-react'
+import type { RoleType } from '@/lib/rbac'
 
 export const appPaths = {
   home: {
@@ -78,6 +79,7 @@ export type NavItem = {
   url: string
   icon: LucideIcon
   isActive?: boolean
+  requiredRole?: RoleType
   items?: { title: string; url: string }[]
 }
 
@@ -86,11 +88,13 @@ export const dashboardNavItems: NavItem[] = [
     title: 'Analytics Dashboard',
     url: appPaths.dashboards.analytics.href,
     icon: BarChart2Icon,
+    requiredRole: 'ADMIN',
   },
   {
     title: 'CRM Dashboard',
     url: appPaths.dashboards.crm.href,
     icon: TrendingUpIcon,
+    requiredRole: 'ADMIN',
   },
 ]
 
@@ -99,11 +103,13 @@ export const appsNavItems: NavItem[] = [
     title: 'Articles',
     url: appPaths.articles.href,
     icon: FileTextIcon,
+    requiredRole: 'ADMIN',
   },
   {
     title: 'Chat',
     url: appPaths.apps.chat.href,
     icon: MessageSquareIcon,
+    requiredRole: 'ADMIN',
   },
 ]
 
@@ -112,6 +118,7 @@ export const pagesNavItems: NavItem[] = [
     title: 'Tables',
     url: appPaths.users.href,
     icon: TableIcon,
+    requiredRole: 'ADMIN',
     items: [
       { title: 'Data Table', url: appPaths.users.href },
       { title: 'Filterable Table', url: appPaths.loginLogs.href },
@@ -132,16 +139,19 @@ export const pagesNavItems: NavItem[] = [
     title: '404',
     url: appPaths.pages.notFound.href,
     icon: AlertCircleIcon,
+    requiredRole: 'ADMIN',
   },
   {
     title: 'Error',
     url: appPaths.pages.error.href,
     icon: AlertCircleIcon,
+    requiredRole: 'ADMIN',
   },
   {
     title: 'Coming Soon',
     url: appPaths.pages.comingSoon.href,
     icon: TimerIcon,
+    requiredRole: 'ADMIN',
   },
 ]
 
@@ -150,6 +160,7 @@ export const managementNavItems: NavItem[] = [
     title: 'Roles',
     url: appPaths.roles.href,
     icon: ShieldCheckIcon,
+    requiredRole: 'ADMIN',
   },
 ]
 
