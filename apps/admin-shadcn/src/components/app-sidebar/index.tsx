@@ -17,21 +17,15 @@ import {
   appsNavItems,
   pagesNavItems,
   managementNavItems,
-  appPaths,
 } from '@/config/app-paths'
+import { hasRequiredRole } from '@/lib/rbac'
 
 import { NavMain } from './nav-main'
 import { NavUser } from './nav-user'
 import { TeamSwitcher } from './team-switcher'
 
 import type { NavItem } from '@/config/app-paths'
-
-/** URLs that require ADMIN role */
-const ADMIN_ONLY_URLS = new Set<string>([
-  appPaths.loginLogs.href,
-  appPaths.auditLogs.href,
-  appPaths.roles.href,
-])
+import type { RoleType } from '@/lib/rbac'
 
 const teams = [
   {
@@ -51,22 +45,17 @@ const teams = [
   },
 ]
 
-function filterByRole(items: NavItem[], isAdmin: boolean): NavItem[] {
-  return items.flatMap((item) => {
-    if (ADMIN_ONLY_URLS.has(item.url) && !isAdmin) return []
-    if (item.items) {
-      const filteredSub = item.items.filter((sub) => !ADMIN_ONLY_URLS.has(sub.url) || isAdmin)
-      return [{ ...item, items: filteredSub }]
-    }
-    return [item]
-  })
+function visibleItems(items: NavItem[], userRole: RoleType | null): NavItem[] {
+  return items.filter(
+    (item) => !item.requiredRole || hasRequiredRole(userRole, item.requiredRole),
+  )
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const storedUser = useUser()
   const pathname = usePathname()
 
-  const isAdmin = storedUser?.role === 'ADMIN'
+  const userRole = storedUser?.role ?? null
 
   function withActive(items: NavItem[]): NavItem[] {
     return items.map((item) => ({
@@ -96,10 +85,18 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <TeamSwitcher teams={teams} />
       </SidebarHeader>
       <SidebarContent>
-        <NavMain label="Dashboards" items={withActive(dashboardNavItems)} />
-        <NavMain label="Apps" items={withActive(appsNavItems)} />
-        <NavMain label="Pages" items={withActive(filterByRole(pagesNavItems, isAdmin))} />
-        {isAdmin && <NavMain label="Management" items={withActive(managementNavItems)} />}
+        {visibleItems(dashboardNavItems, userRole).length > 0 && (
+          <NavMain label="Dashboards" items={withActive(visibleItems(dashboardNavItems, userRole))} />
+        )}
+        {visibleItems(appsNavItems, userRole).length > 0 && (
+          <NavMain label="Apps" items={withActive(visibleItems(appsNavItems, userRole))} />
+        )}
+        {visibleItems(pagesNavItems, userRole).length > 0 && (
+          <NavMain label="Pages" items={withActive(visibleItems(pagesNavItems, userRole))} />
+        )}
+        {visibleItems(managementNavItems, userRole).length > 0 && (
+          <NavMain label="Management" items={withActive(visibleItems(managementNavItems, userRole))} />
+        )}
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={user} />
