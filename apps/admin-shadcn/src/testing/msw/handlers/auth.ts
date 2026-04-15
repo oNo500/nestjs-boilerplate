@@ -14,7 +14,7 @@ export const authHandlers = [
       return HttpResponse.json<LoginResponseDto>({
         accessToken: 'mock-access-token',
         refreshToken: 'mock-refresh-token',
-        user: { id: 'user-1', email: 'user@example.com', role: 'admin' },
+        user: { id: 'user-1', email: 'user@example.com', role: 'ADMIN' },
       })
     }
 

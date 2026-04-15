@@ -12,7 +12,7 @@ import type { StoredUser } from '@/lib/token'
 export const mockUser: StoredUser = {
   id: 'user-1',
   email: 'user@example.com',
-  role: 'admin',
+  role: 'ADMIN',
 }
 
 export const mockTokens = {

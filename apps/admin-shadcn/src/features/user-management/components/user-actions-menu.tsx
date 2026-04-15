@@ -27,10 +27,10 @@ import { useState } from 'react'
 import { useAssignRole } from '@/features/user-management/hooks/use-assign-role'
 import { useBanUser } from '@/features/user-management/hooks/use-ban-user'
 import { useDeleteUser } from '@/features/user-management/hooks/use-delete-user'
+import { ROLES } from '@/lib/rbac'
 
 import type { UserRow } from '@/features/user-management/types'
-
-const ROLES = ['ADMIN', 'USER', 'EDITOR', 'MODERATOR'] as const
+import type { RoleType } from '@/lib/rbac'
 
 interface UserActionsMenuProps {
   user: UserRow
@@ -56,7 +56,7 @@ export function UserActionsMenu({ user }: UserActionsMenuProps) {
     )
   }
 
-  function handleRoleChange(role: (typeof ROLES)[number]) {
+  function handleRoleChange(role: RoleType) {
     roleMutation.mutate({
       params: { path: { id: user.id } },
       body: { role },
@@ -86,7 +86,7 @@ export function UserActionsMenu({ user }: UserActionsMenuProps) {
           <DropdownMenuSub>
             <DropdownMenuSubTrigger>Change role</DropdownMenuSubTrigger>
             <DropdownMenuSubContent>
-              {ROLES.map((role) => (
+              {Object.values(ROLES).map((role) => (
                 <DropdownMenuItem
                   key={role}
                   onClick={() => handleRoleChange(role)}
