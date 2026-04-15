@@ -2,14 +2,12 @@
 
 import {
   BarChart2Icon,
-  TrendingUpIcon,
   FileTextIcon,
-  MessageSquareIcon,
-  AlertCircleIcon,
-  TimerIcon,
-  TableIcon,
-  ClipboardPenIcon,
+  UsersIcon,
   ShieldCheckIcon,
+  ListChecksIcon,
+  LogInIcon,
+  SettingsIcon,
 } from 'lucide-react'
 
 import type { LucideIcon } from 'lucide-react'
@@ -21,23 +19,14 @@ export const appPaths = {
   },
   dashboard: {
     href: '/dashboards/analytics',
-    label: 'Analytics Dashboard',
+    label: 'Dashboard',
   },
   dashboards: {
-    analytics: { href: '/dashboards/analytics', label: 'Analytics Dashboard' },
-    crm: { href: '/dashboards/crm', label: 'CRM Dashboard' },
-  },
-  apps: {
-    chat: { href: '/apps/chat', label: 'Chat' },
+    analytics: { href: '/dashboards/analytics', label: 'Dashboard' },
   },
   articles: {
     href: '/articles',
     label: 'Articles',
-  },
-  pages: {
-    notFound: { href: '/pages/404', label: '404' },
-    error: { href: '/pages/error', label: 'Error' },
-    comingSoon: { href: '/pages/coming-soon', label: 'Coming Soon' },
   },
   auth: {
     register: {
@@ -83,79 +72,31 @@ export type NavItem = {
   items?: { title: string; url: string }[]
 }
 
-export const dashboardNavItems: NavItem[] = [
+export const overviewNavItems: NavItem[] = [
   {
-    title: 'Analytics Dashboard',
+    title: 'Dashboard',
     url: appPaths.dashboards.analytics.href,
     icon: BarChart2Icon,
     requiredRole: 'ADMIN',
   },
-  {
-    title: 'CRM Dashboard',
-    url: appPaths.dashboards.crm.href,
-    icon: TrendingUpIcon,
-    requiredRole: 'ADMIN',
-  },
 ]
 
-export const appsNavItems: NavItem[] = [
+export const contentNavItems: NavItem[] = [
   {
     title: 'Articles',
     url: appPaths.articles.href,
     icon: FileTextIcon,
     requiredRole: 'ADMIN',
   },
-  {
-    title: 'Chat',
-    url: appPaths.apps.chat.href,
-    icon: MessageSquareIcon,
-    requiredRole: 'ADMIN',
-  },
 ]
 
-export const pagesNavItems: NavItem[] = [
+export const identityNavItems: NavItem[] = [
   {
-    title: 'Tables',
+    title: 'Users',
     url: appPaths.users.href,
-    icon: TableIcon,
-    requiredRole: 'ADMIN',
-    items: [
-      { title: 'Data Table', url: appPaths.users.href },
-      { title: 'Filterable Table', url: appPaths.loginLogs.href },
-      { title: 'Sortable Table', url: appPaths.auditLogs.href },
-    ],
-  },
-  {
-    title: 'Forms',
-    url: appPaths.settings.general.href,
-    icon: ClipboardPenIcon,
-    items: [
-      { title: 'Settings Form', url: appPaths.settings.general.href },
-      { title: 'Session Manager', url: appPaths.settings.sessions.href },
-      { title: 'File Upload', url: appPaths.settings.uploadDemo.href },
-    ],
-  },
-  {
-    title: '404',
-    url: appPaths.pages.notFound.href,
-    icon: AlertCircleIcon,
+    icon: UsersIcon,
     requiredRole: 'ADMIN',
   },
-  {
-    title: 'Error',
-    url: appPaths.pages.error.href,
-    icon: AlertCircleIcon,
-    requiredRole: 'ADMIN',
-  },
-  {
-    title: 'Coming Soon',
-    url: appPaths.pages.comingSoon.href,
-    icon: TimerIcon,
-    requiredRole: 'ADMIN',
-  },
-]
-
-export const managementNavItems: NavItem[] = [
   {
     title: 'Roles',
     url: appPaths.roles.href,
@@ -164,12 +105,32 @@ export const managementNavItems: NavItem[] = [
   },
 ]
 
-// Kept for backwards compatibility
-export const navItems: NavItem[] = [
-  ...dashboardNavItems,
-  ...appsNavItems,
-  ...pagesNavItems,
-  ...managementNavItems,
+export const auditNavItems: NavItem[] = [
+  {
+    title: 'Audit Logs',
+    url: appPaths.auditLogs.href,
+    icon: ListChecksIcon,
+    requiredRole: 'ADMIN',
+  },
+  {
+    title: 'Login Logs',
+    url: appPaths.loginLogs.href,
+    icon: LogInIcon,
+    requiredRole: 'ADMIN',
+  },
+]
+
+export const settingsNavItems: NavItem[] = [
+  {
+    title: 'Settings',
+    url: appPaths.settings.general.href,
+    icon: SettingsIcon,
+    items: [
+      { title: 'General', url: appPaths.settings.general.href },
+      { title: 'Sessions', url: appPaths.settings.sessions.href },
+      { title: 'Upload Demo', url: appPaths.settings.uploadDemo.href },
+    ],
+  },
 ]
 
 function kebabToCamel(str: string): string {

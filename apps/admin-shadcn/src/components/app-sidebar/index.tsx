@@ -13,10 +13,11 @@ import * as React from 'react'
 
 import { useUser } from '@/components/user-provider'
 import {
-  dashboardNavItems,
-  appsNavItems,
-  pagesNavItems,
-  managementNavItems,
+  overviewNavItems,
+  contentNavItems,
+  identityNavItems,
+  auditNavItems,
+  settingsNavItems,
 } from '@/config/app-paths'
 import { hasRequiredRole } from '@/lib/rbac'
 
@@ -85,17 +86,20 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <TeamSwitcher teams={teams} />
       </SidebarHeader>
       <SidebarContent>
-        {visibleItems(dashboardNavItems, userRole).length > 0 && (
-          <NavMain label="Dashboards" items={withActive(visibleItems(dashboardNavItems, userRole))} />
+        {visibleItems(overviewNavItems, userRole).length > 0 && (
+          <NavMain label="Overview" items={withActive(visibleItems(overviewNavItems, userRole))} />
         )}
-        {visibleItems(appsNavItems, userRole).length > 0 && (
-          <NavMain label="Apps" items={withActive(visibleItems(appsNavItems, userRole))} />
+        {visibleItems(contentNavItems, userRole).length > 0 && (
+          <NavMain label="Content" items={withActive(visibleItems(contentNavItems, userRole))} />
         )}
-        {visibleItems(pagesNavItems, userRole).length > 0 && (
-          <NavMain label="Pages" items={withActive(visibleItems(pagesNavItems, userRole))} />
+        {visibleItems(identityNavItems, userRole).length > 0 && (
+          <NavMain label="Identity" items={withActive(visibleItems(identityNavItems, userRole))} />
         )}
-        {visibleItems(managementNavItems, userRole).length > 0 && (
-          <NavMain label="Management" items={withActive(visibleItems(managementNavItems, userRole))} />
+        {visibleItems(auditNavItems, userRole).length > 0 && (
+          <NavMain label="Audit" items={withActive(visibleItems(auditNavItems, userRole))} />
+        )}
+        {visibleItems(settingsNavItems, userRole).length > 0 && (
+          <NavMain label="Settings" items={withActive(visibleItems(settingsNavItems, userRole))} />
         )}
       </SidebarContent>
       <SidebarFooter>
