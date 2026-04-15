@@ -25,7 +25,10 @@ import { useAssignRole } from '@/features/user-management/hooks/use-assign-role'
 import type { UserRow } from '@/features/user-management/types'
 import type { ColumnDef } from '@tanstack/react-table'
 
-const ROLES = ['ADMIN', 'USER'] as const
+const ROLE_ITEMS = [
+  { label: 'Administrator', value: 'ADMIN' },
+  { label: 'User', value: 'USER' },
+] as const
 
 interface PendingChange {
   userId: string
@@ -52,14 +55,14 @@ function RoleCell({
   }
 
   return (
-    <Select value={selected} onValueChange={handleChange}>
+    <Select items={ROLE_ITEMS} value={selected} onValueChange={handleChange}>
       <SelectTrigger className="w-32">
         <SelectValue />
       </SelectTrigger>
       <SelectContent>
-        {ROLES.map((role) => (
-          <SelectItem key={role} value={role}>
-            {role === 'ADMIN' ? 'Administrator' : 'User'}
+        {ROLE_ITEMS.map((item) => (
+          <SelectItem key={item.value} value={item.value}>
+            {item.label}
           </SelectItem>
         ))}
       </SelectContent>

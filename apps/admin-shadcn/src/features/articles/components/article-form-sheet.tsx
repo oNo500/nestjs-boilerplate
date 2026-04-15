@@ -41,6 +41,13 @@ type ArticleRow = components['schemas']['ArticleResponseDto']
 
 const CATEGORIES = ['tech', 'design', 'product', 'other'] as const
 
+const CATEGORY_ITEMS: { label: string; value: (typeof CATEGORIES)[number] }[] = [
+  { label: 'Tech', value: 'tech' },
+  { label: 'Design', value: 'design' },
+  { label: 'Product', value: 'product' },
+  { label: 'Other', value: 'other' },
+]
+
 const schema = z.object({
   title: z.string().min(1, 'Title is required'),
   content: z.string().min(1, 'Content is required'),
@@ -197,14 +204,18 @@ export function ArticleFormSheet({ article, trigger }: ArticleFormSheetProps) {
                 name="category"
                 control={control}
                 render={({ field }) => (
-                  <Select value={field.value ?? ''} onValueChange={field.onChange}>
+                  <Select
+                    items={CATEGORY_ITEMS}
+                    value={field.value ?? ''}
+                    onValueChange={field.onChange}
+                  >
                     <SelectTrigger id="category" className="w-full">
                       <SelectValue placeholder="Select category" />
                     </SelectTrigger>
                     <SelectContent>
-                      {CATEGORIES.map((c) => (
-                        <SelectItem key={c} value={c} className="capitalize">
-                          {c}
+                      {CATEGORY_ITEMS.map((item) => (
+                        <SelectItem key={item.value} value={item.value}>
+                          {item.label}
                         </SelectItem>
                       ))}
                     </SelectContent>
