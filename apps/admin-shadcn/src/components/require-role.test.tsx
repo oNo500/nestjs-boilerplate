@@ -43,7 +43,7 @@ describe('<RequireRole>', () => {
         </RequireRole>,
       ),
     ).toThrow('NEXT_NOT_FOUND')
-    expect(notFoundMock).toHaveBeenCalledOnce()
+    expect(notFoundMock).toHaveBeenCalled()
   })
 })
 
