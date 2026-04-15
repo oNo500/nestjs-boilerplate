@@ -157,13 +157,13 @@ const accountSchema = z.object({
 type AccountValues = z.infer<typeof accountSchema>
 
 const TIMEZONES = [
-  'UTC',
-  'UTC+8 (Asia/Shanghai)',
-  'UTC+9 (Asia/Tokyo)',
-  'UTC-5 (America/New_York)',
-  'UTC-8 (America/Los_Angeles)',
-  'UTC+1 (Europe/London)',
-  'UTC+2 (Europe/Paris)',
+  { value: 'UTC', label: 'UTC' },
+  { value: 'UTC+8 (Asia/Shanghai)', label: 'UTC+8 (Asia/Shanghai)' },
+  { value: 'UTC+9 (Asia/Tokyo)', label: 'UTC+9 (Asia/Tokyo)' },
+  { value: 'UTC-5 (America/New_York)', label: 'UTC-5 (America/New_York)' },
+  { value: 'UTC-8 (America/Los_Angeles)', label: 'UTC-8 (America/Los_Angeles)' },
+  { value: 'UTC+1 (Europe/London)', label: 'UTC+1 (Europe/London)' },
+  { value: 'UTC+2 (Europe/Paris)', label: 'UTC+2 (Europe/Paris)' },
 ]
 
 const LANGUAGES = [
@@ -201,14 +201,14 @@ function AccountPreferencesCard() {
                 control={control}
                 name="timezone"
                 render={({ field }) => (
-                  <Select value={field.value} onValueChange={field.onChange}>
+                  <Select items={TIMEZONES} value={field.value} onValueChange={field.onChange}>
                     <SelectTrigger id="timezone" className="w-full">
                       <SelectValue placeholder="Select timezone" />
                     </SelectTrigger>
                     <SelectContent>
                       {TIMEZONES.map((tz) => (
-                        <SelectItem key={tz} value={tz}>
-                          {tz}
+                        <SelectItem key={tz.value} value={tz.value}>
+                          {tz.label}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -226,7 +226,7 @@ function AccountPreferencesCard() {
                 control={control}
                 name="language"
                 render={({ field }) => (
-                  <Select value={field.value} onValueChange={field.onChange}>
+                  <Select items={LANGUAGES} value={field.value} onValueChange={field.onChange}>
                     <SelectTrigger id="language" className="w-full">
                       <SelectValue placeholder="Select language" />
                     </SelectTrigger>

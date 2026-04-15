@@ -18,6 +18,12 @@ const PAGE_SIZE = 20
 
 type StatusFilter = 'all' | 'success' | 'failed'
 
+const STATUS_ITEMS: { label: string; value: StatusFilter }[] = [
+  { label: 'All Status', value: 'all' },
+  { label: 'Success', value: 'success' },
+  { label: 'Failed', value: 'failed' },
+]
+
 export function LoginLogsPage() {
   const [page, setPage] = useState(1)
   const [status, setStatus] = useState<StatusFilter>('all')
@@ -48,16 +54,19 @@ export function LoginLogsPage() {
         description={total > 0 ? `${total} record${total === 1 ? '' : 's'} total` : undefined}
         actions={
           <Select
+            items={STATUS_ITEMS}
             value={status}
             onValueChange={(val) => handleStatusChange(val as StatusFilter | null)}
           >
             <SelectTrigger className="w-[160px]">
-              <SelectValue placeholder="All Status" />
+              <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All Status</SelectItem>
-              <SelectItem value="success">Success</SelectItem>
-              <SelectItem value="failed">Failed</SelectItem>
+              {STATUS_ITEMS.map((item) => (
+                <SelectItem key={item.value} value={item.value}>
+                  {item.label}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         }
