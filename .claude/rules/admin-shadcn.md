@@ -96,5 +96,6 @@ Components are built on `@base-ui/react` and **do not** support Radix-style `asC
 - `index.ts` barrel files under `features/` (import from source directly)
 - Hard-coded route paths in components (use `config/app-paths.ts`)
 - Hand-written API types (import from `@workspace/api-types`)
+- Hard-coded role strings (import `RoleType` / `ROLES` / `hasRequiredRole` from `@/lib/rbac`; use `<RequireRole>` / `<ShowForRole>` for guards)
 - Manual edits inside `packages/ui`
 - Pre-creating empty subdirectories

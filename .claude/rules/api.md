@@ -231,3 +231,4 @@ pnpm --filter @workspace/database db:generate
 - `@Global()` on non-infrastructure contexts
 - Concrete implementations inside `shared-kernel/`
 - A Service exceeding 10 methods without being split
+- Hand-writing the `RoleType` union (derive from `UserDatabase['role']` — the `user_role` pgEnum is the source of truth)
