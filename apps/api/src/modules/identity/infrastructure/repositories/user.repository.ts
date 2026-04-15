@@ -128,7 +128,7 @@ export class UserRepositoryImpl implements IdentityRepository {
         username: data.email.split('@')[0] ?? data.email,
         displayUsername: data.name,
         displayName: data.displayName ?? null,
-        role: data.role ?? null,
+        role: data.role ?? 'USER',
         emailVerified: false,
         banned: false,
         createdAt: now,

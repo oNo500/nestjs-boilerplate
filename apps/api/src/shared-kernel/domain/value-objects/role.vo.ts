@@ -1,9 +1,11 @@
+import type { UserDatabase } from '@workspace/database'
+
 /**
  * Role type
  *
- * User role definitions shared across modules
+ * Derived from the database `user_role` enum to keep DB / backend / frontend aligned.
  */
-export type RoleType = 'ADMIN' | 'USER' | 'EDITOR' | 'MODERATOR'
+export type RoleType = UserDatabase['role']
 
 /**
  * Role constants
@@ -11,14 +13,12 @@ export type RoleType = 'ADMIN' | 'USER' | 'EDITOR' | 'MODERATOR'
 export const ROLES = {
   ADMIN: 'ADMIN',
   USER: 'USER',
-  EDITOR: 'EDITOR',
-  MODERATOR: 'MODERATOR',
-} as const
+} as const satisfies Record<RoleType, RoleType>
 
 /**
  * Role hierarchy (higher index means higher privilege)
  */
-export const ROLE_HIERARCHY: RoleType[] = ['USER', 'EDITOR', 'MODERATOR', 'ADMIN']
+export const ROLE_HIERARCHY: RoleType[] = ['USER', 'ADMIN']
 
 /**
  * Checks whether a role satisfies the required minimum role.

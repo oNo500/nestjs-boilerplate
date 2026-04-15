@@ -20,7 +20,7 @@ export class UserRoleRepositoryImpl implements UserRoleRepository {
     private readonly db: DrizzleDb,
   ) {}
 
-  async setRole(userId: string, role: RoleType | null): Promise<void> {
+  async setRole(userId: string, role: RoleType): Promise<void> {
     await this.db
       .update(usersTable)
       .set({
@@ -41,7 +41,7 @@ export class UserRoleRepositoryImpl implements UserRoleRepository {
       return null
     }
 
-    return result[0]!.role as RoleType | null
+    return result[0]!.role
   }
 
   async hasRole(userId: string, role: RoleType): Promise<boolean> {

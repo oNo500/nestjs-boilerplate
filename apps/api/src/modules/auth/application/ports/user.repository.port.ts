@@ -1,3 +1,5 @@
+import type { RoleType } from '@/shared-kernel/domain/value-objects/role.vo'
+
 export const USER_REPOSITORY = Symbol('USER_REPOSITORY')
 
 /**
@@ -9,7 +11,7 @@ export interface User {
   email: string
   emailVerified: boolean
   image: string | null
-  role: string | null
+  role: RoleType
   banned: boolean
   banReason: string | null
   banExpires: Date | null
@@ -21,7 +23,7 @@ export interface CreateUserData {
   id: string
   name: string
   email: string
-  role?: string
+  role?: RoleType
 }
 
 /**

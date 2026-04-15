@@ -7,7 +7,7 @@ export class UserCreatedEvent extends DomainEvent {
     public readonly userId: string,
     public readonly email: string,
     public readonly name: string,
-    public readonly role: RoleType | null,
+    public readonly role: RoleType,
   ) {
     super()
   }
