@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 
 import { ROLES, hasRequiredRole } from './rbac'
 
-describe('ROLES', () => {
+describe('roles', () => {
   it('exposes ADMIN and USER values', () => {
     expect(ROLES.ADMIN).toBe('ADMIN')
     expect(ROLES.USER).toBe('USER')
