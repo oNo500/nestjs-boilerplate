@@ -101,7 +101,7 @@ export class AuthService {
 
     await this.authIdentityRepo.save(identity)
 
-    const role = await this.userRoleRepo.getRole(identity.userId)
+    const role = (await this.userRoleRepo.getRole(identity.userId)) ?? 'USER'
     const result = await this.generateTokens(identity.userId, email, role, deviceContext)
 
     void this.eventPublisher.publish(new UserLoggedInEvent(identity.userId, email))
@@ -158,7 +158,7 @@ export class AuthService {
     const emailIdentity = identities.find((i) => i.provider === 'email')
     const email = emailIdentity?.identifier ?? ''
 
-    const role = await this.userRoleRepo.getRole(session.userId)
+    const role = (await this.userRoleRepo.getRole(session.userId)) ?? 'USER'
 
     return this.generateTokens(session.userId, email, role, deviceContext)
   }
@@ -200,7 +200,7 @@ export class AuthService {
     return this.revokeAllSessions(userId)
   }
 
-  async getSession(sessionId: string, userId: string, email: string, role: string | null) {
+  async getSession(sessionId: string, userId: string, email: string, role: RoleType) {
     const session = await this.authSessionRepo.findById(sessionId)
     if (session?.userId !== userId) {
       throw new UnauthorizedException({
@@ -272,7 +272,7 @@ export class AuthService {
   private async generateTokens(
     userId: string,
     email: string,
-    role: RoleType | null,
+    role: RoleType,
     deviceContext?: DeviceContext,
   ) {
     const refreshToken = randomUUID()
@@ -295,7 +295,7 @@ export class AuthService {
     const payload: JwtPayload = {
       sub: userId,
       email,
-      roles: role ? [role] : [], // Wrap single role in an array to maintain JWT format compatibility
+      roles: [role], // Wrap single role in an array to maintain JWT format compatibility
       sessionId,
     }
     const accessToken = this.jwtService.sign(payload)

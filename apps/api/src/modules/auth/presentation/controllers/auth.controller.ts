@@ -21,6 +21,8 @@ import { SessionResponseDto } from '@/modules/auth/presentation/dtos/session-res
 import { SessionsListResponseDto } from '@/modules/auth/presentation/dtos/sessions-list-response.dto'
 import { Public } from '@/shared-kernel/infrastructure/decorators/public.decorator'
 
+import type { RoleType } from '@/shared-kernel/domain/value-objects/role.vo'
+
 @ApiTags('auth')
 @Controller('auth')
 export class AuthController {
@@ -84,7 +86,7 @@ export class AuthController {
       user: { id: string; email: string; roles: string[]; sessionId: string }
     },
   ): Promise<SessionResponseDto> {
-    const role = req.user.roles[0] ?? null
+    const role = (req.user.roles[0] as RoleType | undefined) ?? 'USER'
     return this.authService.getSession(req.user.sessionId, req.user.id, req.user.email, role)
   }
 

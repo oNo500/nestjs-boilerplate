@@ -1,5 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger'
 
+import { ROLES } from '@/shared-kernel/domain/value-objects/role.vo'
+
+import type { RoleType } from '@/shared-kernel/domain/value-objects/role.vo'
+
 /**
  * Aligns with the better-auth get-session response structure
  */
@@ -10,8 +14,8 @@ export class SessionUserDto {
   @ApiProperty({ example: 'user@example.com' })
   email: string
 
-  @ApiProperty({ type: String, example: 'user', nullable: true })
-  role: string | null
+  @ApiProperty({ enum: Object.values(ROLES), example: 'USER' })
+  role: RoleType
 }
 
 export class SessionInfoDto {
