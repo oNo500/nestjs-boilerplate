@@ -996,8 +996,11 @@ export interface components {
             id: string;
             /** @example user@example.com */
             email: string;
-            /** @example user */
-            role: string | null;
+            /**
+             * @example USER
+             * @enum {string}
+             */
+            role: "ADMIN" | "USER";
         };
         LoginResponseDto: {
             /** @example eyJhbGciOiJIUzI1NiJ9... */
@@ -1031,8 +1034,11 @@ export interface components {
             id: string;
             /** @example user@example.com */
             email: string;
-            /** @example user */
-            role: string | null;
+            /**
+             * @example USER
+             * @enum {string}
+             */
+            role: "ADMIN" | "USER";
         };
         SessionInfoDto: {
             /** @example ses_01HXYZ */
