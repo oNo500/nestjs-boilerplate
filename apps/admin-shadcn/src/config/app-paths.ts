@@ -72,25 +72,19 @@ export type NavItem = {
   items?: { title: string; url: string }[]
 }
 
-export const overviewNavItems: NavItem[] = [
+export const managementNavItems: NavItem[] = [
   {
     title: 'Dashboard',
     url: appPaths.dashboards.analytics.href,
     icon: BarChart2Icon,
     requiredRole: 'ADMIN',
   },
-]
-
-export const contentNavItems: NavItem[] = [
   {
     title: 'Articles',
     url: appPaths.articles.href,
     icon: FileTextIcon,
     requiredRole: 'ADMIN',
   },
-]
-
-export const identityNavItems: NavItem[] = [
   {
     title: 'Users',
     url: appPaths.users.href,
@@ -103,9 +97,6 @@ export const identityNavItems: NavItem[] = [
     icon: ShieldCheckIcon,
     requiredRole: 'ADMIN',
   },
-]
-
-export const auditNavItems: NavItem[] = [
   {
     title: 'Audit Logs',
     url: appPaths.auditLogs.href,
