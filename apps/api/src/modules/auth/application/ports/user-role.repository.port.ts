@@ -14,7 +14,7 @@ export interface UserRoleRepository {
   /**
    * Set the role for a user
    */
-  setRole(userId: string, role: RoleType | null): Promise<void>
+  setRole(userId: string, role: RoleType): Promise<void>
 
   /**
    * Get the role for a user

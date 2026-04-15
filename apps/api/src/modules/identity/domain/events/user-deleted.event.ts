@@ -9,7 +9,7 @@ export class UserDeletedEvent extends DomainEvent {
     public readonly snapshot: {
       email: string
       name: string
-      role: RoleType | null
+      role: RoleType
     },
   ) {
     super()

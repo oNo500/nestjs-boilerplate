@@ -2,7 +2,11 @@ import { ApiPropertyOptional } from '@nestjs/swagger'
 import { Transform } from 'class-transformer'
 import { IsBoolean, IsOptional, IsString } from 'class-validator'
 
+import { ROLES } from '@/shared-kernel/domain/value-objects/role.vo'
+import { IsInField } from '@/shared-kernel/infrastructure/decorators/validators'
 import { OffsetPaginationDto } from '@/shared-kernel/infrastructure/dtos/offset-pagination.dto'
+
+import type { RoleType } from '@/shared-kernel/domain/value-objects/role.vo'
 
 /**
  * User query DTO
@@ -20,10 +24,10 @@ export class UserQueryDto extends OffsetPaginationDto {
   @IsString()
   search?: string
 
-  @ApiPropertyOptional({ example: 'admin' })
+  @ApiPropertyOptional({ example: 'ADMIN', enum: Object.values(ROLES) })
   @IsOptional()
-  @IsString()
-  role?: string
+  @IsInField(Object.values(ROLES))
+  role?: RoleType
 
   @ApiPropertyOptional({ example: true })
   @IsOptional()

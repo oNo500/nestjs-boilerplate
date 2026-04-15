@@ -65,7 +65,7 @@ export class UserService implements IdentityPort {
 
     const user = await this.userRepository.create(data)
     await this.eventPublisher.publish(
-      new UserCreatedEvent(user.id, user.email, user.name, user.role as RoleType | null),
+      new UserCreatedEvent(user.id, user.email, user.name, user.role),
     )
     return user
   }
@@ -128,7 +128,7 @@ export class UserService implements IdentityPort {
       new UserDeletedEvent(id, actorId, {
         email: user.email,
         name: user.name,
-        role: user.role as RoleType | null,
+        role: user.role,
       }),
     )
   }
@@ -188,7 +188,7 @@ export class UserService implements IdentityPort {
       new UserRoleAssignedEvent(
         targetUserId,
         actorId,
-        { role: existing.role as RoleType | null },
+        { role: existing.role },
         { role: newRole },
       ),
     )

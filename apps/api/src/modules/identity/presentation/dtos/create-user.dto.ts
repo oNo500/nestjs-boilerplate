@@ -2,6 +2,8 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
 import { IsOptional } from 'class-validator'
 
 import { ROLES } from '@/shared-kernel/domain/value-objects/role.vo'
+
+import type { RoleType } from '@/shared-kernel/domain/value-objects/role.vo'
 import {
   IsEmailField,
   IsInField,
@@ -40,5 +42,5 @@ export class CreateUserDto {
   @ApiPropertyOptional({ example: 'user', enum: Object.values(ROLES) })
   @IsOptional()
   @IsInField(Object.values(ROLES))
-  role?: string
+  role?: RoleType
 }

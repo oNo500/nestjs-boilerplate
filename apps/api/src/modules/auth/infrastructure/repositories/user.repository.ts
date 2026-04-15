@@ -34,7 +34,7 @@ export class UserRepositoryImpl implements UserRepository {
         email: data.email,
         username: data.email.split('@')[0] ?? data.email, // derive username from email
         displayUsername: data.name, // use name as display username
-        role: data.role ?? null,
+        role: data.role ?? 'USER',
         emailVerified: false,
         banned: false,
         createdAt: now,

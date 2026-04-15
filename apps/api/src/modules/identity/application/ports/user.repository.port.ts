@@ -1,3 +1,5 @@
+import type { RoleType } from '@/shared-kernel/domain/value-objects/role.vo'
+
 /**
  * User info (adapted to better-auth schema)
  *
@@ -13,7 +15,7 @@ export interface UserInfo {
   email: string
   emailVerified: boolean
   image: string | null
-  role: string | null
+  role: RoleType
   banned: boolean
   banReason: string | null
   createdAt: Date
@@ -27,7 +29,7 @@ export interface UserListQuery {
   page: number
   pageSize: number
   search?: string
-  role?: string
+  role?: RoleType
   banned?: boolean
 }
 
@@ -47,7 +49,7 @@ export interface CreateUserData {
   displayName?: string
   email: string
   password: string
-  role?: string
+  role?: RoleType
 }
 
 /**
@@ -58,7 +60,7 @@ export interface UpdateUserData {
   displayName?: string | null
   banned?: boolean
   banReason?: string | null
-  role?: string | null
+  role?: RoleType
 }
 
 /**

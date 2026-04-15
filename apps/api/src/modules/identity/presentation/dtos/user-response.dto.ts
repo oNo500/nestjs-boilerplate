@@ -1,6 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger'
 
+import { ROLES } from '@/shared-kernel/domain/value-objects/role.vo'
 import { OffsetListResponseDto } from '@/shared-kernel/infrastructure/dtos/list-response.dto'
+
+import type { RoleType } from '@/shared-kernel/domain/value-objects/role.vo'
 
 /**
  * Adapted to better-auth schema:
@@ -26,8 +29,8 @@ export class UserResponseDto {
   @ApiProperty({ type: String, example: 'https://example.com/avatar.png', nullable: true })
   image: string | null
 
-  @ApiProperty({ type: String, example: 'user', nullable: true })
-  role: string | null
+  @ApiProperty({ enum: Object.values(ROLES), example: 'USER' })
+  role: RoleType
 
   @ApiProperty({ example: false })
   banned: boolean

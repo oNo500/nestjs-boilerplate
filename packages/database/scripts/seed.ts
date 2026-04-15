@@ -12,59 +12,12 @@ import bcrypt from 'bcrypt'
 import { config } from 'dotenv'
 import { eq, or } from 'drizzle-orm'
 import { drizzle } from 'drizzle-orm/node-postgres'
-import { boolean, index, pgTable, text, timestamp, uniqueIndex } from 'drizzle-orm/pg-core'
 import { Pool } from 'pg'
+
+import { accountsTable, usersTable } from '../src/schemas/identity/index'
 
 // Load environment variables
 config({ path: '.env' })
-
-const usersTable = pgTable(
-  'users',
-  {
-    id: text('id').primaryKey(),
-    name: text('name').notNull(),
-    email: text('email').notNull(),
-    username: text('username').notNull().unique(),
-    displayUsername: text('display_username').notNull(),
-    emailVerified: boolean('email_verified').notNull().default(false),
-    image: text('image'),
-    role: text('role'),
-    banned: boolean('banned').default(false),
-    banReason: text('ban_reason'),
-    banExpires: timestamp('ban_expires'),
-    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
-    updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
-  },
-  (table) => [
-    uniqueIndex('users_email_idx').on(table.email),
-    uniqueIndex('users_username_idx').on(table.username),
-  ],
-)
-
-const accountsTable = pgTable(
-  'accounts',
-  {
-    id: text('id').primaryKey(),
-    userId: text('user_id')
-      .notNull()
-      .references(() => usersTable.id, { onDelete: 'cascade' }),
-    accountId: text('account_id').notNull(),
-    providerId: text('provider_id').notNull(),
-    accessToken: text('access_token'),
-    refreshToken: text('refresh_token'),
-    idToken: text('id_token'),
-    accessTokenExpiresAt: timestamp('access_token_expires_at', { withTimezone: true }),
-    refreshTokenExpiresAt: timestamp('refresh_token_expires_at', { withTimezone: true }),
-    scope: text('scope'),
-    password: text('password'),
-    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
-    updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
-  },
-  (table) => [
-    uniqueIndex('accounts_provider_account_idx').on(table.providerId, table.accountId),
-    index('accounts_userId_idx').on(table.userId),
-  ],
-)
 
 const TEST_ACCOUNTS = [
   {

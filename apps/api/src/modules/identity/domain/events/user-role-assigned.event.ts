@@ -6,7 +6,7 @@ export class UserRoleAssignedEvent extends DomainEvent {
   constructor(
     public readonly userId: string,
     public readonly actorId: string,
-    public readonly before: { role: RoleType | null },
+    public readonly before: { role: RoleType },
     public readonly after: { role: RoleType },
   ) {
     super()
