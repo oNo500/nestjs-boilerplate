@@ -22,11 +22,11 @@
 
 **New files:**
 - `apps/admin-shadcn/src/lib/rbac.ts` — pure utilities (`ROLES`, `RoleType`, `hasRequiredRole`)
-- `apps/admin-shadcn/src/lib/rbac.spec.ts`
+- `apps/admin-shadcn/src/lib/rbac.test.ts`
 - `apps/admin-shadcn/src/hooks/use-has-role.ts` — `useCurrentUser`, `useHasRole`
-- `apps/admin-shadcn/src/hooks/use-has-role.spec.tsx`
+- `apps/admin-shadcn/src/hooks/use-has-role.test.tsx`
 - `apps/admin-shadcn/src/components/require-role.tsx` — `RequireRole`, `ShowForRole`
-- `apps/admin-shadcn/src/components/require-role.spec.tsx`
+- `apps/admin-shadcn/src/components/require-role.test.tsx`
 - `apps/admin-shadcn/src/app/(protected)/(admin)/layout.tsx`
 
 **Modified files:**
@@ -91,11 +91,11 @@ git commit -m "chore(api-types): regenerate after role enum change"
 
 **Files:**
 - Create: `apps/admin-shadcn/src/lib/rbac.ts`
-- Test: `apps/admin-shadcn/src/lib/rbac.spec.ts`
+- Test: `apps/admin-shadcn/src/lib/rbac.test.ts`
 
 - [ ] **Step 1: Write the failing test**
 
-Create `apps/admin-shadcn/src/lib/rbac.spec.ts`:
+Create `apps/admin-shadcn/src/lib/rbac.test.ts`:
 
 ```ts
 import { describe, expect, it } from 'vitest'
@@ -136,7 +136,7 @@ describe('hasRequiredRole', () => {
 - [ ] **Step 2: Run test to verify it fails**
 
 ```bash
-pnpm --filter admin-shadcn test -- src/lib/rbac.spec.ts
+pnpm --filter admin-shadcn test -- src/lib/rbac.test.ts
 ```
 
 Expected: FAIL — "Cannot find module './rbac'".
@@ -185,7 +185,7 @@ export function hasRequiredRole(
 - [ ] **Step 4: Run test to verify it passes**
 
 ```bash
-pnpm --filter admin-shadcn test -- src/lib/rbac.spec.ts
+pnpm --filter admin-shadcn test -- src/lib/rbac.test.ts
 ```
 
 Expected: 6 tests pass.
@@ -201,7 +201,7 @@ Expected: no errors introduced by these files. Pre-existing errors elsewhere in 
 - [ ] **Step 6: Commit**
 
 ```bash
-git add apps/admin-shadcn/src/lib/rbac.ts apps/admin-shadcn/src/lib/rbac.spec.ts
+git add apps/admin-shadcn/src/lib/rbac.ts apps/admin-shadcn/src/lib/rbac.test.ts
 git commit -m "feat(rbac): add RoleType, ROLES, hasRequiredRole"
 ```
 
@@ -253,11 +253,11 @@ git commit -m "feat(rbac): tighten StoredUser.role to RoleType"
 
 **Files:**
 - Create: `apps/admin-shadcn/src/hooks/use-has-role.ts`
-- Test: `apps/admin-shadcn/src/hooks/use-has-role.spec.tsx`
+- Test: `apps/admin-shadcn/src/hooks/use-has-role.test.tsx`
 
 - [ ] **Step 1: Write the failing test**
 
-Create `apps/admin-shadcn/src/hooks/use-has-role.spec.tsx`:
+Create `apps/admin-shadcn/src/hooks/use-has-role.test.tsx`:
 
 ```tsx
 import { renderHook } from '@testing-library/react'
@@ -324,7 +324,7 @@ describe('useHasRole', () => {
 - [ ] **Step 2: Run test to verify it fails**
 
 ```bash
-pnpm --filter admin-shadcn test -- src/hooks/use-has-role.spec.tsx
+pnpm --filter admin-shadcn test -- src/hooks/use-has-role.test.tsx
 ```
 
 Expected: FAIL — "Cannot find module './use-has-role'".
@@ -369,7 +369,7 @@ export function useHasRole(required: RoleType): boolean {
 - [ ] **Step 4: Run test to verify it passes**
 
 ```bash
-pnpm --filter admin-shadcn test -- src/hooks/use-has-role.spec.tsx
+pnpm --filter admin-shadcn test -- src/hooks/use-has-role.test.tsx
 ```
 
 Expected: 7 tests pass.
@@ -377,7 +377,7 @@ Expected: 7 tests pass.
 - [ ] **Step 5: Commit**
 
 ```bash
-git add apps/admin-shadcn/src/hooks/use-has-role.ts apps/admin-shadcn/src/hooks/use-has-role.spec.tsx
+git add apps/admin-shadcn/src/hooks/use-has-role.ts apps/admin-shadcn/src/hooks/use-has-role.test.tsx
 git commit -m "feat(rbac): add useCurrentUser and useHasRole hooks"
 ```
 
@@ -387,11 +387,11 @@ git commit -m "feat(rbac): add useCurrentUser and useHasRole hooks"
 
 **Files:**
 - Create: `apps/admin-shadcn/src/components/require-role.tsx`
-- Test: `apps/admin-shadcn/src/components/require-role.spec.tsx`
+- Test: `apps/admin-shadcn/src/components/require-role.test.tsx`
 
 - [ ] **Step 1: Write the failing test**
 
-Create `apps/admin-shadcn/src/components/require-role.spec.tsx`:
+Create `apps/admin-shadcn/src/components/require-role.test.tsx`:
 
 ```tsx
 import { render, screen } from '@testing-library/react'
@@ -479,7 +479,7 @@ describe('<ShowForRole>', () => {
 - [ ] **Step 2: Run test to verify it fails**
 
 ```bash
-pnpm --filter admin-shadcn test -- src/components/require-role.spec.tsx
+pnpm --filter admin-shadcn test -- src/components/require-role.test.tsx
 ```
 
 Expected: FAIL — "Cannot find module './require-role'".
@@ -530,7 +530,7 @@ export function ShowForRole({ role, children }: Props): React.ReactElement | nul
 - [ ] **Step 4: Run test to verify it passes**
 
 ```bash
-pnpm --filter admin-shadcn test -- src/components/require-role.spec.tsx
+pnpm --filter admin-shadcn test -- src/components/require-role.test.tsx
 ```
 
 Expected: 5 tests pass.
@@ -538,7 +538,7 @@ Expected: 5 tests pass.
 - [ ] **Step 5: Commit**
 
 ```bash
-git add apps/admin-shadcn/src/components/require-role.tsx apps/admin-shadcn/src/components/require-role.spec.tsx
+git add apps/admin-shadcn/src/components/require-role.tsx apps/admin-shadcn/src/components/require-role.test.tsx
 git commit -m "feat(rbac): add <RequireRole> and <ShowForRole>"
 ```
 
