@@ -46,17 +46,8 @@ export function DataTable<TData>({
     getCoreRowModel: getCoreRowModel(),
   })
 
-  if (isLoading) {
-    return (
-      <div className="space-y-2">
-        {Array.from({ length: skeletonRows }, (_, i) => `sk-${i}`).map((key) => (
-          <Skeleton key={key} className="h-12 w-full" />
-        ))}
-      </div>
-    )
-  }
-
   const hasExpandRow = !!(getRowId && renderExpandedRow)
+  const rows = table.getRowModel().rows
 
   return (
     <div className="rounded-md border">
@@ -75,8 +66,18 @@ export function DataTable<TData>({
           ))}
         </TableHeader>
         <TableBody>
-          {table.getRowModel().rows.length > 0 ? (
-            table.getRowModel().rows.map((row) => {
+          {isLoading ? (
+            Array.from({ length: skeletonRows }, (_, i) => `sk-${i}`).map((key) => (
+              <TableRow key={key}>
+                {columns.map((_, colIndex) => (
+                  <TableCell key={colIndex}>
+                    <Skeleton className="h-4 w-full" />
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))
+          ) : rows.length > 0 ? (
+            rows.map((row) => {
               const rowId = hasExpandRow ? getRowId(row.original) : undefined
               const isExpanded = hasExpandRow && expandedRowId === rowId
 
