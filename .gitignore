@@ -89,3 +89,6 @@ storybook-static
 !.claude/
 !CLAUDE.md
 !**/CLAUDE.md
+
+# AI working artifacts (plans, specs) — local only
+docs/superpowers/
