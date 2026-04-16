@@ -288,7 +288,6 @@ After a batch of edits, run `turbo typecheck` to verify. Do **not** trust LSP di
 ### Branching
 
 - `master` — main line; PRs merge here
-- `dev` — integration branch (CI also gates on this)
 - Feature branches: `feat/<scope>`, `fix/<scope>`, `chore/<scope>`, `docs/<scope>`
 
 ### Commit messages — Conventional Commits (required)
@@ -314,7 +313,7 @@ docs(rules): add RBAC notes to api and admin-shadcn rules
 
 Opening a PR auto-loads [`.github/pull_request_template.md`](./.github/pull_request_template.md). Fill out every section — the template exists to prevent the "what is this?" review round-trip.
 
-CI runs on every PR to `master` or `dev`:
+CI runs on every PR to `master`:
 
 - `lint → typecheck → build → unit tests` (one job)
 - `E2E tests` with live Postgres + Redis services (separate job)

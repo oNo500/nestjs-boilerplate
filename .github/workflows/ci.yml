@@ -3,7 +3,6 @@ name: CI
 on:
   pull_request:
     branches:
-      - dev
       - master
 
 jobs:
