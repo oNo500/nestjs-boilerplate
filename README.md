@@ -5,7 +5,16 @@
 [![pnpm](https://img.shields.io/badge/pnpm-10-orange)](https://pnpm.io)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](./LICENSE)
 
-NestJS monorepo — DDD backend, Drizzle ORM + PostgreSQL, JWT/OAuth2, Next.js App Router admin frontend.
+**A production-ready full-stack NestJS + Next.js boilerplate.**
+
+A complete monorepo with the cross-cutting concerns a real SaaS needs — auth, RBAC, auditing, idempotency, optimistic locking — and a typed contract from PostgreSQL all the way to React.
+
+## Features
+
+- **Production-grade cross-cutting concerns** — JWT + OAuth (Google / GitHub), RBAC, audit logging, RFC 9457 error contract, idempotency keys, optimistic locking via ETag.
+- **End-to-end typed** — Drizzle schema drives database types; OpenAPI spec drives frontend types. Type-safe from PostgreSQL to React.
+- **Structured architectural rules** — MECE rules under [`.claude/rules/`](./.claude/rules/) document DDD layering, context boundaries, and package conventions. Compatible with Claude Code, Cursor, and similar assistants.
+- **Modern toolchain** — NestJS 11 · Next.js 16 · Drizzle ORM · shadcn/ui on Base UI · oxlint + oxfmt · Turborepo · pnpm.
 
 > [!NOTE]
 > Looking for the Ant Design Pro integration? It has been archived due to maintenance cost. See the [`archive/admin-antd`](https://github.com/oNo500/nestjs-boilerplate/tree/archive/admin-antd) branch for the last working snapshot.
