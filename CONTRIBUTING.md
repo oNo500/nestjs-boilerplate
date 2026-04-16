@@ -3,7 +3,10 @@
 Developer handbook for `nestjs-boilerplate`. Reading this end-to-end should get you from a fresh clone to a merged PR without surprises.
 
 > [!NOTE]
-> The root [`README.md`](./README.md) covers **what** this repo is. This document covers **how** to work on it.
+> The root [`README.md`](./README.md) covers **what** this repo is. This document covers **how** to work on it. For deeper context, see:
+> - [`docs/architecture.md`](./docs/architecture.md) — system layout and request lifecycle
+> - [`docs/api-conventions.md`](./docs/api-conventions.md) — HTTP contract
+> - [`docs/technology-choices.md`](./docs/technology-choices.md) — decisions and trade-offs
 
 ## Table of Contents
 

@@ -71,3 +71,10 @@ pnpm --filter @workspace/database db:push # dev: push directly
 # After any backend endpoint change (API must be running on :3000)
 pnpm --filter @workspace/api-types api:gen
 ```
+
+## Documentation
+
+- [Architecture](./docs/architecture.md) — monorepo layout, DDD layering, request lifecycle
+- [API Conventions](./docs/api-conventions.md) — URLs, responses, errors, auth, idempotency, optimistic locking
+- [Technology Choices](./docs/technology-choices.md) — why Drizzle, Base UI, opt-in DDD, oxlint
+- [Contributing](./CONTRIBUTING.md) — setup, workflows, testing, git, troubleshooting
