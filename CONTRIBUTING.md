@@ -333,10 +333,6 @@ Logger: `nestjs-pino` + `pino-http`. Config lives in `apps/api/src/app/logger/lo
 - **Health check**: <http://localhost:3000/health>
 - **Drizzle Studio**: `pnpm --filter @workspace/database db:studio` — web UI for the local database
 
-### Deployment
-
-See [`docs/deployment.md`](./docs/deployment.md) for the GCP Cloud Run deployment guide.
-
 ## Troubleshooting
 
 ### `pnpm install` fails on native modules
