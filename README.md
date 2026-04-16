@@ -7,13 +7,16 @@
 
 **A production-ready full-stack NestJS + Next.js boilerplate.**
 
-A complete monorepo with the cross-cutting concerns a real SaaS needs — auth, RBAC, auditing, idempotency, optimistic locking — and a typed contract from PostgreSQL all the way to React.
+A complete monorepo with the cross-cutting concerns a real SaaS needs, plus a typed contract from PostgreSQL all the way to React. Start with plain CRUD; graduate a context to full DDD only when it earns it.
 
 ## Features
 
-- **Production-grade cross-cutting concerns** — JWT + OAuth (Google / GitHub), RBAC, audit logging, RFC 9457 error contract, idempotency keys, optimistic locking via ETag.
-- **End-to-end typed** — Drizzle schema drives database types; OpenAPI spec drives frontend types. Type-safe from PostgreSQL to React.
-- **Structured architectural rules** — MECE rules under [`.claude/rules/`](./.claude/rules/) document DDD layering, context boundaries, and package conventions. Compatible with Claude Code, Cursor, and similar assistants.
+- **Auth & RBAC** — JWT + OAuth (Google / GitHub), role-based access control.
+- **Admin frontend, batteries included** — Next.js App Router, TanStack Query with type-safe hooks, React Hook Form + Zod, role-aware components for UI-level RBAC.
+- **Durable writes & audit** — idempotency keys, optimistic locking via ETag, and domain-event-driven audit logging.
+- **Observability** — standardized error responses (RFC 9457 problem details), structured logging with PII redaction, request-ID correlation.
+- **End-to-end typed** — Drizzle drives database types; OpenAPI drives frontend types. Interactive API docs at `/docs`.
+- **Ready for AI assistants** — architectural rules under [`.claude/rules/`](./.claude/rules/) load automatically into Claude Code, Cursor, and similar tools. The same files work as onboarding docs for human contributors.
 - **Modern toolchain** — NestJS 11 · Next.js 16 · Drizzle ORM · shadcn/ui on Base UI · oxlint + oxfmt · Turborepo · pnpm.
 
 > [!NOTE]
@@ -22,7 +25,7 @@ A complete monorepo with the cross-cutting concerns a real SaaS needs — auth, 
 ## Workspace
 
 - **`api`** (`apps/api`, :3000) — NestJS backend, DDD, Drizzle ORM, Passport
-- **`admin-shadcn`** (`apps/admin-shadcn`, :8080) — Tech demo panel, Next.js App Router, shadcn/ui
+- **`admin-shadcn`** (`apps/admin-shadcn`, :8080) — Admin panel, Next.js App Router, shadcn/ui
 - **`@workspace/database`** (`packages/database`) — Schema definitions & migrations, Drizzle ORM
 - **`@workspace/api-types`** (`packages/api-types`) — Shared OpenAPI type definitions, openapi-typescript
 - **`@workspace/ui`** (`packages/ui`) — Shared UI component library, @base-ui/react
@@ -48,37 +51,6 @@ pnpm dev
 turbo build / test / lint / typecheck
 turbo format          # auto-fix formatting (oxfmt)
 turbo format:check    # CI formatting check
-```
-
-## Code Quality
-
-Linting and formatting are powered by [oxlint](https://oxc.rs/docs/guide/usage/linter) + [oxfmt](https://oxc.rs/docs/guide/usage/formatter) via [`@infra-x/code-quality`](https://github.com/oNo500/infra-code/tree/master/packages/code-quality) presets. Each package has its own `oxlint.config.ts` and `oxfmt.config.ts` with framework-specific rules.
-
-- **Root** — shared baseline (base, unicorn, depend)
-- **api** — NestJS boundaries, Drizzle, Node.js, Vitest
-- **admin-shadcn** — React, Next.js, Vitest, Tailwind CSS class sorting
-- **database** — Drizzle, Node.js
-- **ui** — React, Tailwind CSS class sorting
-- **icons** — React
-
-## Workflows
-
-### Update Database Schema
-
-```bash
-pnpm --filter @workspace/database build   # rebuild types
-pnpm --filter @workspace/database db:push # dev: push directly
-# prod: db:generate → db:migrate
-```
-
-### Regenerate API Types
-
-> [!WARNING]
-> API types are auto-generated from the OpenAPI spec. Never hand-write them.
-
-```bash
-# After any backend endpoint change (API must be running on :3000)
-pnpm --filter @workspace/api-types api:gen
 ```
 
 ## Documentation
