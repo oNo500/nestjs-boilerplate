@@ -21,12 +21,16 @@
 
 import createQueryClient from 'openapi-react-query'
 
+import type { components } from '@workspace/api-types'
+
 import { apiClient } from './api-client'
 
 export const $api = createQueryClient(apiClient)
 
 // Re-export types for use in features
 export type { paths, components } from '@workspace/api-types'
+
+export type UserRow = components['schemas']['UserResponseDto']
 
 // Re-export the API client (for non-React usage)
 export { apiClient } from './api-client'

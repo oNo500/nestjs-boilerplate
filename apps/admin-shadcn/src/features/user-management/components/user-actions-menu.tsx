@@ -29,7 +29,7 @@ import { useBanUser } from '@/features/user-management/hooks/use-ban-user'
 import { useDeleteUser } from '@/features/user-management/hooks/use-delete-user'
 import { ROLES } from '@/lib/rbac'
 
-import type { UserRow } from '@/features/user-management/types'
+import type { UserRow } from '@/lib/api'
 import type { RoleType } from '@/lib/rbac'
 
 interface UserActionsMenuProps {

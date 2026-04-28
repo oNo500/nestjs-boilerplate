@@ -22,7 +22,7 @@ import { useState } from 'react'
 import { DataTable } from '@/components/data-table/data-table'
 import { useAssignRole } from '@/features/user-management/hooks/use-assign-role'
 
-import type { UserRow } from '@/features/user-management/types'
+import type { UserRow } from '@/lib/api'
 import type { ColumnDef } from '@tanstack/react-table'
 
 const ROLE_ITEMS = [

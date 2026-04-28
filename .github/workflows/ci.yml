@@ -31,6 +31,9 @@ jobs:
       - name: Typecheck
         run: pnpm turbo typecheck
 
+      - name: Dependency rules
+        run: pnpm turbo deps
+
       - name: Build
         run: pnpm turbo build
         env:

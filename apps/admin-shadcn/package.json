@@ -11,7 +11,8 @@
     "format": "oxfmt --write .",
     "format:check": "oxfmt --check .",
     "typecheck": "tsc -b --noEmit",
-    "test": "vitest"
+    "test": "vitest",
+    "deps": "depcruise src --config .dependency-cruiser.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
@@ -37,7 +38,8 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
-    "@infra-x/code-quality": "0.4.0",
+    "@infra-x/code-quality": "^0.5.0",
+    "dependency-cruiser": "^17.0.0",
     "@tailwindcss/postcss": "^4.2.2",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.9.1",

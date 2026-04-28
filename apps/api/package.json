@@ -22,7 +22,8 @@
     "test:e2e": "vitest run --config ./vitest.e2e.config.mts",
     "test:ui": "vitest --ui",
     "test:watch": "vitest",
-    "typecheck": "tsc -b --noEmit"
+    "typecheck": "tsc -b --noEmit",
+    "deps": "depcruise src --config .dependency-cruiser.mjs"
   },
   "dependencies": {
     "@keyv/redis": "^5.1.6",
@@ -63,7 +64,8 @@
   },
   "devDependencies": {
     "@golevelup/ts-vitest": "^4.0.0",
-    "@infra-x/code-quality": "0.4.0",
+    "@infra-x/code-quality": "^0.5.0",
+    "dependency-cruiser": "^17.0.0",
     "@nestjs/cli": "^11.0.16",
     "@nestjs/schematics": "^11.0.9",
     "@nestjs/testing": "^11.1.17",

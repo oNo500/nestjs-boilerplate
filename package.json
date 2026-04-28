@@ -9,11 +9,12 @@
     "format": "turbo run format",
     "format:check": "turbo run format:check",
     "typecheck": "turbo run typecheck",
+    "deps": "turbo run deps",
     "prepare": "pnpm run setup:env",
     "setup:env": "pnpm --filter api --filter admin-shadcn --filter @workspace/database exec cp .env.example .env"
   },
   "devDependencies": {
-    "@infra-x/code-quality": "0.4.0",
+    "@infra-x/code-quality": "^0.5.0",
     "oxfmt": "^0.44.0",
     "oxlint": "^1.59.0",
     "turbo": "^2.8.20"

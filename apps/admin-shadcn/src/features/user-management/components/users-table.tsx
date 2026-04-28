@@ -4,7 +4,7 @@ import { DataTable } from '@/components/data-table/data-table'
 import { UserActionsMenu } from '@/features/user-management/components/user-actions-menu'
 import { UserStatusBadge } from '@/features/user-management/components/user-status-badge'
 
-import type { UserRow } from '@/features/user-management/types'
+import type { UserRow } from '@/lib/api'
 import type { ColumnDef } from '@tanstack/react-table'
 
 const columns: ColumnDef<UserRow>[] = [
