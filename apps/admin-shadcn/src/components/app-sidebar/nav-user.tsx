@@ -11,14 +11,19 @@ import {
   DropdownMenuTrigger,
 } from '@workspace/ui/components/dropdown-menu'
 import { Button } from '@workspace/ui/components/button'
-import { MoonIcon, SunIcon, SunMoonIcon } from 'lucide-react'
+import {
+  ChevronsUpDownIcon,
+  LogOutIcon,
+  MoonIcon,
+  SunIcon,
+  SunMoonIcon,
+} from 'lucide-react'
 import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
 } from '@workspace/ui/components/sidebar'
-import { ChevronsUpDownIcon, LogOutIcon } from 'lucide-react'
 import { useTheme } from 'next-themes'
 import { useRouter } from 'next/navigation'
 

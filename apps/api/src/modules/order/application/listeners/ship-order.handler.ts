@@ -32,7 +32,9 @@ export class ShipOrderHandler {
 
     try {
       // Simulate a time-consuming logistics API call (2 seconds)
-      await new Promise<void>((resolve) => setTimeout(resolve, 2000))
+      await new Promise<void>((resolve) => {
+        setTimeout(resolve, 2000)
+      })
 
       // Simulate generating a tracking number
       const trackingNumber = `SF${Date.now()}`

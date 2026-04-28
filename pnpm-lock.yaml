@@ -9,8 +9,8 @@ importers:
   .:
     devDependencies:
       '@infra-x/code-quality':
-        specifier: ^0.5.0
-        version: 0.5.0(@typescript-eslint/parser@8.57.1(eslint@10.2.0(jiti@2.6.1))(typescript@5.9.3))(class-validator@0.14.2)(eslint@10.2.0(jiti@2.6.1))(oxfmt@0.44.0)(oxlint@1.59.0(oxlint-tsgolint@0.22.1))(storybook@10.2.13(@testing-library/dom@10.4.1)(prettier@3.8.1)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(tailwindcss@4.2.2)(typescript@5.9.3)
+        specifier: ^0.6.2
+        version: 0.6.2(@typescript-eslint/parser@8.57.1(eslint@10.2.0(jiti@2.6.1))(typescript@5.9.3))(class-validator@0.14.2)(eslint@10.2.0(jiti@2.6.1))(oxfmt@0.44.0)(oxlint@1.59.0(oxlint-tsgolint@0.22.1))(storybook@10.2.13(@testing-library/dom@10.4.1)(prettier@3.8.1)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(tailwindcss@4.2.2)(typescript@5.9.3)
       oxfmt:
         specifier: ^0.44.0
         version: 0.44.0
@@ -88,8 +88,8 @@ importers:
         version: 4.3.6
     devDependencies:
       '@infra-x/code-quality':
-        specifier: ^0.5.0
-        version: 0.5.0(@typescript-eslint/parser@8.57.1(eslint@10.2.0(jiti@2.6.1))(typescript@5.9.3))(class-validator@0.14.2)(eslint@10.2.0(jiti@2.6.1))(oxfmt@0.44.0)(oxlint@1.59.0(oxlint-tsgolint@0.22.1))(storybook@10.2.13(@testing-library/dom@10.4.1)(prettier@3.8.1)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(tailwindcss@4.2.2)(typescript@5.9.3)
+        specifier: ^0.6.2
+        version: 0.6.2(@typescript-eslint/parser@8.57.1(eslint@10.2.0(jiti@2.6.1))(typescript@5.9.3))(class-validator@0.14.2)(eslint@10.2.0(jiti@2.6.1))(oxfmt@0.44.0)(oxlint@1.59.0(oxlint-tsgolint@0.22.1))(storybook@10.2.13(@testing-library/dom@10.4.1)(prettier@3.8.1)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(tailwindcss@4.2.2)(typescript@5.9.3)
       '@tailwindcss/postcss':
         specifier: ^4.2.2
         version: 4.2.2
@@ -254,8 +254,8 @@ importers:
         specifier: ^4.0.0
         version: 4.0.0
       '@infra-x/code-quality':
-        specifier: ^0.5.0
-        version: 0.5.0(@typescript-eslint/parser@8.57.1(eslint@10.2.0(jiti@2.6.1))(typescript@5.9.3))(class-validator@0.14.2)(eslint@10.2.0(jiti@2.6.1))(oxfmt@0.44.0)(oxlint@1.59.0(oxlint-tsgolint@0.22.1))(storybook@10.2.13(@testing-library/dom@10.4.1)(prettier@3.8.1)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(tailwindcss@4.2.2)(typescript@5.9.3)
+        specifier: ^0.6.2
+        version: 0.6.2(@typescript-eslint/parser@8.57.1(eslint@10.2.0(jiti@2.6.1))(typescript@5.9.3))(class-validator@0.14.2)(eslint@10.2.0(jiti@2.6.1))(oxfmt@0.44.0)(oxlint@1.59.0(oxlint-tsgolint@0.22.1))(storybook@10.2.13(@testing-library/dom@10.4.1)(prettier@3.8.1)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(tailwindcss@4.2.2)(typescript@5.9.3)
       '@nestjs/cli':
         specifier: ^11.0.16
         version: 11.0.16(@swc/cli@0.8.0(@swc/core@1.15.18)(chokidar@4.0.3))(@swc/core@1.15.18)(@types/node@25.5.0)(esbuild@0.27.7)
@@ -344,8 +344,8 @@ importers:
   packages/database:
     devDependencies:
       '@infra-x/code-quality':
-        specifier: ^0.5.0
-        version: 0.5.0(@typescript-eslint/parser@8.57.1(eslint@10.2.0(jiti@2.6.1))(typescript@5.9.3))(class-validator@0.14.2)(eslint@10.2.0(jiti@2.6.1))(oxfmt@0.44.0)(oxlint@1.59.0(oxlint-tsgolint@0.22.1))(storybook@10.2.13(@testing-library/dom@10.4.1)(prettier@3.8.1)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(tailwindcss@4.2.2)(typescript@5.9.3)
+        specifier: ^0.6.2
+        version: 0.6.2(@typescript-eslint/parser@8.57.1(eslint@10.2.0(jiti@2.6.1))(typescript@5.9.3))(class-validator@0.14.2)(eslint@10.2.0(jiti@2.6.1))(oxfmt@0.44.0)(oxlint@1.59.0(oxlint-tsgolint@0.22.1))(storybook@10.2.13(@testing-library/dom@10.4.1)(prettier@3.8.1)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(tailwindcss@4.2.2)(typescript@5.9.3)
       '@types/bcrypt':
         specifier: ^6.0.0
         version: 6.0.0
@@ -387,8 +387,8 @@ importers:
         version: 19.2.4
     devDependencies:
       '@infra-x/code-quality':
-        specifier: ^0.5.0
-        version: 0.5.0(@typescript-eslint/parser@8.57.1(eslint@10.2.0(jiti@2.6.1))(typescript@5.9.3))(class-validator@0.14.2)(eslint@10.2.0(jiti@2.6.1))(oxfmt@0.44.0)(oxlint@1.59.0(oxlint-tsgolint@0.22.1))(storybook@10.2.13(@testing-library/dom@10.4.1)(prettier@3.8.1)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(tailwindcss@4.2.2)(typescript@5.9.3)
+        specifier: ^0.6.2
+        version: 0.6.2(@typescript-eslint/parser@8.57.1(eslint@10.2.0(jiti@2.6.1))(typescript@5.9.3))(class-validator@0.14.2)(eslint@10.2.0(jiti@2.6.1))(oxfmt@0.44.0)(oxlint@1.59.0(oxlint-tsgolint@0.22.1))(storybook@10.2.13(@testing-library/dom@10.4.1)(prettier@3.8.1)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(tailwindcss@4.2.2)(typescript@5.9.3)
       '@svgr/cli':
         specifier: ^8.1.0
         version: 8.1.0(typescript@5.9.3)
@@ -457,8 +457,8 @@ importers:
         version: 4.3.6
     devDependencies:
       '@infra-x/code-quality':
-        specifier: ^0.5.0
-        version: 0.5.0(@typescript-eslint/parser@8.57.1(eslint@10.2.0(jiti@2.6.1))(typescript@5.9.3))(class-validator@0.14.2)(eslint@10.2.0(jiti@2.6.1))(oxfmt@0.44.0)(oxlint@1.59.0(oxlint-tsgolint@0.22.1))(storybook@10.2.13(@testing-library/dom@10.4.1)(prettier@3.8.1)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(tailwindcss@4.2.2)(typescript@5.9.3)
+        specifier: ^0.6.2
+        version: 0.6.2(@typescript-eslint/parser@8.57.1(eslint@10.2.0(jiti@2.6.1))(typescript@5.9.3))(class-validator@0.14.2)(eslint@10.2.0(jiti@2.6.1))(oxfmt@0.44.0)(oxlint@1.59.0(oxlint-tsgolint@0.22.1))(storybook@10.2.13(@testing-library/dom@10.4.1)(prettier@3.8.1)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(tailwindcss@4.2.2)(typescript@5.9.3)
       '@tailwindcss/postcss':
         specifier: ^4.2.2
         version: 4.2.2
@@ -1640,8 +1640,8 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@infra-x/code-quality@0.5.0':
-    resolution: {integrity: sha512-znk9RnVAEGgDaR0VjRWIEtmA/51c9ke0bP+SvSdV3u50gOLswtD1nqlVBbhH4gU4rUxJ/YLaGomaSi6NtNwvJA==}
+  '@infra-x/code-quality@0.6.2':
+    resolution: {integrity: sha512-HBvBfq1Zu0yABU2OFtIoTo6XtfD1U4j2WO6UfJNQbLwwq9W1WbjdDQJ/RtWVR2zJWDui4LkQxWnjcWQHyT5/qg==}
     peerDependencies:
       class-validator: '*'
       oxfmt: '>=0.44.0'
@@ -8587,7 +8587,7 @@ snapshots:
   '@img/sharp-win32-x64@0.34.5':
     optional: true
 
-  '@infra-x/code-quality@0.5.0(@typescript-eslint/parser@8.57.1(eslint@10.2.0(jiti@2.6.1))(typescript@5.9.3))(class-validator@0.14.2)(eslint@10.2.0(jiti@2.6.1))(oxfmt@0.44.0)(oxlint@1.59.0(oxlint-tsgolint@0.22.1))(storybook@10.2.13(@testing-library/dom@10.4.1)(prettier@3.8.1)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(tailwindcss@4.2.2)(typescript@5.9.3)':
+  '@infra-x/code-quality@0.6.2(@typescript-eslint/parser@8.57.1(eslint@10.2.0(jiti@2.6.1))(typescript@5.9.3))(class-validator@0.14.2)(eslint@10.2.0(jiti@2.6.1))(oxfmt@0.44.0)(oxlint@1.59.0(oxlint-tsgolint@0.22.1))(storybook@10.2.13(@testing-library/dom@10.4.1)(prettier@3.8.1)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(tailwindcss@4.2.2)(typescript@5.9.3)':
     dependencies:
       '@darraghor/eslint-plugin-nestjs-typed': 7.1.28(@typescript-eslint/parser@8.57.1(eslint@10.2.0(jiti@2.6.1))(typescript@5.9.3))(class-validator@0.14.2)(eslint@10.2.0(jiti@2.6.1))(typescript@5.9.3)
       defu: 6.1.7

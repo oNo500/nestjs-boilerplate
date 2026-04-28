@@ -167,7 +167,9 @@ async function waitForJob(
     if (job.status === 'succeeded' || job.status === 'failed' || job.status === 'cancelled') {
       return job
     }
-    await new Promise<void>((resolve) => setTimeout(resolve, 300))
+    await new Promise<void>((resolve) => {
+      setTimeout(resolve, 300)
+    })
   }
   throw new Error(`Job ${jobId} did not complete within ${timeoutMs}ms`)
 }

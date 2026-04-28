@@ -51,6 +51,25 @@ export default {
         dependencyTypesNot: ['type-only'],
       },
     },
+    {
+      name: 'domain-no-external-libs',
+      severity: 'error',
+      comment:
+        'Domain layer must stay free of runtime libraries (@nestjs/*, drizzle, bcrypt, pino, ...). Test files (vitest) are exempt.',
+      from: {
+        path: '^src/modules/[^/]+/domain/',
+        pathNot: '\\.spec\\.ts$',
+      },
+      to: { dependencyTypes: ['npm', 'npm-dev', 'npm-optional', 'npm-peer', 'npm-no-pkg'] },
+    },
+    {
+      name: 'presentation-no-database',
+      severity: 'error',
+      comment:
+        'Presentation layer must not access the database directly. Go through application services.',
+      from: { path: '^src/modules/[^/]+/presentation/' },
+      to: { path: '^(@workspace/database|drizzle-orm|pg|postgres)($|/)' },
+    },
   ],
   options: {
     doNotFollow: { path: 'node_modules' },

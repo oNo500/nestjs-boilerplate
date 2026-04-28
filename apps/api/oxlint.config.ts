@@ -30,5 +30,13 @@ export default defineConfig({
         'typescript/consistent-type-imports': 'off',
       },
     },
+    {
+      // DTO files conventionally bundle related request/response classes;
+      // test files declare e2e fixtures and helper classes inline.
+      files: ['**/dtos/**/*.ts', '**/__tests__/**/*.ts', '**/*.e2e-spec.ts'],
+      rules: {
+        'max-classes-per-file': 'off',
+      },
+    },
   ],
 })

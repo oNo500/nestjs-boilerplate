@@ -67,13 +67,17 @@ export function DataTable<TData>({
         </TableHeader>
         <TableBody>
           {isLoading ? (
-            Array.from({ length: skeletonRows }, (_, i) => `sk-${i}`).map((key) => (
-              <TableRow key={key}>
-                {columns.map((_, colIndex) => (
-                  <TableCell key={colIndex}>
-                    <Skeleton className="h-4 w-full" />
-                  </TableCell>
-                ))}
+            Array.from({ length: skeletonRows }, (_, i) => `sk-${i}`).map((rowKey) => (
+              <TableRow key={rowKey}>
+                {columns.map((column, colIndex) => {
+                  const columnKey =
+                    column.id ?? ('accessorKey' in column ? String(column.accessorKey) : colIndex)
+                  return (
+                    <TableCell key={`${rowKey}-${columnKey}`}>
+                      <Skeleton className="h-4 w-full" />
+                    </TableCell>
+                  )
+                })}
               </TableRow>
             ))
           ) : rows.length > 0 ? (

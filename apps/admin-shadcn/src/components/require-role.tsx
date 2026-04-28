@@ -18,10 +18,10 @@ interface Props {
  * triggers Next.js `notFound()` so URL tampering fails closed with a 404.
  * The backend still returns 403 for API calls — this is UX, not enforcement.
  */
-export function RequireRole({ role, children }: Props): React.ReactElement | null {
+export function RequireRole({ role, children }: Props): React.ReactNode {
   const allowed = useHasRole(role)
   if (!allowed) notFound()
-  return <>{children}</>
+  return children
 }
 
 /**
@@ -30,7 +30,7 @@ export function RequireRole({ role, children }: Props): React.ReactElement | nul
  * Renders `children` when allowed, otherwise null. Use for buttons,
  * menu items, and table columns that should disappear for unauthorized users.
  */
-export function ShowForRole({ role, children }: Props): React.ReactElement | null {
+export function ShowForRole({ role, children }: Props): React.ReactNode {
   const allowed = useHasRole(role)
-  return allowed ? <>{children}</> : null
+  return allowed ? children : null
 }

@@ -64,7 +64,7 @@
   },
   "devDependencies": {
     "@golevelup/ts-vitest": "^4.0.0",
-    "@infra-x/code-quality": "^0.5.0",
+    "@infra-x/code-quality": "^0.6.2",
     "dependency-cruiser": "^17.0.0",
     "@nestjs/cli": "^11.0.16",
     "@nestjs/schematics": "^11.0.9",

@@ -18,7 +18,7 @@
     "react": "^19.2.4"
   },
   "devDependencies": {
-    "@infra-x/code-quality": "^0.5.0",
+    "@infra-x/code-quality": "^0.6.2",
     "@svgr/cli": "^8.1.0",
     "@types/react": "^19.2.14",
     "tsdown": "^0.21.4",

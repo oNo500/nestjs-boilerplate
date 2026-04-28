@@ -19,6 +19,16 @@ export default defineConfig({
       files: ['scripts/**/*.ts'],
       rules: {
         'typescript/no-explicit-any': 'off',
+        // Scripts intentionally reach into src/ via relative paths.
+        'import/no-relative-parent-imports': 'off',
+      },
+    },
+    {
+      // Drizzle Kit does not resolve tsconfig path aliases for schema files.
+      // Schemas must reference each other via relative paths.
+      files: ['src/schemas/**/*.ts'],
+      rules: {
+        'import/no-relative-parent-imports': 'off',
       },
     },
   ],
